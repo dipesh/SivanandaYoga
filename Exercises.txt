@@ -1,0 +1,85 @@
+[{
+  "id": 1,
+  "title": "Opening Prayer",
+  "englishTitle": "Opening Prayer",
+}, {
+  "id": 2,
+  "title": "Kapalabhati Pranayama",
+  "englishTitle": "Kapalabhati",
+}, {
+  "id": 3,
+  "title": "Anuloma Viloma Pranayama",
+  "englishTitle": "Anuloma Viloma ",
+}, {
+  "id": 4,
+  "title": "Surya Namaskar",
+  "englishTitle": "Sun Salutation",
+}, {
+  "id": 5,
+  "title": "Single Leg Raises",
+  "englishTitle": "Single Leg Raises",
+}, {
+  "id": 6,
+  "title": "Double Leg Raises",
+  "englishTitle": "Double Leg Raises",
+}, {
+  "id": 7,
+  "title": "Sirsasana",
+  "englishTitle": "Headstand",
+}, {
+  "id": 8,
+  "title": "Sarvangasana",
+  "englishTitle": "Shoulderstand",
+}, {
+  "id": 9,
+  "title": "Halasana",
+  "englishTitle": "Plough",
+}, {
+  "id": 10,
+  "title": "Matyasana",
+  "englishTitle": "Fish",
+}, {
+  "id": 11,
+  "title": "Pascimottanasana",
+  "englishTitle": "Sitting Forward Bend",
+}, {
+  "id": 12,
+  "title": "Inclined",
+  "englishTitle": "Plane",
+}, {
+  "id": 13,
+  "title": "Bhujangasana",
+  "englishTitle": "Cobra",
+}, {
+  "id": 14,
+  "title": "Salabasana",
+  "englishTitle": "Locust",
+}, {
+  "id": 15,
+  "title": "Dhanurasana",
+  "englishTitle": "Bow",
+}, {
+  "id": 16,
+  "title": "Ardhamatsyendrasana",
+  "englishTitle": "Half Spinal Twist",
+}, {
+  "id": 17,
+  "title": "Kakasana",
+  "englishTitle": "Crow",
+}, {
+  "id": 18,
+  "title": "Padahastasana",
+  "englishTitle": "Standing Forward Bend",
+}, {
+  "id": 19,
+  "title": "Trikonasana",
+  "englishTitle": "Triangle",
+}, {
+  "id": 20,
+  "title": "Final Relaxation",
+  "englishTitle": "Final Relaxation",
+}, {
+  "id": 21,
+  "title": "Final Prayers",
+  "englishTitle": "Final Prayers",
+}]
