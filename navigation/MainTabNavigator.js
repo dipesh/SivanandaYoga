@@ -11,7 +11,7 @@ import SettingsScreen from '../screens/SettingsScreen';
 import CreatePracticeScreen from '../screens/CreatePracticeScreen';
 
 const HomeStack = createStackNavigator({
-  Home: StartClassScreen,
+  Home: HomeScreen,
   CreatePractice: {
     screen: CreatePracticeScreen,
   } 

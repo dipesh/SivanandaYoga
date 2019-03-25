@@ -2,6 +2,7 @@
   "id": 1,
   "title": "Opening Prayer",
   "englishTitle": "Opening Prayer",
+  
 }, {
   "id": 2,
   "title": "Kapalabhati Pranayama",

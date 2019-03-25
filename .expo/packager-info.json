@@ -1,10 +1,10 @@
 {
-  "expoServerPort": null,
+  "expoServerPort": 19000,
   "webpackServerPort": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
-  "packagerPort": null,
-  "packagerPid": null,
+  "expoServerNgrokUrl": "https://ff-it2.anonymous.sivanandayoga.exp.direct",
+  "packagerNgrokUrl": "https://packager.ff-it2.anonymous.sivanandayoga.exp.direct",
+  "ngrokPid": 13348,
+  "packagerPort": 19001,
+  "packagerPid": 13636,
   "devToolsPort": 19002
 }

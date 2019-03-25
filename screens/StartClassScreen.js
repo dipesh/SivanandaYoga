@@ -46,6 +46,9 @@ const styles = StyleSheet.create({
     },
     headerButton: {
         flex: 0.3,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
         width: 50,
         height: 50,
         backgroundColor: 'powderblue',

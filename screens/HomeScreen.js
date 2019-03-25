@@ -26,16 +26,27 @@ export default class HomeScreen extends React.Component {
     constructor(props) {
         super(props);
 
+
+        //
+        //
+        //[
+        //{"name":"class 1", "item":{"key":"0","title":"Kapalabhati"}},
+        //{"name":"class 2", "item":{"key":"1","title":"Anulom"}}
+        //]
+        //
+        this.savedClassName = "tempName"//this.props.name;
         this.savedClassesKey = "SivanandaSavedClasses";
         this.ajustableClassName = "Adjustable Class 1";
 
         this.asanaArray = this.getAsanasArray();
         //.concat(this.getPranayamArray());
 
-        this.allAsanaArray;
         this.removedAsanaArray = [];
 
+        this.allClasses = this._retrieveData();
+
         this.state = {
+            allClassesHolder: this.allClasses,
             arrayHolder: [],
             //removedAsanaArray: [],
             textInput_Holder: '',
@@ -44,78 +55,98 @@ export default class HomeScreen extends React.Component {
 
     }
 
-    saveYoga() {
+    _storeData = async () => {  
+        console.log("save data");
+
+        for (i = 0; i < this.allClasses.length; i++) {
+            if(this.allClasses[i].name == this.savedClassName){
+                this.allClasses[i].item = asanaArray;
+            }
+            else{
+                let arr = [{
+                      name: this.savedClassName,
+                    }]
+                arr.item = asanaArray;
+                this.allClasses.push(arr);
+                this.setState({ allClassesHolder: [...this.allClasses] })
+            }
+        }
+
         try {
-            await AsyncStorage.setItem('@MySuperStore:SivanandaSavedClasses', ' JSON.stringify(UID234_delta)');
+            await AsyncStorage.setItem(this.savedClassesKey, JSON.stringify(this.state.allClassesHolder));
+            
         } catch (error) {
             // Error saving data
-        }
-    }
+           
+
+        } 
+    } 
     _retrieveData = async () => {
         try {
-            const value = await AsyncStorage.getItem('TASKS');
+            console.log("load data");
+            const value = await AsyncStorage.getItem(this.savedClassesKey);
+            
+            console.log("load value " + value);
+            
             if (value !== null) {
                 // We have data!!
+  
+                var allClassesArray = JSON.parse(value);
+                let itemArray = []
+ 
+                allClassesArray.forEach(element => {
+                    if(element.name == this.savedClassName){
+                        itemArray = element.item; 
+                    }
+                });
+
+                this.setState({ arrayHolder: [...itemArray] })
+
                 console.log(value);
+            }
+            else{
+                //there are no saved classes 
             }
         } catch (error) {
             // Error retrieving data
+            console.log("load error: "+error);
+            try { 
+                AsyncStorage.removeItem(this.savedClassesKey);
+                console.log("removed data");
+            } catch (error) {}
         }
     };
-    loadYoga(){
-
-    }
+   
     toggleModal(visible) {
         this.setState({ modalVisible: visible });
     }
 
     getAsanasArray() {
+        //the key also represents the order
         let arr = [
             {
-                key: 0,
+                key: "0",
                 title: 'Kapalabhati',
                 description: 'Kapalabhati',
                 image_url: ' ',
-                rounds: 4,
-                actionsPerRound: 35,
-                retentionLength: 20,
-                handleRemovePress: this.deleteData,
-                updateRounds: this.updateRounds,
-                updateActionsPerRound: this.updateActionsPerRound,
-                updateRetentionLength: this.updateRetentionLength,
-                isDeleted: false,
             },
             {
-                key: 1,
-                title: 'Anulom',
-                description: 'Anulom',
+                key: "1",
+                title: 'Anulom Viloma',
+                description: 'Anulom Viloma',
                 image_url: ' ',
-                rounds: 20,
-                ratioPerRound: 5,
-                handleRemovePress: this.deleteData,
-                updateRounds: this.updateRounds,
-                updateRatioPerRound: this.updateRatioPerRound,
-                isDeleted: false,
             },
             {
-                key: 2,
+                key: "2",
                 title: 'Sirshasana',
                 description: 'Sirshasana',
                 image_url: ' ',
-                holdTime: 30,
-                handleRemovePress: this.deleteData,
-                updateHoldTime: this.updateHoldTime,
-                isDeleted: false,
             },
             {
-                key: 3,
+                key: "3",
                 title: 'Sarvangasana',
                 description: 'Sarvangasana',
                 image_url: ' ',
-                holdTime: 30,
-                handleRemovePress: this.deleteData,
-                updateHoldTime: this.updateHoldTime,
-                isDeleted: false,
             },
             // {
             //   key: 0, 
@@ -228,8 +259,22 @@ export default class HomeScreen extends React.Component {
             //   isDeleted: false,
             // },
         ]
+         
         for (i = 0; i < arr.length; i++) {
-            arr[i].key = i.toString();
+            arr[i].isDeleted = false;
+            arr[i].handleRemovePress = this.deleteData;
+
+            arr[i].holdTime = 30;
+            arr[i].updateHoldTime = this.updateHoldTime;
+
+            arr[i].actionsPerRound = 35;
+            arr[i].updateActionsPerRound = this.updateActionsPerRound;
+            arr[i].retentionLength = 20;
+            arr[i].updateRetentionLength = this.updateRetentionLength;
+            arr[i].rounds = 20;
+            arr[i].updateRounds = this.updateRounds;
+            arr[i].ratioPerRound = 5;
+            arr[i].updateRatioPerRound = this.updateRatioPerRound;
         }
         return arr;
     }
@@ -310,10 +355,25 @@ export default class HomeScreen extends React.Component {
                     <AsanaListview itemList={this.state.arrayHolder} />
                 </ScrollView>
                 {/* <Text> {JSON.stringify(this.asanaArray)} </Text> */}
+
+                <View style={styles.headerView}>
+                    <TouchableOpacity onPress={() => this._storeData()} style={styles.headerButton}>
+                        <Text style={styles.headerButtonButtonText}>Save</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => this._retrieveData()} style={styles.headerButton}>
+                        <Text style={styles.headerButtonButtonText}>Load</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         );
     }
+    // saveData(){
 
+    // }
+
+    loadData(){
+        console.log("load data");
+    }
     renderRemovedItems() {
 
         if (this.removedAsanaArray.length == 0) {
@@ -345,6 +405,24 @@ export default class HomeScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
+    headerView: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    }, 
+    headerButtonButtonText: {
+        textAlign: 'center',
+    },
+    headerButton: {
+        flex: 0.3,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 50,
+        height: 50,
+        backgroundColor: 'powderblue',
+        padding: 10,
+        margin: 10
+    },
     buttonContainer: {
         margin: 10,
     },
