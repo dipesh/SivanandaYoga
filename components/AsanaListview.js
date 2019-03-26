@@ -1,55 +1,53 @@
-import React, { Component } from 'react';
-import { View, ListView, FlatList, StyleSheet, Text } from 'react-native';
-import CustomRow from './CustomRow';
-import AsanaRow from './AsanaRow';
+import React, { Component } from "react";
+import { View, ListView, FlatList, StyleSheet, Text } from "react-native";
+import CustomRow from "./CustomRow";
+import AsanaRow from "./AsanaRow";
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
+  container: {
+    flex: 1
+  }
 });
 
-
 export default class AsanaListview extends Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        this.state = {
-        }
-    }
+    this.state = {};
+  }
 
-    static propTypes = {
-        //itemList
-    }
+  static propTypes = {
+    //itemList
+  };
 
-    render = () => {
-        return (
-            <View style={styles.container}>
-                <FlatList
-                    data={this.props.itemList}
-                    extraData={this.props.itemList}
-                    renderItem={({ item }) =>
-                        <AsanaRow
-                            rowNumber={item.key}
-                            title={item.title}
-                            description={item.description}
-                            image_url={item.image_url}
-                            holdTime={item.holdTime}
-                            rounds={item.rounds}
-                            actionsPerRound={item.actionsPerRound}
-                            retentionLength={item.retentionLength}
-                            ratioPerRound={item.ratioPerRound}
-                            handleRemovePress={item.handleRemovePress}
-                            updateHoldTime={item.updateHoldTime}
-                            updateRounds={item.updateRounds}
-                            updateActionsPerRound={item.updateActionsPerRound}
-                            updateRetentionLength={item.updateRetentionLength}
-                            updateRatioPerRound={item.updateRatioPerRound}
-                            isDeleted={item.isDeleted}
-                        />
-                    }
-                />
-            </View>
-            )
-    }
+  render = () => {
+    return (
+      <View style={styles.container}>
+        <FlatList
+          data={this.props.itemList}
+          extraData={this.props.itemList}
+          renderItem={({ item }) => (
+            <AsanaRow 
+              rowNumber={item.key}
+              title={item.title}
+              description={item.description}
+              image_url={item.image_url}
+              holdTime={item.holdTime}
+              rounds={item.rounds}
+              actionsPerRound={item.actionsPerRound}
+              retentionLength={item.retentionLength}
+              ratioPerRound={item.ratioPerRound}
+              handleRemovePress={this.props.handleRemovePress}
+              updateHoldTime={this.props.updateHoldTime}
+              updateRounds={this.props.updateRounds}
+              updateActionsPerRound={this.props.updateActionsPerRound}
+              updateRetentionLength={this.props.updateRetentionLength}
+              updateRatioPerRound={this.props.updateRatioPerRound}
+              isDeleted={item.isDeleted}
+            />
+          )}
+        />
+      </View>
+    );
+  };
 }
