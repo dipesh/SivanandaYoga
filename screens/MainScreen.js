@@ -8,12 +8,13 @@ import {
   FlatList,
   AsyncStorage
 } from "react-native";
+import quote from "../quotes";
 
 export default class MainScreen extends React.Component {
   static navigationOptions = {
     title: "Main"
   };
-
+ 
   constructor(props) {
     super(props);
     this.savedClassesKey = "SivanandaSavedClasses";
@@ -23,15 +24,14 @@ export default class MainScreen extends React.Component {
 
     this.state = {
       allClassesHolder: this.allClasses
-    };
+    }; 
   }
 
   _retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem(this.savedClassesKey);
 
-      console.log("load value " + value);
-
+      console.log('load value ' + value)
       if (value !== null) {
         this.allClasses = JSON.parse(value);
         this.setState({ allClassesHolder: [...this.allClasses] });
@@ -82,22 +82,17 @@ export default class MainScreen extends React.Component {
       </ScrollView>
     );
   }
-  _renderItem = ({ item }) => (
-    <MyListItem
-      id={item.id}
-      onPressItem={this._onPressItem}
-      selected={!!this.state.selected.get(item.id)}
-      title={item.title}
-    />
-  );
 
   getQuote() {
-    return "This is a test quote";
+    
+    const min = 0;
+    const max = 808;
+    const rand = Math.floor(min + Math.random() * (max - min));
+
+    return quote[rand];
   }
 
   openClass(item) {
-    
-
     if(item == 60){
 
     }
@@ -109,10 +104,9 @@ export default class MainScreen extends React.Component {
     }
     else{
       //it must be a custom class, so item is a array
-      let adjustableClassName = item.name;
       this.props.navigation.navigate('StartClassScreen',
       {
-        name: adjustableClassName,
+        item: item,
       });
     }
   }
@@ -155,7 +149,7 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   dailyQuote: {
-    height: 100,
+    minHeight: 100,
     padding: 15,
     margin: 10,
     // textAlign: 'center',

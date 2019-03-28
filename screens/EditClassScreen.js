@@ -28,13 +28,11 @@ export default class EditClassScreen extends React.Component {
   constructor(props) {
     super(props);
 
-    //
-    //
     //[
     //{"name":"class 1", "item":{"key":"0","title":"Kapalabhati"}},
     //{"name":"class 2", "item":{"key":"1","title":"Anulom"}}
     //]
-    //
+    
     this.savedClassName = "tempName3"; //this.props.name;
     this.savedClassesKey = "SivanandaSavedClasses";
     this.ajustableClassName = "Adjustable Class 1";
@@ -93,8 +91,6 @@ export default class EditClassScreen extends React.Component {
   _retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem(this.savedClassesKey);
-
-      console.log("load value " + value);
 
       if (value !== null) {
         // We have data!!
@@ -360,7 +356,7 @@ export default class EditClassScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        {/* <Modal
+      <Modal
           animationType={"slide"}
           transparent={false}
           visible={this.state.modalVisible}
@@ -405,7 +401,7 @@ export default class EditClassScreen extends React.Component {
           />
         </ScrollView>
         {/* <Text> {JSON.stringify(this.asanaArray)} </Text> */}
-{/*
+
         <View style={styles.headerView}>
           <TouchableOpacity
             onPress={() => this._storeData()}
@@ -419,7 +415,7 @@ export default class EditClassScreen extends React.Component {
           >
             <Text style={styles.headerButtonButtonText}>Load</Text>
           </TouchableOpacity>
-        </View> */}
+        </View> 
       </View>
     );
   }
