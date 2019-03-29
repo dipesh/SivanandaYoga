@@ -26,7 +26,7 @@ export default class StartClassScreen extends React.Component {
           key: "0",
           title: "Kapalabhati",
           description: "Kapalabhati",
-          image_url: " ",
+          image_url: require("../assets/images/Kapalabhati.jpg"),
           isDeleted: false,
           holdTime: 30,
           actionsPerRound: 35,
@@ -38,7 +38,7 @@ export default class StartClassScreen extends React.Component {
           key: "1",
           title: "Anulom Viloma",
           description: "Anulom Viloma",
-          image_url: " ",
+          image_url: require("../assets/images/Anulom Viloma.jpg"),
           isDeleted: false,
           holdTime: 30,
           actionsPerRound: 35,
@@ -50,7 +50,7 @@ export default class StartClassScreen extends React.Component {
           key: "2",
           title: "Sirshasana",
           description: "Sirshasana",
-          image_url: " ",
+          image_url: require("../assets/images/Sirshasana.jpg"),
           isDeleted: false,
           holdTime: 30,
           actionsPerRound: 35,
@@ -62,7 +62,7 @@ export default class StartClassScreen extends React.Component {
           key: "3",
           title: "Sarvangasana",
           description: "Sarvangasana",
-          image_url: " ",
+          image_url: require("../assets/images/Sarvangasana.jpg"),
           isDeleted: false,
           holdTime: 30,
           actionsPerRound: 35,
@@ -79,13 +79,13 @@ export default class StartClassScreen extends React.Component {
     });
     this.asanaArray[2].isSelected = true;
 
+    this.currentAsanaRow = -1;
 
-    this.currentAsana = "";
-
-    this.started = false;
+    //this.started = false;
 
     this.state = {
-      asanaHolder: this.asanaArray
+      asanaHolder: this.asanaArray,
+      started: false
     };
   }
 
@@ -93,12 +93,7 @@ export default class StartClassScreen extends React.Component {
     return (
       <ScrollView style={styles.container}>
         <View style={styles.headerView}>
-          <TouchableOpacity
-            onPress={() => this.startPause()}
-            style={styles.headerButton}
-          >
-            <Text style={styles.headerButtonButtonText}>Start</Text>
-          </TouchableOpacity>
+          {this.renderStartPauseButtion()}
           <TouchableOpacity
             onPress={() => this.editClass()}
             style={styles.headerButton}
@@ -107,10 +102,7 @@ export default class StartClassScreen extends React.Component {
           </TouchableOpacity>
         </View>
 
-        <Image
-          style={{ width: 100, height: 100 }}
-          source={require("../assets/images/IconSivananda.jpg")}
-        />
+        {this.renderImage()}
 
         <FlatList
           data={this.state.asanaHolder}
@@ -120,16 +112,36 @@ export default class StartClassScreen extends React.Component {
       </ScrollView>
     );
   }
+  renderImage() {
+    let image = require("../assets/images/IconSivananda.png");
 
-  renderItem = item => {
-
-    let color = 'rgba(0, 0, 0, 0)'
-    if(item.isSelected){
-      color =  '#eff0f1'
+    if (this.currentAsanaRow >= 0) {
+      this.asanaArray[this.currentAsanaRow].image_url;
+    }
+    return <Image style={{ width: 100, height: 100 }} source={image} />;
+  }
+  renderStartPauseButtion() {
+    let text = "Start";
+    if (this.state.started) {
+      text = "Pause";
     }
     return (
       <TouchableOpacity
-        style={{backgroundColor: color}}
+        onPress={() => this.startPause()}
+        style={styles.headerButton}
+      >
+        <Text style={styles.headerButtonButtonText}>{text}</Text>
+      </TouchableOpacity>
+    );
+  }
+  renderItem = item => {
+    let color = "rgba(0, 0, 0, 0)";
+    if (item.isSelected) {
+      color = "#eff0f1";
+    }
+    return (
+      <TouchableOpacity
+        style={{ backgroundColor: color }}
         onPress={() => this.exersiceClicked(item)}
       >
         <Text style={styles.customClassRow}>{item.title}</Text>
@@ -139,27 +151,39 @@ export default class StartClassScreen extends React.Component {
   exersiceClicked(item) {}
 
   startPause() {
-    if (this.started) {
-      pauseAsanas();
+    if (this.state.started) {
+      this.pauseAsanas();
     } else {
-      startAsanas();
+      this.startAsanas();
     }
   }
   startAsanas() {
-    this.started = true;
-
-    if (this.currentAsana == "") {
+    //this.started = true;
+    this.setState({ started: true });
+    if (this.currentAsanaRow == -1) {
+      this.currentAsanaRow++;
       //the practice is being started for the first time
       //start the timer
       //highlight the exercise
+      this.asanaArray.forEach(element => {
+        element.isSelected = false;
+      });
+      this.asanaArray[this.currentAsanaRow].isSelected = true;
+
       //set the image
       //when the timespan has ended go to the next asana
     } else {
+      this.asanaArray[this.currentAsanaRow++].isSelected = false;
+      this.asanaArray[this.currentAsanaRow].isSelected = true;
+
       //resume from the last asana and time
+      //highlight next row
     }
+
+    this.setState({ asanaHolder: [...this.asanaArray] });
   }
   pauseAsanas() {
-    this.started = false;
+    this.setState({ started: false });
   }
   editClass() {
     this.props.navigation.navigate("EditClassScreen");
