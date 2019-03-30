@@ -38,7 +38,7 @@ export default class StartClassScreen extends React.Component {
           key: "1",
           title: "Anulom Viloma",
           description: "Anulom Viloma",
-          image_url: require("../assets/images/Anulom Viloma.jpg"),
+          image_url: require("../assets/images/AnulomViloma.jpg"),
           isDeleted: false,
           holdTime: 30,
           actionsPerRound: 35,
@@ -74,10 +74,32 @@ export default class StartClassScreen extends React.Component {
     };
     this.asanaArray = this.currentClass.item;
 
+    this.totalTime = 0;
     this.asanaArray.forEach(element => {
       element.isSelected = false;
+
+      //TODO: add beginning and end time
+
+      //also calculate the total time of the class
+      if (element.title == "Kapalabhati") {
+        let timeToAdd = 3; //for testing
+        //timeToAdd =  (element.actionsPerRound*2 +  element.retentionLength)*element.rounds;
+        this.totalTime += timeToAdd;
+      } else if (element.title == "Anulom Viloma") {
+        let timeToAdd = 5;
+        //timeToAdd = element.ratioPerRound*6*element.rounds; //4 inhale, 12 hold, 8 exhale
+        this.totalTime += timeToAdd;
+      } else {
+        let timeToAdd = 4;
+        //timeToAdd = element.holdTime;
+        this.totalTime += timeToAdd;
+      }
+
+      //create a timestamp for when the posture should end
+      element.endTimeStamp = this.totalTime;
     });
-    this.asanaArray[2].isSelected = true;
+
+    //this.asanaArray[2].isSelected = true;
 
     this.currentAsanaRow = -1;
 
@@ -85,15 +107,40 @@ export default class StartClassScreen extends React.Component {
 
     this.state = {
       asanaHolder: this.asanaArray,
-      started: false
+      started: false,
+      timer: null,
+      counter: 0,
+      totalTime: this.totalTime
     };
   }
+  componentDidMount() {}
+
+  componentWillUnmount() {}
+
+  tick = () => {
+    if (this.state.counter >= this.state.totalTime) {
+      clearTimeout(this.state.timer);
+    } else if (
+      this.state.counter >= this.asanaArray[this.currentAsanaRow].endTimeStamp
+    ) {
+      this.nextAsana();
+      this.setState({ asanaHolder: [...this.asanaArray] });
+    }
+
+    this.setState({
+      counter: this.state.counter + 1
+    });
+  };
 
   render() {
     return (
       <ScrollView style={styles.container}>
         <View style={styles.headerView}>
           {this.renderStartPauseButtion()}
+          <View style={styles.textHeaderView}>
+            <Text>Elapsed: {this.state.counter.toString().toHHMMSS()}</Text>
+            <Text>Total: {this.state.totalTime.toString().toHHMMSS()}</Text>
+          </View>
           <TouchableOpacity
             onPress={() => this.editClass()}
             style={styles.headerButton}
@@ -116,7 +163,7 @@ export default class StartClassScreen extends React.Component {
     let image = require("../assets/images/IconSivananda.png");
 
     if (this.currentAsanaRow >= 0) {
-      this.asanaArray[this.currentAsanaRow].image_url;
+      image = this.asanaArray[this.currentAsanaRow].image_url;
     }
     return <Image style={{ width: 100, height: 100 }} source={image} />;
   }
@@ -158,12 +205,17 @@ export default class StartClassScreen extends React.Component {
     }
   }
   startAsanas() {
+    //start the timer
+    let timer = setInterval(this.tick, 1000);
+    this.setState({ timer });
+
     //this.started = true;
     this.setState({ started: true });
+
+    //the practice is being started for the first time
     if (this.currentAsanaRow == -1) {
       this.currentAsanaRow++;
-      //the practice is being started for the first time
-      //start the timer
+
       //highlight the exercise
       this.asanaArray.forEach(element => {
         element.isSelected = false;
@@ -173,22 +225,42 @@ export default class StartClassScreen extends React.Component {
       //set the image
       //when the timespan has ended go to the next asana
     } else {
-      this.asanaArray[this.currentAsanaRow++].isSelected = false;
-      this.asanaArray[this.currentAsanaRow].isSelected = true;
-
       //resume from the last asana and time
-      //highlight next row
     }
 
     this.setState({ asanaHolder: [...this.asanaArray] });
   }
+  nextAsana() {
+    //highlight next row
+    this.asanaArray[this.currentAsanaRow++].isSelected = false;
+    this.asanaArray[this.currentAsanaRow].isSelected = true;
+  }
   pauseAsanas() {
+    clearTimeout(this.state.timer);
     this.setState({ started: false });
   }
   editClass() {
     this.props.navigation.navigate("EditClassScreen");
   }
 }
+
+String.prototype.toHHMMSS = function() {
+  var sec_num = parseInt(this, 10); // don't forget the second param
+  var hours = Math.floor(sec_num / 3600);
+  var minutes = Math.floor((sec_num - hours * 3600) / 60);
+  var seconds = sec_num - hours * 3600 - minutes * 60;
+
+  if (hours < 10) {
+    hours = "0" + hours;
+  }
+  if (minutes < 10) {
+    minutes = "0" + minutes;
+  }
+  if (seconds < 10) {
+    seconds = "0" + seconds;
+  }
+  return hours + ":" + minutes + ":" + seconds;
+};
 
 const styles = StyleSheet.create({
   customClassRow: {
@@ -202,6 +274,11 @@ const styles = StyleSheet.create({
   headerView: {
     flexDirection: "row",
     justifyContent: "space-between"
+  },
+  textHeaderView: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
   },
   headerButtonButtonText: {
     textAlign: "center"
