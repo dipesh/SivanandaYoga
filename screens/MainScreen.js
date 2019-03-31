@@ -14,31 +14,34 @@ export default class MainScreen extends React.Component {
   static navigationOptions = {
     title: "Main"
   };
- 
+
   constructor(props) {
     super(props);
     this.savedClassesKey = "SivanandaSavedClasses";
-    
+
     this.allClasses = [];
     this._retrieveData();
 
     this.state = {
       allClassesHolder: this.allClasses
-    }; 
+    };
+    this.willFocus = this.props.navigation.addListener("willFocus", () => {
+      this._retrieveData();
+    });
   }
 
   _retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem(this.savedClassesKey);
 
-      console.log('load value ' + value)
+      console.log("load value " + value);
       if (value !== null) {
         this.allClasses = JSON.parse(value);
         this.setState({ allClassesHolder: [...this.allClasses] });
       } else {
         //there are no saved classes
         return [];
-      } 
+      }
     } catch (error) {}
   };
 
@@ -70,21 +73,31 @@ export default class MainScreen extends React.Component {
             <Text style={styles.standardClassButtonText}>120 min</Text>
           </TouchableOpacity>
         </View>
-        <Text style={styles.headerLabel}>Custom Classes:</Text>
+        <Text style={styles.headerLabel}>Adjustable Classes:</Text>
         <FlatList
           data={this.state.allClassesHolder}
           renderItem={({ item }) => (
             <TouchableOpacity onPress={() => this.openClass(item)}>
-              <Text style={styles.customClassRow}>{item.name}</Text>
+              <Text style={styles.customClassRow}>{item.key}</Text>
             </TouchableOpacity>
           )}
         />
+        <TouchableOpacity
+          onPress={() => this.newClass()}
+          style={styles.headerButton}
+        >
+          <Text style={styles.linkText}>+ New Class</Text>
+        </TouchableOpacity>
       </ScrollView>
     );
   }
 
+  newClass() {
+    this.props.navigation.navigate("EditClassScreen", {
+      key: "[New Class]"
+    });
+  }
   getQuote() {
-    
     const min = 0;
     const max = 808;
     const rand = Math.floor(min + Math.random() * (max - min));
@@ -93,20 +106,13 @@ export default class MainScreen extends React.Component {
   }
 
   openClass(item) {
-    if(item == 60){
-
-    }
-    else if(item == 90){
-
-    }
-    else if(item == 120){
-      
-    }
-    else{
+    if (item == 60) {
+    } else if (item == 90) {
+    } else if (item == 120) {
+    } else {
       //it must be a custom class, so item is a array
-      this.props.navigation.navigate('StartClassScreen',
-      {
-        item: item,
+      this.props.navigation.navigate("StartClassScreen", {
+        item: item
       });
     }
   }
@@ -162,5 +168,10 @@ const styles = StyleSheet.create({
   },
   dailyQuoteView: {
     justifyContent: "center"
+  },
+  linkText: {
+    fontSize: 14,
+    color: "#2e78b7",
+    margin: 10
   }
 });

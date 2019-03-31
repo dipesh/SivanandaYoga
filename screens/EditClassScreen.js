@@ -20,20 +20,16 @@ import { MonoText } from "../components/StyledText";
 import AddAsanaRow from "../components/AddAsanaRow";
 import AsanaListview from "../components/AsanaListview";
 import AddAsanaListview from "../components/AddAsanaListview";
+import DialogInput from "react-native-dialog-input";
 
 export default class EditClassScreen extends React.Component {
-  static navigationOptions = {
-    title: "Edit Class"
-  };
+  static navigationOptions = ({ navigation }) => ({
+    title: "Edit " + `${navigation.state.params.key}`
+  });
   constructor(props) {
     super(props);
 
-    //[
-    //{"name":"class 1", "item":{"key":"0","title":"Kapalabhati"}},
-    //{"name":"class 2", "item":{"key":"1","title":"Anulom"}}
-    //]
-    
-    this.savedClassName = "tempName3"; //this.props.name;
+    this.savedClassName = this.props.navigation.getParam("key", "[New Class]");
     this.savedClassesKey = "SivanandaSavedClasses";
     this.ajustableClassName = "Adjustable Class 1";
 
@@ -44,47 +40,54 @@ export default class EditClassScreen extends React.Component {
 
     this.allClasses = [];
     this._retrieveData();
- 
+
     this.state = {
       allClassesHolder: this.allClasses,
       arrayHolder: [],
       //removedAsanaArray: [],
       textInput_Holder: "",
-      modalVisible: false
+      modalVisible: false,
+      isDialogVisible: false
     };
   }
 
   _storeData = async () => {
-    let matchFound = false;
+    if (this.savedClassName == "[New Class]") {
+      this.showDialog(true);
+    }
 
-    for (i = 0; i < this.allClasses.length; i++) {
-      if (this.allClasses[i].name == this.savedClassName) {
-        //update the current item
-        this.allClasses[i].item = this.asanaArray;
-        matchFound = true;
+    //if a name was set or was already saved
+    if (this.savedClassName != "[New Class]") {
+      let matchFound = false;
+
+      for (i = 0; i < this.allClasses.length; i++) {
+        if (this.allClasses[i].key == this.savedClassName) {
+          //update the current item
+          this.allClasses[i].item = this.asanaArray;
+          matchFound = true;
+        }
       }
-    }
 
-    if (this.allClasses.length == 0 || matchFound == false) {
-      //save a new item
-      let arr = {
-        key: this.savedClassName,
-        name: this.savedClassName,
-        item: []
-      }; 
+      if (this.allClasses.length == 0 || matchFound == false) {
+        //save a new item
+        let arr = {
+          key: this.savedClassName,
+          item: []
+        };
 
-      arr.item = this.asanaArray;
-      this.allClasses.push(arr);
-    }
+        arr.item = this.asanaArray;
+        this.allClasses.push(arr);
+      }
 
-    this.setState({ allClassesHolder: [...this.allClasses] });
-    try {
-      await AsyncStorage.setItem(
-        this.savedClassesKey,
-        JSON.stringify(this.allClasses)
-      );
-    } catch (error) {
-      // Error saving data
+      this.setState({ allClassesHolder: [...this.allClasses] });
+      try {
+        await AsyncStorage.setItem(
+          this.savedClassesKey,
+          JSON.stringify(this.allClasses)
+        );
+      } catch (error) {
+        // Error saving data
+      }
     }
   };
 
@@ -99,7 +102,7 @@ export default class EditClassScreen extends React.Component {
         //let itemArray = [];
 
         this.allClasses.forEach(element => {
-          if (element.name == this.savedClassName) {
+          if (element.key == this.savedClassName) {
             this.asanaArray = element.item;
           }
         });
@@ -331,32 +334,36 @@ export default class EditClassScreen extends React.Component {
       this.asanaArray[i].key = i.toString();
     }
   };
+
   updateHoldTime = (rowNumber, holdTime) => {
     this.asanaArray[rowNumber].holdTime = holdTime;
     this.setState({ arrayHolder: [...this.asanaArray] });
   };
+
   updateRounds = (rowNumber, rounds) => {
     this.asanaArray[rowNumber].rounds = rounds;
     this.setState({ arrayHolder: [...this.asanaArray] });
   };
+
   updateActionsPerRound = (rowNumber, actionsPerRound) => {
     this.asanaArray[rowNumber].actionsPerRound = actionsPerRound;
     this.setState({ arrayHolder: [...this.asanaArray] });
   };
+
   updateRetentionLength = (rowNumber, retentionLength) => {
     this.asanaArray[rowNumber].retentionLength = retentionLength;
     this.setState({ arrayHolder: [...this.asanaArray] });
   };
+
   updateRatioPerRound = (rowNumber, ratioPerRound) => {
     this.asanaArray[rowNumber].ratioPerRound = ratioPerRound;
     this.setState({ arrayHolder: [...this.asanaArray] });
   };
 
-
   render() {
     return (
-      <View style={styles.container}>
-      <Modal
+      <View style={styles.mainContainer}>
+        <Modal
           animationType={"slide"}
           transparent={false}
           visible={this.state.modalVisible}
@@ -376,20 +383,22 @@ export default class EditClassScreen extends React.Component {
             </TouchableOpacity>
           </View>
         </Modal>
+        <DialogInput
+          isDialogVisible={this.state.isDialogVisible}
+          title={"Enter Name"}
+          message={"Enter name for adjustable class"}
+          submitInput={inputText => {
+            this.setName(inputText);
+          }}
+          closeDialog={() => {
+            this.showDialog(false);
+          }}
+        />
 
         <ScrollView
-          style={styles.container}
+          style={styles.scrollViewContainer}
           contentContainerStyle={styles.contentContainer}
         >
-          <View style={styles.helpContainer}>
-            <TouchableOpacity
-              onPress={this._handleAddExercisePress}
-              style={styles.addExercises}
-            >
-              <Text style={styles.linkText}>Add Exercise</Text>
-            </TouchableOpacity>
-          </View>
-
           <AsanaListview
             itemList={this.state.arrayHolder}
             handleRemovePress={this.deleteData}
@@ -407,20 +416,42 @@ export default class EditClassScreen extends React.Component {
             onPress={() => this._storeData()}
             style={styles.headerButton}
           >
-            <Text style={styles.headerButtonButtonText}>Save</Text>
+            <Text style={styles.headerButtonButtonText}>Save Class</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => this._retrieveData()}
+            onPress={() => this._removeClass()}
             style={styles.headerButton}
           >
-            <Text style={styles.headerButtonButtonText}>Load</Text>
+            <Text style={styles.headerButtonButtonText}>Remove Class</Text>
           </TouchableOpacity>
-        </View> 
+          <TouchableOpacity
+            onPress={() => this._handleAddExercisePress()}
+            style={styles.headerButton}
+          >
+            <Text style={styles.headerButtonButtonText}>Add Exercise</Text>
+          </TouchableOpacity>
+        </View>
+
+        <Text>{this.savedClassName}</Text>
       </View>
     );
   }
+  _removeClass(){
+    
+    this.props.navigation.goBack();
+  }
+  setName(input) {
+    this.savedClassName = input;
 
+    this.props.navigation.setParams({ key: this.savedClassName });
+    this._storeData();
 
+    this.showDialog(false);
+  }
+
+  showDialog(value) {
+    this.setState({ isDialogVisible: value });
+  }
   renderRemovedItems() {
     if (this.removedAsanaArray.length == 0) {
       return <Text>There is nothing to add </Text>;
@@ -447,6 +478,7 @@ export default class EditClassScreen extends React.Component {
       );
     }
   }
+
   _handleAddExercisePress = () => {
     this.toggleModal(true);
     //this.joinData();
@@ -475,9 +507,13 @@ const styles = StyleSheet.create({
   buttonContainer: {
     margin: 10
   },
-  container: {
+  mainContainer: {
     flex: 1,
-    backgroundColor: "#fff"
+    backgroundColor: "#ffa"
+  },
+  scrollViewContainer: {
+    flex: 1,
+    backgroundColor: "#aff"
   },
   developmentModeText: {
     marginBottom: 20,
@@ -487,7 +523,7 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   contentContainer: {
-    paddingTop: 30
+    paddingTop: 5
   },
   welcomeContainer: {
     alignItems: "center",
@@ -551,7 +587,6 @@ const styles = StyleSheet.create({
     marginTop: 5
   },
   helpContainer: {
-    marginTop: 15,
     alignItems: "center"
   },
   addExercises: {
@@ -560,5 +595,6 @@ const styles = StyleSheet.create({
   linkText: {
     fontSize: 14,
     color: "#2e78b7"
-  }
+  },
+  textInputModal: {}
 });

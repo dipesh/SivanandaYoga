@@ -3,8 +3,8 @@
   "webpackServerPort": null,
   "expoServerNgrokUrl": "https://ff-it2.anonymous.sivanandayoga.exp.direct",
   "packagerNgrokUrl": "https://packager.ff-it2.anonymous.sivanandayoga.exp.direct",
-  "ngrokPid": 9288,
+  "ngrokPid": 6788,
   "packagerPort": 19001,
-  "packagerPid": 7256,
+  "packagerPid": 7988,
   "devToolsPort": 19002
 }

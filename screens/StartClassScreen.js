@@ -20,7 +20,6 @@ export default class StartClassScreen extends React.Component {
     //this.currentClass = this.props.navigation.getParam("item", "");
     this.currentClass = {
       key: "tempName2",
-      name: "tempName2",
       item: [
         {
           key: "0",
@@ -240,7 +239,9 @@ export default class StartClassScreen extends React.Component {
     this.setState({ started: false });
   }
   editClass() {
-    this.props.navigation.navigate("EditClassScreen");
+    this.props.navigation.navigate("EditClassScreen", {
+      key: this.currentClass.key
+    });
   }
 }
 
