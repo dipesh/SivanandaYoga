@@ -4,7 +4,6 @@ let arr = [
     title: "Opening Prayer",
     description: "Opening Prayer",
     image_url: require("../assets/images/Kapalabhati.jpg"),
-    isDeleted: false,
     holdTime: 30,
     actionsPerRound: 35,
     retentionLength: 30,
@@ -16,7 +15,6 @@ let arr = [
     title: "Kapalabhati",
     description: "Kapalabhati",
     image_url: require("../assets/images/Kapalabhati.jpg"),
-    isDeleted: false,
     holdTime: 30,
     actionsPerRound: 35,
     retentionLength: 30,
@@ -28,7 +26,6 @@ let arr = [
     title: "Anulom Viloma",
     description: "Anulom Viloma",
     image_url: require("../assets/images/AnulomViloma.jpg"),
-    isDeleted: false,
     holdTime: 30,
     actionsPerRound: 35,
     retentionLength: 30,
@@ -40,7 +37,6 @@ let arr = [
     title: "Sirshasana",
     description: "Sirshasana",
     image_url: require("../assets/images/Sirshasana.jpg"),
-    isDeleted: false,
     holdTime: 30,
     actionsPerRound: 35,
     retentionLength: 30,
@@ -52,7 +48,6 @@ let arr = [
     title: "Sarvangasana",
     description: "Sarvangasana",
     image_url: require("../assets/images/Sarvangasana.jpg"),
-    isDeleted: false,
     holdTime: 30,
     actionsPerRound: 35,
     retentionLength: 30,
@@ -67,7 +62,6 @@ let arr = [
   //   holdTime: 30,
   //   handleRemovePress: this.deleteData,
   //   updateHoldTime: this.updateHoldTime
-  //   isDeleted: false,
   // },
   // {
   //   key: 0,
@@ -77,7 +71,6 @@ let arr = [
   //   holdTime: 30,
   //   handleRemovePress: this.deleteData,
   //   updateHoldTime: this.updateHoldTime
-  //   isDeleted: false,
   // },
   // {
   //   key: 0,
@@ -87,7 +80,6 @@ let arr = [
   //   holdTime: 30,
   //   handleRemovePress: this.deleteData,
   //   updateHoldTime: this.updateHoldTime
-  //   isDeleted: false,
   // },
   // {
   //   key: 0,
@@ -97,7 +89,6 @@ let arr = [
   //   holdTime: 30,
   //   handleRemovePress: this.deleteData,
   //   updateHoldTime: this.updateHoldTime
-  //   isDeleted: false,
   // },
   // {
   //   key: 0,
@@ -107,7 +98,6 @@ let arr = [
   //   holdTime: 30,
   //   handleRemovePress: this.deleteData,
   //   updateHoldTime: this.updateHoldTime
-  //   isDeleted: false,
   // },
   // {
   //   key: 0,
@@ -117,7 +107,6 @@ let arr = [
   //   holdTime: 30,
   //   handleRemovePress: this.deleteData,
   //   updateHoldTime: this.updateHoldTime
-  //   isDeleted: false,
   // },
   // {
   //   key: 0,
@@ -127,7 +116,6 @@ let arr = [
   //   holdTime: 30,
   //   handleRemovePress: this.deleteData,
   //   updateHoldTime: this.updateHoldTime
-  //   isDeleted: false,
   // },
   // {
   //   key: 0,
@@ -137,7 +125,6 @@ let arr = [
   //   holdTime: 30,
   //   handleRemovePress: this.deleteData,
   //   updateHoldTime: this.updateHoldTime
-  //   isDeleted: false,
   // },
   // {
   //   key: 0,
@@ -147,7 +134,6 @@ let arr = [
   //   holdTime: 30,
   //   handleRemovePress: this.deleteData,
   //   updateHoldTime: this.updateHoldTime
-  //   isDeleted: false,
   // },
   // {
   //   key: 0,
@@ -157,7 +143,6 @@ let arr = [
   //   holdTime: 30,
   //   handleRemovePress: this.deleteData,
   //   updateHoldTime: this.updateHoldTime
-  //   isDeleted: false,
   // },
   // {
   //   key: 0,
@@ -167,6 +152,5 @@ let arr = [
   //   holdTime: 30,
   //   handleRemovePress: this.deleteData,
   //   updateHoldTime: this.updateHoldTime
-  //   isDeleted: false,
   // },
 ];

@@ -46,7 +46,6 @@ export default class AsanaRow extends Component {
     //rounds: PropTypes.number, //no need to declare twice
     ratioPerRound: PropTypes.number,
 
-    isDeleted: PropTypes.bool
   };
 
   render = () => {
@@ -62,8 +61,6 @@ export default class AsanaRow extends Component {
       },
       onClose: () => this.setState({ currentlyOpenSwipeable: null })
     };
-
-    const isDeleted = this.props.isDeleted;
 
     return (
       <Swipeable

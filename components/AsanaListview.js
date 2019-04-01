@@ -43,7 +43,6 @@ export default class AsanaListview extends Component {
               updateActionsPerRound={this.props.updateActionsPerRound}
               updateRetentionLength={this.props.updateRetentionLength}
               updateRatioPerRound={this.props.updateRatioPerRound}
-              isDeleted={item.isDeleted}
             />
           )}
         />

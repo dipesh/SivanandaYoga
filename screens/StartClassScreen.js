@@ -11,66 +11,62 @@ import {
 
 export default class StartClassScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
-    title: "uncomment this " //`${navigation.state.params.item.name}`
+    title: `${navigation.state.params.item.key}`
   });
 
   constructor(props) {
     super(props);
 
-    //this.currentClass = this.props.navigation.getParam("item", "");
-    this.currentClass = {
-      key: "tempName2",
-      item: [
-        {
-          key: "0",
-          title: "Kapalabhati",
-          description: "Kapalabhati",
-          image_url: require("../assets/images/Kapalabhati.jpg"),
-          isDeleted: false,
-          holdTime: 30,
-          actionsPerRound: 35,
-          retentionLength: 30,
-          rounds: 6,
-          ratioPerRound: 5
-        },
-        {
-          key: "1",
-          title: "Anulom Viloma",
-          description: "Anulom Viloma",
-          image_url: require("../assets/images/AnulomViloma.jpg"),
-          isDeleted: false,
-          holdTime: 30,
-          actionsPerRound: 35,
-          retentionLength: 30,
-          rounds: 20,
-          ratioPerRound: 5
-        },
-        {
-          key: "2",
-          title: "Sirshasana",
-          description: "Sirshasana",
-          image_url: require("../assets/images/Sirshasana.jpg"),
-          isDeleted: false,
-          holdTime: 30,
-          actionsPerRound: 35,
-          retentionLength: 30,
-          rounds: 20,
-          ratioPerRound: 5
-        },
-        {
-          key: "3",
-          title: "Sarvangasana",
-          description: "Sarvangasana",
-          image_url: require("../assets/images/Sarvangasana.jpg"),
-          isDeleted: false,
-          holdTime: 30,
-          actionsPerRound: 35,
-          retentionLength: 30,
-          rounds: 20,
-          ratioPerRound: 5
-        }
-      ]
-    };
+    this.currentClass = this.props.navigation.getParam("item", "");
+    // this.currentClass = {
+    //   key: "tempName2",
+    //   item: [
+    //     {
+    //       key: "0",
+    //       title: "Kapalabhati",
+    //       description: "Kapalabhati",
+    //       image_url: require("../assets/images/Kapalabhati.jpg"),
+    //       holdTime: 30,
+    //       actionsPerRound: 35,
+    //       retentionLength: 30,
+    //       rounds: 6,
+    //       ratioPerRound: 5
+    //     },
+    //     {
+    //       key: "1",
+    //       title: "Anulom Viloma",
+    //       description: "Anulom Viloma",
+    //       image_url: require("../assets/images/AnulomViloma.jpg"),
+    //       holdTime: 30,
+    //       actionsPerRound: 35,
+    //       retentionLength: 30,
+    //       rounds: 20,
+    //       ratioPerRound: 5
+    //     },
+    //     {
+    //       key: "2",
+    //       title: "Sirshasana",
+    //       description: "Sirshasana",
+    //       image_url: require("../assets/images/Sirshasana.jpg"),
+    //       holdTime: 30,
+    //       actionsPerRound: 35,
+    //       retentionLength: 30,
+    //       rounds: 20,
+    //       ratioPerRound: 5
+    //     },
+    //     {
+    //       key: "3",
+    //       title: "Sarvangasana",
+    //       description: "Sarvangasana",
+    //       image_url: require("../assets/images/Sarvangasana.jpg"),
+    //       holdTime: 30,
+    //       actionsPerRound: 35,
+    //       retentionLength: 30,
+    //       rounds: 20,
+    //       ratioPerRound: 5
+    //     }
+    //   ]
+    // };
     this.asanaArray = this.currentClass.item;
 
     this.totalTime = 0;

@@ -20,7 +20,6 @@ const AddAsanaListview = ({ itemList }) => (
                     rowNumber={item.key}
                     title={item.title}
                     description={item.description}
-                    isDeleted={item.isDeleted}
                 />
             }
         />
