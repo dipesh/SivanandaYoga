@@ -30,7 +30,7 @@ export default class AsanaRow extends Component {
     title: PropTypes.string,
 
     description: PropTypes.string,
-    image_url: PropTypes.string,
+    //image_url: PropTypes.string,
     //updateHoldTime
     //handleRemovePress, this will be a function
 

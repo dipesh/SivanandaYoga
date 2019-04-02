@@ -11,7 +11,6 @@ import LinksScreen from "../screens/LinksScreen";
 import StartClassScreen from "../screens/StartClassScreen";
 import MainScreen from "../screens/MainScreen";
 import SettingsScreen from "../screens/SettingsScreen";
-import CreatePracticeScreen from "../screens/CreatePracticeScreen";
 
 const HomeStack = createStackNavigator({
   Home: MainScreen,
@@ -21,9 +20,7 @@ const HomeStack = createStackNavigator({
   EditClassScreen: {
     screen: EditClassScreen
   },
-  CreatePracticeScreen: {
-    screen: CreatePracticeScreen
-  }
+ 
 });
 
 HomeStack.navigationOptions = {
@@ -42,9 +39,6 @@ HomeStack.navigationOptions = {
 
 const LinksStack = createStackNavigator({
   Links: MainScreen,
-  EditClassScreen: {
-    screen: CreatePracticeScreen
-  }
 });
 
 LinksStack.navigationOptions = {

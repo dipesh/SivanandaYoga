@@ -20,7 +20,6 @@ export default class MainScreen extends React.Component {
     this.savedClassesKey = "SivanandaSavedClasses";
 
     this.allClasses = [];
-    this._retrieveData();
 
     this.state = {
       allClassesHolder: this.allClasses
@@ -86,7 +85,7 @@ export default class MainScreen extends React.Component {
           onPress={() => this.newClass()}
           style={styles.headerButton}
         >
-          <Text style={styles.linkText}>+ New Class</Text>
+          <Text style={styles.linkText}>+ New Ajustable Class</Text>
         </TouchableOpacity>
       </ScrollView>
     );

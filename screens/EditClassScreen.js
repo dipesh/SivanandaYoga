@@ -106,7 +106,10 @@ export default class EditClassScreen extends React.Component {
             this.asanaArray = element.item;
           }
         });
-
+        
+        for (i = 0; i < this.asanaArray.length; i++) {
+          this.asanaArray[i].rowNumber = i.toString();
+        }
         //this.setState({ arrayHolder: [...itemArray] })
         this.setState({ arrayHolder: [...this.asanaArray] });
       } else {
@@ -133,7 +136,7 @@ export default class EditClassScreen extends React.Component {
         key: "0",
         title: "Opening Prayer",
         description: "Opening Prayer",
-        image_url: require("../assets/images/Kapalabhati.jpg"),
+        image_url: require("../assets/images/OpeningPrayer.jpg"),
         holdTime: 30,
         actionsPerRound: 35,
         retentionLength: 30,
@@ -163,7 +166,7 @@ export default class EditClassScreen extends React.Component {
         ratioPerRound: 5
       },
       {
-        key: "4",
+        key: "3",
         title: "Surya Namaskar",
         description: "Sun Salutations",
         image_url: require("../assets/images/SunSalutations.jpg"),
@@ -174,7 +177,7 @@ export default class EditClassScreen extends React.Component {
         ratioPerRound: 5
       },
       {
-        key: "5",
+        key: "4",
         title: "Single Leg Raises",
         description: "Single Leg Raises",
         image_url: require("../assets/images/SingleLegRaises.jpg"),
@@ -184,140 +187,127 @@ export default class EditClassScreen extends React.Component {
         rounds: 20,
         ratioPerRound: 5
       },
-      {
-        key: "6",
-        title: "Double Leg Raises",
-        description: "Double Leg Raises",
-        image_url: require("../assets/images/DoubleLegRaises.jpg"),
-        holdTime: 30,
-        actionsPerRound: 35,
-        retentionLength: 30,
-        rounds: 20,
-        ratioPerRound: 5
-      },
-      {
-        key: "7",
-        title: "Sirshasana",
-        description: "Headstand",
-        image_url: require("../assets/images/Sirshasana.jpg"),
-        holdTime: 30,
-        actionsPerRound: 35,
-        retentionLength: 30,
-        rounds: 20,
-        ratioPerRound: 5
-      },
-      {
-        key: "8",
-        title: "Sarvangasana",
-        description: "Shoulderstand",
-        image_url: require("../assets/images/Sarvangasana.jpg"),
-        holdTime: 30,
-        actionsPerRound: 35,
-        retentionLength: 30,
-        rounds: 20,
-        ratioPerRound: 5
-      },
-      {
-        key: "9",
-        title: 'Halasana',
-        description: 'Halasana',
-        image_url: require("../assets/images/Halasana.jpg"),
-        holdTime: 30,
-      },
-      {
-        key: "10",
-        title: 'Matsyasana',
-        description: 'Matsyasana',
-        image_url: require("../assets/images/Matsyasana.jpg"),
-        holdTime: 30,
-      },
-      {
-        key: "11",
-        title: 'Paschimothanasana',
-        description: 'Paschimothanasana',
-        image_url: require("../assets/images/Paschimothanasana.jpg"),
-        holdTime: 30,
-      },
-      {
-        key: "12",
-        title: 'Bhujangasana',
-        description: 'Bhujangasana',
-        image_url: require("../assets/images/Bhujangasana.jpg"),
-        holdTime: 30,
-      },
-      {
-        key: "13",
-        title: 'Salabhasana',
-        description: 'Salabhasana',
-        image_url: require("../assets/images/Salabhasana.jpg"),
-        holdTime: 30,
-      },
-      {
-        key: "14",
-        title: 'Dhanurasana',
-        description: 'Dhanurasana',
-        image_url: require("../assets/images/Dhanurasana.jpg"),
-        holdTime: 30,
-      },
-      {
-        key: "15",
-        title: 'Ardha Matsyendrasana',
-        description: 'Ardha Matsyendrasana',
-        image_url: require("../assets/images/ArdhaMatsyendrasana.jpg"),
-        holdTime: 30,
-      },
-      {
-        key: "16",
-        title: 'Kakasana',
-        description: 'Kakasana',
-        image_url: require("../assets/images/Kakasana.jpg"),
-        holdTime: 30,
-      },
-      {
-        key: "17",
-        title: 'Pada Hasthasana',
-        description: 'Pada Hasthasana',
-        image_url: require("../assets/images/PadaHasthasana.jpg"),
-        holdTime: 30,
-      },
-      {
-        key: "18",
-        title: 'Trikonasana',
-        description: 'Trikonasana',
-        image_url: require("../assets/images/Trikonasana.jpg"),
-        holdTime: 30,
-      },
-      {
-        key: "19",
-        title: 'Savasana',
-        description: 'Savasana',
-        image_url: require("../assets/images/Savasana.jpg"),
-        holdTime: 30,
-      },
-      {
-        key: "20",
-        title: 'Final Prayer',
-        description: 'Final Prayer',
-        image_url: require("../assets/images/FinalPrayer.jpg"),
-        holdTime: 30,
-      },
+      // {
+      //   key: "5",
+      //   title: "Double Leg Raises",
+      //   description: "Double Leg Raises",
+      //   image_url: require("../assets/images/DoubleLegRaises.jpg"),
+      //   holdTime: 30,
+      //   actionsPerRound: 35,
+      //   retentionLength: 30,
+      //   rounds: 20,
+      //   ratioPerRound: 5
+      // },
+      // {
+      //   key: "6",
+      //   title: "Sirshasana",
+      //   description: "Headstand",
+      //   image_url: require("../assets/images/Sirshasana.jpg"),
+      //   holdTime: 30,
+      //   actionsPerRound: 35,
+      //   retentionLength: 30,
+      //   rounds: 20,
+      //   ratioPerRound: 5
+      // },
+      // {
+      //   key: "7",
+      //   title: "Sarvangasana",
+      //   description: "Shoulderstand",
+      //   image_url: require("../assets/images/Sarvangasana.jpg"),
+      //   holdTime: 30,
+      //   actionsPerRound: 35,
+      //   retentionLength: 30,
+      //   rounds: 20,
+      //   ratioPerRound: 5
+      // },
+      // {
+      //   key: "8",
+      //   title: 'Halasana',
+      //   description: 'Halasana',
+      //   image_url: require("../assets/images/Halasana.jpg"),
+      //   holdTime: 30,
+      // },
+      // {
+      //   key: "9",
+      //   title: 'Matsyasana',
+      //   description: 'Matsyasana',
+      //   image_url: require("../assets/images/Matsyasana.jpg"),
+      //   holdTime: 30,
+      // },
+      // {
+      //   key: "10",
+      //   title: 'Paschimothanasana',
+      //   description: 'Paschimothanasana',
+      //   image_url: require("../assets/images/Paschimothanasana.jpg"),
+      //   holdTime: 30,
+      // },
+      // {
+      //   key: "11",
+      //   title: 'Bhujangasana',
+      //   description: 'Bhujangasana',
+      //   image_url: require("../assets/images/Bhujangasana.jpg"),
+      //   holdTime: 30,
+      // },
+      // {
+      //   key: "12",
+      //   title: 'Salabhasana',
+      //   description: 'Salabhasana',
+      //   image_url: require("../assets/images/Salabhasana.jpg"),
+      //   holdTime: 30,
+      // },
+      // {
+      //   key: "13",
+      //   title: 'Dhanurasana',
+      //   description: 'Dhanurasana',
+      //   image_url: require("../assets/images/Dhanurasana.jpg"),
+      //   holdTime: 30,
+      // },
+      // {
+      //   key: "14",
+      //   title: 'Ardha Matsyendrasana',
+      //   description: 'Ardha Matsyendrasana',
+      //   image_url: require("../assets/images/ArdhaMatsyendrasana.jpg"),
+      //   holdTime: 30,
+      // },
+      // {
+      //   key: "15",
+      //   title: 'Kakasana',
+      //   description: 'Kakasana',
+      //   image_url: require("../assets/images/Kakasana.jpg"),
+      //   holdTime: 30,
+      // },
+      // {
+      //   key: "16",
+      //   title: 'Pada Hasthasana',
+      //   description: 'Pada Hasthasana',
+      //   image_url: require("../assets/images/PadaHasthasana.jpg"),
+      //   holdTime: 30,
+      // },
+      // {
+      //   key: "17",
+      //   title: 'Trikonasana',
+      //   description: 'Trikonasana',
+      //   image_url: require("../assets/images/Trikonasana.jpg"),
+      //   holdTime: 30,
+      // },
+      // {
+      //   key: "18",
+      //   title: 'Savasana',
+      //   description: 'Savasana',
+      //   image_url: require("../assets/images/Savasana.jpg"),
+      //   holdTime: 30,
+      // },
+      // {
+      //   key: "19",
+      //   title: 'Final Prayer',
+      //   description: 'Final Prayer',
+      //   image_url: require("../assets/images/FinalPrayer.jpg"),
+      //   holdTime: 30,
+      // },
     ];
-
-    // for (i = 0; i < arr.length; i++) {
-    //   arr[i].handleRemovePress = this.deleteData;
-
-    //   arr[i].holdTime = 30;
-    //   arr[i].updateHoldTime = this.updateHoldTime;
-
-    //   arr[i].actionsPerRound = 35;
-    //   arr[i].updateActionsPerRound = this.updateActionsPerRound;
-    //   arr[i].retentionLength = 30;
-    //   arr[i].updateRetentionLength = this.updateRetentionLength;
-    //   arr[i].rounds = 20;
-    //   arr[i].updateRounds = this.updateRounds;
-    //   arr[i].ratioPerRound = 5;
-    //   arr[i].updateRatioPerRound = this.updateRatioPerRound;
-    // }
+    for (i = 0; i < arr.length; i++) {
+      arr[i].rowNumber = i.toString();
+    }
     return arr;
   }
 
@@ -331,19 +321,33 @@ export default class EditClassScreen extends React.Component {
     this.asanaArray.splice(rowNumber, 1);
 
     for (i = 0; i < this.asanaArray.length; i++) {
-      this.asanaArray[i].key = i.toString();
+      this.asanaArray[i].rowNumber = i.toString();
     }
     this.setState({ arrayHolder: [...this.asanaArray] });
   };
 
   joinData = item => {
-    this.asanaArray.push(item);
+
+    //add the item at the right index, the key contains the proper order
+    let indexToAdd = 0;
+    if (item.key > this.asanaArray.length) {
+      this.asanaArray.push(item);
+    } else {
+      for (i = 0; i < this.asanaArray.length; i++) {
+        if (item.key <= this.asanaArray[i].key) {
+          indexToAdd = i;
+          break;
+        }
+      }
+    }
+    this.asanaArray.splice(indexToAdd, 0, item);
+
     this.setState({ arrayHolder: [...this.asanaArray] });
 
     this.removedAsanaArray.splice(item.rowNumber, 1);
 
     for (i = 0; i < this.asanaArray.length; i++) {
-      this.asanaArray[i].key = i.toString();
+      this.asanaArray[i].rowNumber = i.toString();
     }
   };
 
@@ -379,11 +383,11 @@ export default class EditClassScreen extends React.Component {
           animationType={"slide"}
           transparent={false}
           visible={this.state.modalVisible}
-          onRequestClose={() => {
+          onRequestClose={() => { 
             console.log("Modal has been closed.");
           }}
         >
-          <View style={styles.modal}>
+          <View style={styles.mainContainer}>
             {this.renderRemovedItems()}
             <TouchableOpacity
               style={styles.addExercises}
@@ -444,7 +448,7 @@ export default class EditClassScreen extends React.Component {
           </TouchableOpacity>
         </View>
 
-        <Text>{this.savedClassName}</Text>
+        {/* <Text>{this.savedClassName}</Text> */}
       </View>
     );
   }
@@ -531,11 +535,12 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     flex: 1,
-    backgroundColor: "#ffa"
+    padding: 5,
+    backgroundColor: "#fff"
   },
   scrollViewContainer: {
     flex: 1,
-    backgroundColor: "#aff"
+    backgroundColor: "#fff"
   },
   developmentModeText: {
     marginBottom: 20,
