@@ -28,7 +28,8 @@ export default class AsanaListview extends Component {
           extraData={this.props.itemList}
           renderItem={({ item }) => (
             <AsanaRow 
-              rowNumber={item.key}
+              rowNumber={item.rowNumber}
+              key={item.key}
               title={item.title}
               description={item.description}
               image_url={item.image_url}

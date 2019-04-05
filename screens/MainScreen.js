@@ -28,7 +28,14 @@ export default class MainScreen extends React.Component {
       this._retrieveData();
     });
   }
-
+  playSound(){
+    try {
+      //SoundPlayer.playSoundFile("../assets/sounds/AnulomViloma", "mp3");
+      //SoundPlayer.playUrl("https://example.com/music.mp3");
+    } catch (e) {
+      console.log(`cannot play the sound file`, e);
+    }
+  }
   _retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem(this.savedClassesKey);
@@ -86,6 +93,12 @@ export default class MainScreen extends React.Component {
           style={styles.headerButton}
         >
           <Text style={styles.linkText}>+ New Ajustable Class</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => this.playSound()}
+          style={styles.headerButton}
+        >
+          <Text style={styles.linkText}>Play</Text>
         </TouchableOpacity>
       </ScrollView>
     );

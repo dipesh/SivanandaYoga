@@ -6,7 +6,8 @@ import {
   Text,
   View,
   FlatList,
-  Image
+  Image,
+  AsyncStorage
 } from "react-native";
 
 export default class StartClassScreen extends React.Component {
@@ -16,8 +17,11 @@ export default class StartClassScreen extends React.Component {
 
   constructor(props) {
     super(props);
+    this.savedClassesKey = "SivanandaSavedClasses";
 
     this.currentClass = this.props.navigation.getParam("item", "");
+    this.savedClassName = this.currentClass.key;
+
     // this.currentClass = {
     //   key: "tempName2",
     //   item: [
@@ -68,7 +72,24 @@ export default class StartClassScreen extends React.Component {
     //   ]
     // };
     this.asanaArray = this.currentClass.item;
+    this.setTimes();
 
+    this.willFocus = this.props.navigation.addListener("willFocus", () => {
+      this._retrieveData();
+    });
+
+    this.currentAsanaRow = -1;
+
+    this.state = {
+      arrayHolder: this.asanaArray,
+      started: false,
+      timer: null,
+      counter: 0,
+      totalTime: this.totalTime
+    };
+  }
+
+  setTimes() {
     this.totalTime = 0;
     this.asanaArray.forEach(element => {
       element.isSelected = false;
@@ -93,24 +114,28 @@ export default class StartClassScreen extends React.Component {
       //create a timestamp for when the posture should end
       element.endTimeStamp = this.totalTime;
     });
-
-    //this.asanaArray[2].isSelected = true;
-
-    this.currentAsanaRow = -1;
-
-    //this.started = false;
-
-    this.state = {
-      asanaHolder: this.asanaArray,
-      started: false,
-      timer: null,
-      counter: 0,
-      totalTime: this.totalTime
-    };
   }
-  componentDidMount() {}
 
-  componentWillUnmount() {}
+  _retrieveData = async () => {
+    try {
+      const value = await AsyncStorage.getItem(this.savedClassesKey);
+      console.log(value)
+      if (value !== null) {
+        this.allClasses = JSON.parse(value);
+        this.allClasses.forEach(element => {
+          if (element.key == this.savedClassName) {
+            console.log("updated")
+            this.asanaArray = element.item;
+            this.setTimes();
+          }
+        });
+
+        this.setState({ arrayHolder: [...this.asanaArray] });
+      }
+    } catch (error) {
+      console.log("load error: " + error);
+    }
+  };
 
   tick = () => {
     if (this.state.counter >= this.state.totalTime) {
@@ -119,7 +144,7 @@ export default class StartClassScreen extends React.Component {
       this.state.counter >= this.asanaArray[this.currentAsanaRow].endTimeStamp
     ) {
       this.nextAsana();
-      this.setState({ asanaHolder: [...this.asanaArray] });
+      this.setState({ arrayHolder: [...this.asanaArray] });
     }
 
     this.setState({
@@ -131,7 +156,7 @@ export default class StartClassScreen extends React.Component {
     return (
       <ScrollView style={styles.container}>
         <View style={styles.headerView}>
-          {this.renderStartPauseButtion()}
+          {this.renderStartPauseButton()}
           <View style={styles.textHeaderView}>
             <Text>Elapsed: {this.state.counter.toString().toHHMMSS()}</Text>
             <Text>Total: {this.state.totalTime.toString().toHHMMSS()}</Text>
@@ -147,7 +172,7 @@ export default class StartClassScreen extends React.Component {
         {this.renderImage()}
 
         <FlatList
-          data={this.state.asanaHolder}
+          data={this.state.arrayHolder}
           renderItem={({ item }) => this.renderItem(item)}
         />
         {/* <Text> {JSON.stringify(this.asanaArray)} </Text> */}
@@ -162,7 +187,7 @@ export default class StartClassScreen extends React.Component {
     }
     return <Image style={{ width: 100, height: 100 }} source={image} />;
   }
-  renderStartPauseButtion() {
+  renderStartPauseButton() {
     let text = "Start";
     if (this.state.started) {
       text = "Pause";
@@ -223,7 +248,7 @@ export default class StartClassScreen extends React.Component {
       //resume from the last asana and time
     }
 
-    this.setState({ asanaHolder: [...this.asanaArray] });
+    this.setState({ arrayHolder: [...this.asanaArray] });
   }
   nextAsana() {
     //highlight next row
@@ -234,9 +259,15 @@ export default class StartClassScreen extends React.Component {
     clearTimeout(this.state.timer);
     this.setState({ started: false });
   }
+
+  updateData() {
+    console.log("update data");
+  }
+
   editClass() {
     this.props.navigation.navigate("EditClassScreen", {
-      key: this.currentClass.key
+      key: this.currentClass.key,
+      updateData: this.updateData
     });
   }
 }
@@ -275,7 +306,7 @@ const styles = StyleSheet.create({
   textHeaderView: {
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "center"
   },
   headerButtonButtonText: {
     textAlign: "center"

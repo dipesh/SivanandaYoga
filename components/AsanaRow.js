@@ -8,7 +8,9 @@ import {
   Picker
 } from "react-native";
 import PropTypes from "prop-types";
+import NumberChooser from "../components/NumberChooser";
 import Swipeable from "react-native-swipeable-row";
+import NumericInput from "react-native-numeric-input";
 
 export default class AsanaRow extends Component {
   constructor(props) {
@@ -44,8 +46,7 @@ export default class AsanaRow extends Component {
 
     //anulom has
     //rounds: PropTypes.number, //no need to declare twice
-    ratioPerRound: PropTypes.number,
-
+    ratioPerRound: PropTypes.number
   };
 
   render = () => {
@@ -67,6 +68,7 @@ export default class AsanaRow extends Component {
         rightButtons={[
           <TouchableOpacity
             onPress={() => {
+              console.log("asana row " + this.props.title)
               this.props.handleRemovePress(this.props.rowNumber);
               this.state.currentlyOpenSwipeable.recenter();
             }}
@@ -101,35 +103,25 @@ export default class AsanaRow extends Component {
   createPicker(title) {
     let view = [];
 
-    // //kapalabhati has
-    // rounds: PropTypes.number,
-    // actionsPerRound: PropTypes.number,
-    // retentionLength: PropTypes.number,
-
-    // //anulom has
-    // rounds: PropTypes.number,
-    // ratioPerRound: PropTypes.number,
     if (title == "Kapalabhati") {
       view.push(
         <View key={this.keyCount++}>
           <View style={styles.container_text} key={this.keyCount++}>
             <Text style={styles.label}>Rounds:</Text>
-            <Picker
-              selectedValue={this.props.rounds}
-              style={styles.picker}
+            <NumberChooser
               onValueChange={itemValue => {
                 this.setState({ rounds: itemValue });
                 this.props.updateRounds(this.props.rowNumber, itemValue);
               }}
-            >
-              {this.createKapalabatiRoundsRows()}
-            </Picker>
+              initialValue={this.props.rounds}
+              minValue={3}
+              //maxValue={10}
+              incrementValue={1}
+            />
           </View>
           <View style={styles.container_text} key={this.keyCount++}>
             <Text style={styles.label}>Actions Per Round:</Text>
-            <Picker
-              selectedValue={this.props.actionsPerRound}
-              style={styles.picker}
+            <NumberChooser
               onValueChange={itemValue => {
                 this.setState({ actionsPerRound: itemValue });
                 this.props.updateActionsPerRound(
@@ -137,73 +129,75 @@ export default class AsanaRow extends Component {
                   itemValue
                 );
               }}
-            >
-              {this.createKapalabatiActionsPerRoundRows()}
-            </Picker>
+              initialValue={this.props.actionsPerRound}
+              minValue={30}
+              //maxValue={10}
+              incrementValue={5}
+            />
           </View>
         </View>
       );
       view.push(
         <View style={styles.container_text} key={this.keyCount++}>
           <Text style={styles.label}>Retention Length</Text>
-          <Picker
-            selectedValue={this.props.retentionLength}
-            style={styles.picker}
+          <NumberChooser
             onValueChange={itemValue => {
               this.setState({ retentionLength: itemValue });
               this.props.updateRetentionLength(this.props.rowNumber, itemValue);
             }}
-          >
-            {this.createKapalabatiRetentionRows()}
-          </Picker>
+            initialValue={this.props.retentionLength}
+            minValue={15}
+            //maxValue={10}
+            incrementValue={5}
+          />
         </View>
       );
     } else if (title == "Anulom" || title == "Anulom Viloma") {
       view.push(
         <View style={styles.container_text} key={this.keyCount++}>
           <Text style={styles.label}>Rounds:</Text>
-          <Picker
-            selectedValue={this.props.rounds}
-            style={styles.picker}
+          <NumberChooser
             onValueChange={itemValue => {
               this.setState({ rounds: itemValue });
               this.props.updateRounds(this.props.rowNumber, itemValue);
             }}
-          >
-            {this.createAnulomRoundsRows()}
-          </Picker>
+            initialValue={this.props.rounds}
+            minValue={15}
+            //maxValue={10}
+            incrementValue={5}
+          />
         </View>
       );
 
       view.push(
         <View style={styles.container_text} key={this.keyCount++}>
           <Text style={styles.label}>Ratio Per Round:</Text>
-          <Picker
-            selectedValue={this.props.ratioPerRound}
-            style={styles.picker}
+          <NumberChooser
             onValueChange={itemValue => {
               this.setState({ ratioPerRound: itemValue });
               this.props.updateRatioPerRound(this.props.rowNumber, itemValue);
             }}
-          >
-            {this.createAnulomRatioRows()}
-          </Picker>
+            initialValue={this.props.ratioPerRound}
+            minValue={4}
+            //maxValue={10}
+            //incrementValue={1}
+          />
         </View>
       );
     } else {
       view.push(
         <View style={styles.container_text} key={this.keyCount++}>
-          <Text style={styles.label}>Hold time:</Text>
-          <Picker
-            selectedValue={this.props.holdTime}
-            style={styles.picker}
+          <Text style={styles.label}>Hold time (sec):</Text>
+          <NumberChooser
             onValueChange={itemValue => {
               this.setState({ holdTime: itemValue });
               this.props.updateHoldTime(this.props.rowNumber, itemValue);
             }}
-          >
-            {this.createAsanaRows()}
-          </Picker>
+            initialValue={this.props.holdTime}
+            minValue={30}
+            //maxValue={900}
+            incrementValue={15}
+          />
         </View>
       );
     }
@@ -307,8 +301,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     fontSize: 14,
-    marginLeft: 7,
-    marginBottom: -5
+
+    marginBottom: 5
   },
   description: {
     fontSize: 11,

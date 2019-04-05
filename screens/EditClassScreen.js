@@ -21,20 +21,19 @@ import AddAsanaRow from "../components/AddAsanaRow";
 import AsanaListview from "../components/AsanaListview";
 import AddAsanaListview from "../components/AddAsanaListview";
 import DialogInput from "react-native-dialog-input";
+//import SoundPlayer from "react-native-sound-player";
 
 export default class EditClassScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
-    title: "Edit " + `${navigation.state.params.key}`
+    title: "Edit " // + `${navigation.state.params.key}`
   });
   constructor(props) {
     super(props);
 
     this.savedClassName = this.props.navigation.getParam("key", "[New Class]");
     this.savedClassesKey = "SivanandaSavedClasses";
-    this.ajustableClassName = "Adjustable Class 1";
 
     this.asanaArray = this.getAsanasArray();
-    //.concat(this.getPranayamArray());
 
     this.removedAsanaArray = [];
 
@@ -49,6 +48,8 @@ export default class EditClassScreen extends React.Component {
       modalVisible: false,
       isDialogVisible: false
     };
+
+    this.test();
   }
 
   _storeData = async () => {
@@ -96,21 +97,33 @@ export default class EditClassScreen extends React.Component {
       const value = await AsyncStorage.getItem(this.savedClassesKey);
 
       if (value !== null) {
-        // We have data!!
-
         this.allClasses = JSON.parse(value);
-        //let itemArray = [];
 
         this.allClasses.forEach(element => {
           if (element.key == this.savedClassName) {
             this.asanaArray = element.item;
           }
         });
-        
-        for (i = 0; i < this.asanaArray.length; i++) {
-          this.asanaArray[i].rowNumber = i.toString();
-        }
-        //this.setState({ arrayHolder: [...itemArray] })
+
+        //find our which asana's were removed and add them to the removed asana list
+        let allAsanaArray = this.getAsanasArray();
+        this.removedAsanaArray = []; //empty the array
+
+        allAsanaArray.forEach(element => {
+          let found = false;
+          this.asanaArray.forEach(e => {
+            if (e.title == element.title) {
+              found = true;
+            }
+          });
+
+          if (found == false) {
+            this.removedAsanaArray.push(element);
+          }
+        });
+
+        this.setArrayRowNumber();
+
         this.setState({ arrayHolder: [...this.asanaArray] });
       } else {
         //there are no saved classes
@@ -118,10 +131,10 @@ export default class EditClassScreen extends React.Component {
     } catch (error) {
       // Error retrieving data
       console.log("load error: " + error);
-      try {
-        AsyncStorage.removeItem(this.savedClassesKey);
-        console.log("removed data");
-      } catch (error) {}
+      // try {
+      //   AsyncStorage.removeItem(this.savedClassesKey);
+      //   console.log("removed data");
+      // } catch (error) {}
     }
   };
 
@@ -137,6 +150,7 @@ export default class EditClassScreen extends React.Component {
         title: "Opening Prayer",
         description: "Opening Prayer",
         image_url: require("../assets/images/OpeningPrayer.jpg"),
+        sound: "../assets/sounds/OpeningPrayer",
         holdTime: 30,
         actionsPerRound: 35,
         retentionLength: 30,
@@ -162,14 +176,14 @@ export default class EditClassScreen extends React.Component {
         holdTime: 30,
         actionsPerRound: 35,
         retentionLength: 30,
-        rounds: 20,
-        ratioPerRound: 5
+        rounds: 15,
+        ratioPerRound: 4
       },
       {
         key: "3",
         title: "Surya Namaskar",
         description: "Sun Salutations",
-        image_url: require("../assets/images/SunSalutations.jpg"),
+        image_url: require("../assets/images/SuryaNamaskar.jpg"),
         holdTime: 30,
         actionsPerRound: 35,
         retentionLength: 30,
@@ -186,7 +200,7 @@ export default class EditClassScreen extends React.Component {
         retentionLength: 30,
         rounds: 20,
         ratioPerRound: 5
-      },
+      }
       // {
       //   key: "5",
       //   title: "Double Leg Raises",
@@ -243,62 +257,69 @@ export default class EditClassScreen extends React.Component {
       // },
       // {
       //   key: "11",
+      //   title: 'Inclined Plane',
+      //   description: 'Inclined Plane',
+      //   image_url: require("../assets/images/InclinedPlane.jpg"),
+      //   holdTime: 30,
+      // },
+      // {
+      //   key: "12",
       //   title: 'Bhujangasana',
       //   description: 'Bhujangasana',
       //   image_url: require("../assets/images/Bhujangasana.jpg"),
       //   holdTime: 30,
       // },
       // {
-      //   key: "12",
+      //   key: "13",
       //   title: 'Salabhasana',
       //   description: 'Salabhasana',
       //   image_url: require("../assets/images/Salabhasana.jpg"),
       //   holdTime: 30,
       // },
       // {
-      //   key: "13",
+      //   key: "14",
       //   title: 'Dhanurasana',
       //   description: 'Dhanurasana',
       //   image_url: require("../assets/images/Dhanurasana.jpg"),
       //   holdTime: 30,
       // },
       // {
-      //   key: "14",
+      //   key: "15",
       //   title: 'Ardha Matsyendrasana',
       //   description: 'Ardha Matsyendrasana',
       //   image_url: require("../assets/images/ArdhaMatsyendrasana.jpg"),
       //   holdTime: 30,
       // },
       // {
-      //   key: "15",
+      //   key: "16",
       //   title: 'Kakasana',
       //   description: 'Kakasana',
       //   image_url: require("../assets/images/Kakasana.jpg"),
       //   holdTime: 30,
       // },
       // {
-      //   key: "16",
+      //   key: "17",
       //   title: 'Pada Hasthasana',
       //   description: 'Pada Hasthasana',
       //   image_url: require("../assets/images/PadaHasthasana.jpg"),
       //   holdTime: 30,
       // },
       // {
-      //   key: "17",
+      //   key: "18",
       //   title: 'Trikonasana',
       //   description: 'Trikonasana',
       //   image_url: require("../assets/images/Trikonasana.jpg"),
       //   holdTime: 30,
       // },
       // {
-      //   key: "18",
+      //   key: "19",
       //   title: 'Savasana',
       //   description: 'Savasana',
       //   image_url: require("../assets/images/Savasana.jpg"),
       //   holdTime: 30,
       // },
       // {
-      //   key: "19",
+      //   key: "20",
       //   title: 'Final Prayer',
       //   description: 'Final Prayer',
       //   image_url: require("../assets/images/FinalPrayer.jpg"),
@@ -315,40 +336,69 @@ export default class EditClassScreen extends React.Component {
     this.setState({ arrayHolder: [...this.asanaArray] });
   }
 
+  test() {
+    //this.deleteData(3);
+  }
+  setArrayRowNumber() {
+    for (let i = 0; i < this.asanaArray.length; i++) {
+      this.asanaArray[i].rowNumber = i.toString();
+    }
+    for (let i = 0; i < this.removedAsanaArray.length; i++) {
+      this.removedAsanaArray[i].rowNumber = i.toString();
+    }
+  }
   deleteData = rowNumber => {
     this.removedAsanaArray.push(this.asanaArray[rowNumber]);
+    //console.log("deleteData " + rowNumber);
+    //console.log("deleteData " + JSON.stringify(this.asanaArray));
+    // console.log(
+    //   "deleteData " +
+    //     rowNumber +
+    //     " " +
+    //     JSON.stringify(this.asanaArray, null, 1) +
+    //     "\n"
+    // );
 
     this.asanaArray.splice(rowNumber, 1);
 
-    for (i = 0; i < this.asanaArray.length; i++) {
-      this.asanaArray[i].rowNumber = i.toString();
-    }
+    this.setArrayRowNumber();
+    console.log(
+      "deleteData " +
+        rowNumber +
+        " " +
+        JSON.stringify(this.asanaArray, null, 3) +
+        "\n" 
+    );
     this.setState({ arrayHolder: [...this.asanaArray] });
+    //this.forceUpdate();
   };
 
   joinData = item => {
+    //console.log("joindata a " + JSON.stringify(this.removedAsanaArray));
 
     //add the item at the right index, the key contains the proper order
     let indexToAdd = 0;
-    if (item.key > this.asanaArray.length) {
+    if (item.key > this.asanaArray[this.asanaArray.length - 1].key) {
       this.asanaArray.push(item);
     } else {
       for (i = 0; i < this.asanaArray.length; i++) {
         if (item.key <= this.asanaArray[i].key) {
           indexToAdd = i;
+          this.asanaArray.splice(indexToAdd, 0, item);
           break;
         }
       }
     }
-    this.asanaArray.splice(indexToAdd, 0, item);
+
+    //console.log(item.key + " " +  this.asanaArray.length);
+    //console.log(indexToAdd);
 
     this.setState({ arrayHolder: [...this.asanaArray] });
-
+    //console.log(item.rowNumber);
+    //console.log("joinData " + JSON.stringify(this.removedAsanaArray));
     this.removedAsanaArray.splice(item.rowNumber, 1);
 
-    for (i = 0; i < this.asanaArray.length; i++) {
-      this.asanaArray[i].rowNumber = i.toString();
-    }
+    this.setArrayRowNumber();
   };
 
   updateHoldTime = (rowNumber, holdTime) => {
@@ -383,7 +433,7 @@ export default class EditClassScreen extends React.Component {
           animationType={"slide"}
           transparent={false}
           visible={this.state.modalVisible}
-          onRequestClose={() => { 
+          onRequestClose={() => {
             console.log("Modal has been closed.");
           }}
         >
@@ -438,7 +488,7 @@ export default class EditClassScreen extends React.Component {
             onPress={() => this._removeClass()}
             style={styles.headerButton}
           >
-            <Text style={styles.headerButtonButtonText}>Remove Class</Text>
+            <Text style={styles.headerButtonButtonText}>Delete Class</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => this._handleAddExercisePress()}
@@ -452,19 +502,17 @@ export default class EditClassScreen extends React.Component {
       </View>
     );
   }
+
   _removeClass() {
     //save with the current class removed
-    
+
     for (i = 0; i < this.allClasses.length; i++) {
       if (this.allClasses[i].key == this.savedClassName) {
-        this.allClasses.splice(i, 1); 
+        this.allClasses.splice(i, 1);
         break;
       }
     }
-    AsyncStorage.setItem(
-      this.savedClassesKey,
-      JSON.stringify(this.allClasses)
-    );
+    AsyncStorage.setItem(this.savedClassesKey, JSON.stringify(this.allClasses));
     this.props.navigation.popToTop();
   }
   setName(input) {
@@ -507,7 +555,6 @@ export default class EditClassScreen extends React.Component {
 
   _handleAddExercisePress = () => {
     this.toggleModal(true);
-    //this.joinData();
   };
 }
 

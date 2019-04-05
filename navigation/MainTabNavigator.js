@@ -13,14 +13,13 @@ import MainScreen from "../screens/MainScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 
 const HomeStack = createStackNavigator({
-  Home: MainScreen,
+  Home: EditClassScreen,
   StartClassScreen: {
     screen: StartClassScreen
   },
   EditClassScreen: {
     screen: EditClassScreen
-  },
- 
+  }
 });
 
 HomeStack.navigationOptions = {
@@ -38,7 +37,7 @@ HomeStack.navigationOptions = {
 };
 
 const LinksStack = createStackNavigator({
-  Links: MainScreen,
+  Links: MainScreen
 });
 
 LinksStack.navigationOptions = {
@@ -52,7 +51,7 @@ LinksStack.navigationOptions = {
 };
 
 const SettingsStack = createStackNavigator({
-  Settings: StartClassScreen
+  Settings: SettingsScreen
 });
 
 SettingsStack.navigationOptions = {
