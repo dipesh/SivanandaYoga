@@ -9,6 +9,7 @@ import {
   AsyncStorage
 } from "react-native";
 import quote from "../quotes";
+import { Audio } from "expo";
 
 export default class MainScreen extends React.Component {
   static navigationOptions = {
@@ -28,19 +29,12 @@ export default class MainScreen extends React.Component {
       this._retrieveData();
     });
   }
-  playSound(){
-    try {
-      //SoundPlayer.playSoundFile("../assets/sounds/AnulomViloma", "mp3");
-      //SoundPlayer.playUrl("https://example.com/music.mp3");
-    } catch (e) {
-      console.log(`cannot play the sound file`, e);
-    }
-  }
+
   _retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem(this.savedClassesKey);
 
-      console.log("load value " + value);
+      //console.log("load value " + value);
       if (value !== null) {
         this.allClasses = JSON.parse(value);
         this.setState({ allClassesHolder: [...this.allClasses] });
@@ -99,6 +93,12 @@ export default class MainScreen extends React.Component {
           style={styles.headerButton}
         >
           <Text style={styles.linkText}>Play</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => this.pauseSound()}
+          style={styles.headerButton}
+        >
+          <Text style={styles.linkText}>Pause</Text>
         </TouchableOpacity>
       </ScrollView>
     );

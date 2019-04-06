@@ -362,13 +362,13 @@ export default class EditClassScreen extends React.Component {
     this.asanaArray.splice(rowNumber, 1);
 
     this.setArrayRowNumber();
-    console.log(
-      "deleteData " +
-        rowNumber +
-        " " +
-        JSON.stringify(this.asanaArray, null, 3) +
-        "\n" 
-    );
+    // console.log(
+    //   "deleteData " +
+    //     rowNumber +
+    //     " " +
+    //     JSON.stringify(this.asanaArray, null, 3) +
+    //     "\n"
+    // );
     this.setState({ arrayHolder: [...this.asanaArray] });
     //this.forceUpdate();
   };
@@ -664,7 +664,9 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   addExercises: {
-    paddingVertical: 15
+    padding: 15,
+    justifyContent: "center",
+    alignItems: "center"
   },
   linkText: {
     fontSize: 14,

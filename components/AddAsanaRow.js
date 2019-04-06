@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 16,
         color: '#000',
+        marginTop: 5
     },
     container_text: {
         flex: 1,
@@ -53,5 +54,6 @@ const styles = StyleSheet.create({
     description: {
         fontSize: 11,
         fontStyle: 'italic',
+        marginBottom: 5
     },
 });

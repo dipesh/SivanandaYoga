@@ -10,67 +10,87 @@ import {
   AsyncStorage
 } from "react-native";
 
+import { Audio } from "expo";
+
 export default class StartClassScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
-    title: `${navigation.state.params.item.key}`
+    title: "uncomment" //`${navigation.state.params.item.key}`
   });
 
   constructor(props) {
     super(props);
     this.savedClassesKey = "SivanandaSavedClasses";
+    this.soundObject = new Audio.Sound();
 
     this.currentClass = this.props.navigation.getParam("item", "");
-    this.savedClassName = this.currentClass.key;
+    //for testing
+    this.currentClass = {
+      key: "tempName2",
+      item: [
+        {
+          key: "0",
+          title: "Opening Prayer",
+          description: "Opening Prayer",
+          image_url: require("../assets/images/OpeningPrayer.jpg"),
+          sound: require("../assets/sounds/OpeningPrayer2.mp3"),
+          holdTime: 30,
+          actionsPerRound: 35,
+          retentionLength: 30,
+          rounds: 6,
+          ratioPerRound: 5
+        },
+        {
+          key: "1",
+          title: "Kapalabhati",
+          description: "Shining Skull Breath",
+          image_url: require("../assets/images/Kapalabhati.jpg"),
+          sound: require("../assets/sounds/Kapalabhati2.mp3"),
+          holdTime: 30,
+          actionsPerRound: 35,
+          retentionLength: 30,
+          rounds: 6,
+          ratioPerRound: 5
+        },
+        {
+          key: "2",
+          title: "Anulom Viloma",
+          description: "Alternate Nostril Breathing",
+          image_url: require("../assets/images/AnulomViloma.jpg"),
+          sound: require("../assets/sounds/AnulomViloma2.mp3"),
+          holdTime: 30,
+          actionsPerRound: 35,
+          retentionLength: 30,
+          rounds: 15,
+          ratioPerRound: 4
+        },
+        {
+          key: "3",
+          title: "Surya Namaskar",
+          description: "Sun Salutations",
+          image_url: require("../assets/images/SuryaNamaskar.jpg"),
+          sound: require("../assets/sounds/SuryaNamaskar2.mp3"),
+          holdTime: 30,
+          actionsPerRound: 35,
+          retentionLength: 30,
+          rounds: 20,
+          ratioPerRound: 5
+        },
+        {
+          key: "4",
+          title: "Single Leg Raises",
+          description: "Single Leg Raises",
+          image_url: require("../assets/images/SingleLegRaises.jpg"),
+          sound: require("../assets/sounds/SingleLegRaises2.mp3"),
+          holdTime: 30,
+          actionsPerRound: 35,
+          retentionLength: 30,
+          rounds: 20,
+          ratioPerRound: 5
+        }
+      ]
+    };
 
-    // this.currentClass = {
-    //   key: "tempName2",
-    //   item: [
-    //     {
-    //       key: "0",
-    //       title: "Kapalabhati",
-    //       description: "Kapalabhati",
-    //       image_url: require("../assets/images/Kapalabhati.jpg"),
-    //       holdTime: 30,
-    //       actionsPerRound: 35,
-    //       retentionLength: 30,
-    //       rounds: 6,
-    //       ratioPerRound: 5
-    //     },
-    //     {
-    //       key: "1",
-    //       title: "Anulom Viloma",
-    //       description: "Anulom Viloma",
-    //       image_url: require("../assets/images/AnulomViloma.jpg"),
-    //       holdTime: 30,
-    //       actionsPerRound: 35,
-    //       retentionLength: 30,
-    //       rounds: 20,
-    //       ratioPerRound: 5
-    //     },
-    //     {
-    //       key: "2",
-    //       title: "Sirshasana",
-    //       description: "Sirshasana",
-    //       image_url: require("../assets/images/Sirshasana.jpg"),
-    //       holdTime: 30,
-    //       actionsPerRound: 35,
-    //       retentionLength: 30,
-    //       rounds: 20,
-    //       ratioPerRound: 5
-    //     },
-    //     {
-    //       key: "3",
-    //       title: "Sarvangasana",
-    //       description: "Sarvangasana",
-    //       image_url: require("../assets/images/Sarvangasana.jpg"),
-    //       holdTime: 30,
-    //       actionsPerRound: 35,
-    //       retentionLength: 30,
-    //       rounds: 20,
-    //       ratioPerRound: 5
-    //     }
-    //   ]
-    // };
+    this.savedClassName = this.currentClass.key;
     this.asanaArray = this.currentClass.item;
     this.setTimes();
 
@@ -87,6 +107,50 @@ export default class StartClassScreen extends React.Component {
       counter: 0,
       totalTime: this.totalTime
     };
+  }
+
+  async loadSound(sound) {
+    try {
+      await this.soundObject.loadAsync(sound);
+      await this.soundObject.playAsync();
+
+     this.soundObject.getStatusAsync()
+      .then(function(result) {
+        console.log(result.durationMillis)
+      })
+      .catch(failureCallback);
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async nextSound(sound) {
+    try {
+      await this.soundObject.unloadAsync();
+      await this.soundObject.loadAsync(sound);
+      await this.soundObject.playAsync();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async playSound() {
+    try {
+      console.log("sound playing");
+      // Your sound is playing!
+    } catch (error) {
+      // An error occurred!
+      console.log(error);
+    }
+  }
+  async pauseSound() {
+    try {
+      await console.log(this.soundObject.getStatusAsync());
+      
+      await this.soundObject.pauseAsync();
+    } catch (error) {
+      // An error occurred!
+      console.log(error);
+    }
   }
 
   setTimes() {
@@ -119,12 +183,12 @@ export default class StartClassScreen extends React.Component {
   _retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem(this.savedClassesKey);
-      console.log(value)
+      console.log(value);
       if (value !== null) {
         this.allClasses = JSON.parse(value);
         this.allClasses.forEach(element => {
           if (element.key == this.savedClassName) {
-            console.log("updated")
+            console.log("updated");
             this.asanaArray = element.item;
             this.setTimes();
           }
@@ -176,6 +240,14 @@ export default class StartClassScreen extends React.Component {
           renderItem={({ item }) => this.renderItem(item)}
         />
         {/* <Text> {JSON.stringify(this.asanaArray)} </Text> */}
+
+        <TouchableOpacity
+          onPress={() => this.nextSound(this.asanaArray[2].sound)}
+          style={styles.headerButton}
+        >
+          <Text style={styles.linkText}>Next</Text>
+        </TouchableOpacity>
+        {/* <Text> {this.soundObject.durationMillis} </Text> */}
       </ScrollView>
     );
   }
@@ -241,12 +313,11 @@ export default class StartClassScreen extends React.Component {
         element.isSelected = false;
       });
       this.asanaArray[this.currentAsanaRow].isSelected = true;
-
-      //set the image
-      //when the timespan has ended go to the next asana
     } else {
       //resume from the last asana and time
     }
+    this.loadSound(this.asanaArray[this.currentAsanaRow].sound);
+    //this.playSound();
 
     this.setState({ arrayHolder: [...this.asanaArray] });
   }
@@ -257,6 +328,7 @@ export default class StartClassScreen extends React.Component {
   }
   pauseAsanas() {
     clearTimeout(this.state.timer);
+    this.pauseSound();
     this.setState({ started: false });
   }
 

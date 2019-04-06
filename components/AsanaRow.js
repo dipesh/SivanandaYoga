@@ -68,7 +68,7 @@ export default class AsanaRow extends Component {
         rightButtons={[
           <TouchableOpacity
             onPress={() => {
-              console.log("asana row " + this.props.title)
+              //console.log("asana row " + this.props.title)
               this.props.handleRemovePress(this.props.rowNumber);
               this.state.currentlyOpenSwipeable.recenter();
             }}
@@ -103,7 +103,10 @@ export default class AsanaRow extends Component {
   createPicker(title) {
     let view = [];
 
-    if (title == "Kapalabhati") {
+    if(title == "Opening Prayer" || title == "Final Prayer"){
+
+    }
+    else if (title == "Kapalabhati") {
       view.push(
         <View key={this.keyCount++}>
           <View style={styles.container_text} key={this.keyCount++}>
@@ -306,7 +309,8 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 11,
-    fontStyle: "italic"
+    fontStyle: "italic",
+    marginBottom: 5,
   },
   photo: {
     height: 50,
