@@ -27,18 +27,18 @@ export default class StartClassScreen extends React.Component {
     this.currentClass = {
       key: "tempName2",
       item: [
-        {
-          key: "0",
-          title: "Opening Prayer",
-          description: "Opening Prayer",
-          image_url: require("../assets/images/OpeningPrayer.jpg"),
-          sound: require("../assets/sounds/OpeningPrayer2.mp3"),
-          holdTime: 30,
-          actionsPerRound: 35,
-          retentionLength: 30,
-          rounds: 6,
-          ratioPerRound: 5
-        },
+        // {
+        //   key: "0",
+        //   title: "Opening Prayer",
+        //   description: "Opening Prayer",
+        //   image_url: require("../assets/images/OpeningPrayer.jpg"),
+        //   sound: require("../assets/sounds/1sec.mp3"),
+        //   holdTime: 30,
+        //   actionsPerRound: 35,
+        //   retentionLength: 30,
+        //   rounds: 6,
+        //   ratioPerRound: 5
+        // },
         {
           key: "1",
           title: "Kapalabhati",
@@ -56,7 +56,7 @@ export default class StartClassScreen extends React.Component {
           title: "Anulom Viloma",
           description: "Alternate Nostril Breathing",
           image_url: require("../assets/images/AnulomViloma.jpg"),
-          sound: require("../assets/sounds/AnulomViloma2.mp3"),
+          sound: require("../assets/sounds/3sec.mp3"),
           holdTime: 30,
           actionsPerRound: 35,
           retentionLength: 30,
@@ -68,7 +68,7 @@ export default class StartClassScreen extends React.Component {
           title: "Surya Namaskar",
           description: "Sun Salutations",
           image_url: require("../assets/images/SuryaNamaskar.jpg"),
-          sound: require("../assets/sounds/SuryaNamaskar2.mp3"),
+          sound: require("../assets/sounds/4sec.mp3"),
           holdTime: 30,
           actionsPerRound: 35,
           retentionLength: 30,
@@ -80,7 +80,7 @@ export default class StartClassScreen extends React.Component {
           title: "Single Leg Raises",
           description: "Single Leg Raises",
           image_url: require("../assets/images/SingleLegRaises.jpg"),
-          sound: require("../assets/sounds/SingleLegRaises2.mp3"),
+          sound: require("../assets/sounds/5sec.mp3"),
           holdTime: 30,
           actionsPerRound: 35,
           retentionLength: 30,
@@ -109,86 +109,15 @@ export default class StartClassScreen extends React.Component {
     };
   }
 
-  async loadSound(sound) {
-    try {
-      await this.soundObject.loadAsync(sound);
-      await this.soundObject.playAsync();
-
-     this.soundObject.getStatusAsync()
-      .then(function(result) {
-        console.log(result.durationMillis)
-      })
-      .catch(failureCallback);
-
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  async nextSound(sound) {
-    try {
-      await this.soundObject.unloadAsync();
-      await this.soundObject.loadAsync(sound);
-      await this.soundObject.playAsync();
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  async playSound() {
-    try {
-      console.log("sound playing");
-      // Your sound is playing!
-    } catch (error) {
-      // An error occurred!
-      console.log(error);
-    }
-  }
-  async pauseSound() {
-    try {
-      await console.log(this.soundObject.getStatusAsync());
-      
-      await this.soundObject.pauseAsync();
-    } catch (error) {
-      // An error occurred!
-      console.log(error);
-    }
-  }
-
-  setTimes() {
-    this.totalTime = 0;
-    this.asanaArray.forEach(element => {
-      element.isSelected = false;
-
-      //TODO: add beginning and end time
-
-      //also calculate the total time of the class
-      if (element.title == "Kapalabhati") {
-        let timeToAdd = 3; //for testing
-        //timeToAdd =  (element.actionsPerRound*2 +  element.retentionLength)*element.rounds;
-        this.totalTime += timeToAdd;
-      } else if (element.title == "Anulom Viloma") {
-        let timeToAdd = 5;
-        //timeToAdd = element.ratioPerRound*6*element.rounds; //4 inhale, 12 hold, 8 exhale
-        this.totalTime += timeToAdd;
-      } else {
-        let timeToAdd = 4;
-        //timeToAdd = element.holdTime;
-        this.totalTime += timeToAdd;
-      }
-
-      //create a timestamp for when the posture should end
-      element.endTimeStamp = this.totalTime;
-    });
-  }
-
   _retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem(this.savedClassesKey);
-      console.log(value);
+      //console.log(value);
       if (value !== null) {
         this.allClasses = JSON.parse(value);
         this.allClasses.forEach(element => {
           if (element.key == this.savedClassName) {
-            console.log("updated");
+            //console.log("updated");
             this.asanaArray = element.item;
             this.setTimes();
           }
@@ -201,9 +130,171 @@ export default class StartClassScreen extends React.Component {
     }
   };
 
+  async loadPlaySound(sound) {
+    try {
+      //if a sound was already loaded
+      await this.soundObject.unloadAsync();
+    } catch (error) {}
+    try {
+      await this.soundObject.loadAsync(sound);
+      await this.soundObject.playAsync();
+    } catch (error) {
+      console.log("loadSound " + error);
+    }
+  }
+  failureCallback(result) {
+    console.log("failureCallback " + result);
+  }
+
+  async nextSound(sound) {
+    try {
+      await this.soundObject.unloadAsync();
+      await this.soundObject.loadAsync(sound);
+      await this.soundObject.playAsync();
+    } catch (error) {
+      console.log("nextSound " + error);
+    }
+  }
+  // async playSound() {
+  //   try {
+  //     console.log("sound playing");
+  //     // Your sound is playing!
+  //   } catch (error) {
+  //     // An error occurred!
+  //     console.log(error);
+  //   }
+  // }
+  async pauseSound() {
+    try {
+      //await console.log(this.soundObject.getStatusAsync());
+      await this.soundObject.pauseAsync();
+    } catch (error) {
+      // An error occurred!
+      console.log("pauseSound " + error);
+    }
+  }
+
+  startPause() {
+    if (this.state.started) {
+      this.pauseAsanas();
+    } else {
+      this.startAsanas();
+    }
+  }
+  startAsanas() {
+    //start the timer
+    let timer = setInterval(this.tick, 1000);
+    this.setState({ timer });
+
+    this.setState({ started: true });
+
+    //the practice is being started for the first time
+    if (this.currentAsanaRow == -1) {
+      this.currentAsanaRow++;
+
+      //highlight the exercise
+      this.asanaArray.forEach(element => {
+        element.isSelected = false;
+      });
+      this.asanaArray[this.currentAsanaRow].isSelected = true;
+    } else {
+      //resume from the last asana and time
+    }
+    if (this.asanaArray[this.currentAsanaRow].title == "Kapalabhati") {
+      this.playKapalabhati();
+    } else {
+      this.loadPlaySound(this.asanaArray[this.currentAsanaRow].sound);
+    }
+    this.setState({ arrayHolder: [...this.asanaArray] });
+  }
+  async playKapalabhati() {
+    let retentionLength = this.asanaArray[this.currentAsanaRow].retentionLength;
+    let actionsPerRound = this.asanaArray[this.currentAsanaRow].actionsPerRound;
+    let rounds = this.asanaArray[this.currentAsanaRow].rounds;
+
+    await this.soundObject.unloadAsync();
+
+    //the intro contains 7 pumps, the pump to retention has 3
+    await this.soundObject.loadAsync(
+      require("../assets/sounds/KapalabhatiIntro.mp3")
+    ) .then(function(result) {
+      let duration = result.durationMillis;
+      await this.soundObject.playAsync();
+
+      this.timeoutCheck = setTimeout(() => {
+        this.setTimePassed();
+        }, duration);
+
+    })
+    .catch(this.failureCallback);
+    
+    //this.soundObject.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
+    //await this.soundObject.unloadAsync();
+  }
+
+  async setTimePassed() {
+    let duration = 0;
+    await this.soundObject.unloadAsync();
+    await this.soundObject
+      .loadAsync(require("../assets/sounds/KapalabhatiPump.mp3"))
+      .then(function(result) {
+        duration = result.durationMillis;
+      })
+      .catch(this.failureCallback);
+    
+  }
+  nextAsana() {
+    //highlight next row
+    this.asanaArray[this.currentAsanaRow++].isSelected = false;
+    this.asanaArray[this.currentAsanaRow].isSelected = true;
+    this.nextSound(this.asanaArray[this.currentAsanaRow].sound);
+  }
+  pauseAsanas() {
+    clearTimeout(this.state.timer);
+    this.pauseSound();
+    this.setState({ started: false });
+  }
+
+  async setTimes() {
+    this.totalTime = 0;
+    let time = 0;
+
+    for (i = 0; i < this.asanaArray.length; i++) {
+      let element = this.asanaArray[i];
+
+      element.isSelected = false;
+
+      //TODO: add beginning and end time
+      //console.log("setTime sound");
+      let newSoundObject = new Audio.Sound();
+      await newSoundObject.loadAsync(element.sound);
+      await newSoundObject
+        .getStatusAsync()
+        .then(function(result) {
+          //console.log("setTime getStatusAsync");
+          let timeToAdd = result.durationMillis;
+          time += timeToAdd;
+          //console.log(timeToAdd + " " + time);
+        })
+        .catch(this.failureCallback);
+      await newSoundObject.unloadAsync();
+
+      //create a timestamp for when the posture should end
+      this.totalTime = Math.floor(time / 1000);
+
+      this.setState({ totalTime: this.totalTime });
+
+      //console.log("total " + this.totalTime);
+      element.endTimeStamp = this.totalTime;
+    }
+  }
+
   tick = () => {
     if (this.state.counter >= this.state.totalTime) {
       clearTimeout(this.state.timer);
+      this.setState({
+        started: false
+      });
     } else if (
       this.state.counter >= this.asanaArray[this.currentAsanaRow].endTimeStamp
     ) {
@@ -281,65 +372,17 @@ export default class StartClassScreen extends React.Component {
     return (
       <TouchableOpacity
         style={{ backgroundColor: color }}
-        onPress={() => this.exersiceClicked(item)}
+        onPress={() => this.exerciseClicked(item)}
       >
         <Text style={styles.customClassRow}>{item.title}</Text>
       </TouchableOpacity>
     );
   };
-  exersiceClicked(item) {}
-
-  startPause() {
-    if (this.state.started) {
-      this.pauseAsanas();
-    } else {
-      this.startAsanas();
-    }
-  }
-  startAsanas() {
-    //start the timer
-    let timer = setInterval(this.tick, 1000);
-    this.setState({ timer });
-
-    //this.started = true;
-    this.setState({ started: true });
-
-    //the practice is being started for the first time
-    if (this.currentAsanaRow == -1) {
-      this.currentAsanaRow++;
-
-      //highlight the exercise
-      this.asanaArray.forEach(element => {
-        element.isSelected = false;
-      });
-      this.asanaArray[this.currentAsanaRow].isSelected = true;
-    } else {
-      //resume from the last asana and time
-    }
-    this.loadSound(this.asanaArray[this.currentAsanaRow].sound);
-    //this.playSound();
-
-    this.setState({ arrayHolder: [...this.asanaArray] });
-  }
-  nextAsana() {
-    //highlight next row
-    this.asanaArray[this.currentAsanaRow++].isSelected = false;
-    this.asanaArray[this.currentAsanaRow].isSelected = true;
-  }
-  pauseAsanas() {
-    clearTimeout(this.state.timer);
-    this.pauseSound();
-    this.setState({ started: false });
-  }
-
-  updateData() {
-    console.log("update data");
-  }
+  exerciseClicked(item) {}
 
   editClass() {
     this.props.navigation.navigate("EditClassScreen", {
-      key: this.currentClass.key,
-      updateData: this.updateData
+      key: this.currentClass.key
     });
   }
 }
