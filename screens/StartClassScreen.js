@@ -12,6 +12,8 @@ import {
 
 import { Audio } from "expo";
 
+import IntervalTimer from "../IntervalTimer";
+
 export default class StartClassScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     title: "uncomment" //`${navigation.state.params.item.key}`
@@ -21,6 +23,7 @@ export default class StartClassScreen extends React.Component {
     super(props);
     this.savedClassesKey = "SivanandaSavedClasses";
     this.soundObject = new Audio.Sound();
+    this.newTimer = new IntervalTimer("dipesh", () => {}, 1000, null);
 
     this.currentClass = this.props.navigation.getParam("item", "");
     //for testing
@@ -155,15 +158,16 @@ export default class StartClassScreen extends React.Component {
       console.log("nextSound " + error);
     }
   }
-  // async playSound() {
-  //   try {
-  //     console.log("sound playing");
-  //     // Your sound is playing!
-  //   } catch (error) {
-  //     // An error occurred!
-  //     console.log(error);
-  //   }
-  // }
+  async playSound() {
+    try {
+      await this.soundObject.playAsync();
+      console.log("sound playing");
+      // Your sound is playing!
+    } catch (error) {
+      // An error occurred!
+      console.log(error);
+    }
+  }
   async pauseSound() {
     try {
       //await console.log(this.soundObject.getStatusAsync());
@@ -212,37 +216,45 @@ export default class StartClassScreen extends React.Component {
     let actionsPerRound = this.asanaArray[this.currentAsanaRow].actionsPerRound;
     let rounds = this.asanaArray[this.currentAsanaRow].rounds;
 
+    this.kaPumpSound = new Audio.Sound();
+    this.kaPumpSound.loadAsync(require("../assets/sounds/KapalabhatiPump.mp3"))
+    .then((result) => {
+      this.kaPumpDuration = result.durationMillis
+    })
+    .catch(this.failureCallback);
+
     await this.soundObject.unloadAsync();
 
     //the intro contains 7 pumps, the pump to retention has 3
-    await this.soundObject.loadAsync(
-      require("../assets/sounds/KapalabhatiIntro.mp3")
-    ) .then(function(result) {
-      let duration = result.durationMillis;
-      await this.soundObject.playAsync();
+    await this.soundObject
+      .loadAsync(require("../assets/sounds/5sec.mp3"))
+      .then(this.KapalabhatiIntroLoadSuccess.bind(this))
+      .catch(this.failureCallback);
+    await this.soundObject.playAsync();
 
-      this.timeoutCheck = setTimeout(() => {
-        this.setTimePassed();
-        }, duration);
-
-    })
-    .catch(this.failureCallback);
-    
+    console.log("loadKaIntro");
     //this.soundObject.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
     //await this.soundObject.unloadAsync();
   }
+  async KapalabhatiIntroLoadSuccess(result) {
+    //let duration = result.durationMillis;
 
-  async setTimePassed() {
-    let duration = 0;
-    await this.soundObject.unloadAsync();
-    await this.soundObject
-      .loadAsync(require("../assets/sounds/KapalabhatiPump.mp3"))
-      .then(function(result) {
-        duration = result.durationMillis;
-      })
-      .catch(this.failureCallback);
-    
+    console.log("ka load " + this.kaPumpDuration);
+    this.newTimer = new IntervalTimer("kaPumpRepeat", () => {
+      this.kaIntroFinish();
+    }, this.kaPumpDuration, 15);
+    this.newTimer.start();
+    // this.timeoutCheck = setTimeout(() => {
+    //   this.kaIntroFinish();
+    // }, duration);
   }
+
+  async kaIntroFinish() {
+    let duration = 0;
+    console.log("kaIntroFinish ");
+    await this.this.kaPumpSound.playAsync();
+  }
+
   nextAsana() {
     //highlight next row
     this.asanaArray[this.currentAsanaRow++].isSelected = false;
