@@ -164,7 +164,7 @@ export default class EditClassScreen extends React.Component {
         image_url: require("../assets/images/Kapalabhati.jpg"),
         holdTime: 30,
         actionsPerRound: 35,
-        retentionLength: 30,
+        retentionLength: 45,
         rounds: 6,
         ratioPerRound: 5
       },

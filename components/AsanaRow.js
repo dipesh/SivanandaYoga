@@ -133,7 +133,7 @@ export default class AsanaRow extends Component {
                 );
               }}
               initialValue={this.props.actionsPerRound}
-              minValue={30}
+              minValue={40}
               //maxValue={10}
               incrementValue={5}
             />
@@ -149,7 +149,7 @@ export default class AsanaRow extends Component {
               this.props.updateRetentionLength(this.props.rowNumber, itemValue);
             }}
             initialValue={this.props.retentionLength}
-            minValue={15}
+            minValue={45}
             //maxValue={10}
             incrementValue={5}
           />

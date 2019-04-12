@@ -49,9 +49,9 @@ export default class StartClassScreen extends React.Component {
           image_url: require("../assets/images/Kapalabhati.jpg"),
           sound: require("../assets/sounds/Kapalabhati2.mp3"),
           holdTime: 30,
-          actionsPerRound: 35,
-          retentionLength: 30,
-          rounds: 6,
+          actionsPerRound: 5,
+          retentionLength: 10,
+          rounds: 3,
           ratioPerRound: 5
         },
         {
@@ -212,47 +212,115 @@ export default class StartClassScreen extends React.Component {
     this.setState({ arrayHolder: [...this.asanaArray] });
   }
   async playKapalabhati() {
-    let retentionLength = this.asanaArray[this.currentAsanaRow].retentionLength;
-    let actionsPerRound = this.asanaArray[this.currentAsanaRow].actionsPerRound;
-    let rounds = this.asanaArray[this.currentAsanaRow].rounds;
-
-    this.kaPumpSound = new Audio.Sound();
-    this.kaPumpSound.loadAsync(require("../assets/sounds/KapalabhatiPump.mp3"))
-    .then((result) => {
-      this.kaPumpDuration = result.durationMillis
-    })
-    .catch(this.failureCallback);
-
     await this.soundObject.unloadAsync();
 
-    //the intro contains 7 pumps, the pump to retention has 3
-    await this.soundObject
-      .loadAsync(require("../assets/sounds/5sec.mp3"))
-      .then(this.KapalabhatiIntroLoadSuccess.bind(this))
-      .catch(this.failureCallback);
+    await this.soundObject.loadAsync(
+      require("../assets/sounds/Kapalabhati2.mp3")
+    );
     await this.soundObject.playAsync();
 
-    console.log("loadKaIntro");
-    //this.soundObject.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
-    //await this.soundObject.unloadAsync();
-  }
-  async KapalabhatiIntroLoadSuccess(result) {
-    //let duration = result.durationMillis;
+    this.kaPumpResetPoint = 55882;
+    this.kaIntroDuration = 48000;
+    this.kaRoundsPassed = 0;
 
-    console.log("ka load " + this.kaPumpDuration);
-    this.newTimer = new IntervalTimer("kaPumpRepeat", () => {
-      this.kaIntroFinish();
-    }, this.kaPumpDuration, 15);
-    this.newTimer.start();
-    // this.timeoutCheck = setTimeout(() => {
-    //   this.kaIntroFinish();
-    // }, duration);
+    //after the intro has finished
+    this.kaIntroFinishTimer = new IntervalTimer(
+      "kaIntroFinish",
+      () => {
+        this.kaIntroFinish();
+      },
+      1000,//this.kaIntroDuration,
+      1
+    );
+    this.kaIntroFinishTimer.start();
   }
 
   async kaIntroFinish() {
-    let duration = 0;
+    let actionsPerRound = this.asanaArray[this.currentAsanaRow].actionsPerRound;
+
+    this.pumpCounter = 0;
+    this.numberOfPumps = actionsPerRound - 2;
     console.log("kaIntroFinish ");
-    await this.this.kaPumpSound.playAsync();
+
+    await this.soundObject.setPositionAsync(this.kaPumpResetPoint);
+    this.kaPumpRepeatTimer = new IntervalTimer(
+      "kaPumpRepeat",
+      () => {
+        //console.log(this.pumpCounter);
+        if (this.pumpCounter == this.numberOfPumps) {
+          this.playEndOfPumping();
+        } else {
+          this.playKaPump();
+          this.pumpCounter++;
+        }
+      },
+      938,
+      this.numberOfPumps + 1 // 1 extra to play end of pumping
+    );
+    this.kaPumpRepeatTimer.start();
+
+    //this.newTimer2.start();
+  }
+  async playKaPump() {
+    try {
+      await this.soundObject.setPositionAsync(this.kaPumpResetPoint);
+    } catch (error) {}
+  }
+  async playEndOfPumping() {
+    await this.soundObject.setPositionAsync(116000);
+    let retentionLength = this.asanaArray[this.currentAsanaRow].retentionLength;
+
+    //end of pumpings is at 1:56, 116000, there is two final pumping then instructions before breath hold
+    //start of breath retention starts at 2:25:000, 145000ms
+    //silence is at 3:06:000, 186000ms
+    //silence ends at 3:36:000, 216000ms
+    //min retention length is 45sec
+
+    //145000 - 116000 = 29000 (time till breath hold)
+    let waitTime = 29000 + retentionLength * 1000;
+    console.log("waitTime " + waitTime);
+    this.endOfPumpingTimer = new IntervalTimer(
+      "endOfPumpingTimer",
+      () => {
+        this.playWaitAndEndOfRentention();
+      },
+      waitTime,
+      1
+    );
+    this.endOfPumpingTimer.start();
+  }
+  async playWaitAndEndOfRentention() {
+    this.kaRoundsPassed++;
+    console.log("endOfPumpingTimer round " + this.kaRoundsPassed);
+
+    let rounds = this.asanaArray[this.currentAsanaRow].rounds;
+
+    //21500 is the first deep inhale before the pumps
+    if (this.kaRoundsPassed == rounds) {
+      //go to end
+      //end is at 8:57:000, 537000ms
+      await this.soundObject.setPositionAsync(537000);
+
+      //go to next sound to play...
+    } else {
+      let deepInhaleTime = 21500
+      let waitTime = this.kaIntroDuration - deepInhaleTime
+
+      //go to the deep inhales before the pumpings
+      await this.soundObject.setPositionAsync(deepInhaleTime);
+
+      //wait till the recording reaches the pumping time wait this.kaIntroDuration
+      //start the pump timer again 
+      this.kaIntroFinishTimer = new IntervalTimer(
+        "kaIntroFinish",
+        () => {
+          this.kaIntroFinish();
+        },
+        waitTime, //1000,//this.kaIntroDuration,
+        1
+      );
+      this.kaIntroFinishTimer.start();
+    }
   }
 
   nextAsana() {
@@ -276,17 +344,13 @@ export default class StartClassScreen extends React.Component {
 
       element.isSelected = false;
 
-      //TODO: add beginning and end time
-      //console.log("setTime sound");
       let newSoundObject = new Audio.Sound();
       await newSoundObject.loadAsync(element.sound);
       await newSoundObject
         .getStatusAsync()
         .then(function(result) {
-          //console.log("setTime getStatusAsync");
           let timeToAdd = result.durationMillis;
           time += timeToAdd;
-          //console.log(timeToAdd + " " + time);
         })
         .catch(this.failureCallback);
       await newSoundObject.unloadAsync();
@@ -296,7 +360,6 @@ export default class StartClassScreen extends React.Component {
 
       this.setState({ totalTime: this.totalTime });
 
-      //console.log("total " + this.totalTime);
       element.endTimeStamp = this.totalTime;
     }
   }
