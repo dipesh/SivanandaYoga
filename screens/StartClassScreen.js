@@ -23,7 +23,10 @@ export default class StartClassScreen extends React.Component {
     super(props);
     this.savedClassesKey = "SivanandaSavedClasses";
     this.soundObject = new Audio.Sound();
+    this.soundObject.setOnPlaybackStatusUpdate(this._onPlaybackStatusUpdate);
     this.newTimer = new IntervalTimer("dipesh", () => {}, 1000, null);
+
+    this.activeTimer = null;
 
     this.currentClass = this.props.navigation.getParam("item", "");
     //for testing
@@ -51,7 +54,7 @@ export default class StartClassScreen extends React.Component {
           holdTime: 30,
           actionsPerRound: 5,
           retentionLength: 10,
-          rounds: 3,
+          rounds: 1,
           ratioPerRound: 5
         },
         {
@@ -111,6 +114,14 @@ export default class StartClassScreen extends React.Component {
       totalTime: this.totalTime
     };
   }
+  _onPlaybackStatusUpdate = playbackStatus => {
+    const { didJustFinish } = playbackStatus;
+
+    if (didJustFinish) {
+      //this.audioInstance.stopAsync();
+      this.nextAsana();
+    }
+  };
 
   _retrieveData = async () => {
     try {
@@ -171,6 +182,7 @@ export default class StartClassScreen extends React.Component {
   async pauseSound() {
     try {
       //await console.log(this.soundObject.getStatusAsync());
+      this.activeTimer.pause();
       await this.soundObject.pauseAsync();
     } catch (error) {
       // An error occurred!
@@ -185,30 +197,33 @@ export default class StartClassScreen extends React.Component {
       this.startAsanas();
     }
   }
-  startAsanas() {
-    //start the timer
-    let timer = setInterval(this.tick, 1000);
-    this.setState({ timer });
-
+  async startAsanas() {
     this.setState({ started: true });
 
     //the practice is being started for the first time
     if (this.currentAsanaRow == -1) {
-      this.currentAsanaRow++;
+      //start the timer
+      let timer = setInterval(this.tick, 1000);
+      this.setState({ timer });
 
-      //highlight the exercise
-      this.asanaArray.forEach(element => {
-        element.isSelected = false;
-      });
-      this.asanaArray[this.currentAsanaRow].isSelected = true;
+      this.currentAsanaRow++;
+      if (this.asanaArray[this.currentAsanaRow].title == "Kapalabhati") {
+        this.playKapalabhati();
+      } else {
+        this.loadPlaySound(this.asanaArray[this.currentAsanaRow].sound);
+      }
     } else {
       //resume from the last asana and time
+      this.activeTimer.resume();
+      await this.soundObject.playAsync();
     }
-    if (this.asanaArray[this.currentAsanaRow].title == "Kapalabhati") {
-      this.playKapalabhati();
-    } else {
-      this.loadPlaySound(this.asanaArray[this.currentAsanaRow].sound);
-    }
+    
+    //highlight the exercise
+    this.asanaArray.forEach(element => {
+      element.isSelected = false;
+    });
+    this.asanaArray[this.currentAsanaRow].isSelected = true;
+
     this.setState({ arrayHolder: [...this.asanaArray] });
   }
   async playKapalabhati() {
@@ -218,6 +233,9 @@ export default class StartClassScreen extends React.Component {
       require("../assets/sounds/Kapalabhati2.mp3")
     );
     await this.soundObject.playAsync();
+
+    // await this.soundObject.setPositionAsync(537000);
+    // return;
 
     this.kaPumpResetPoint = 55882;
     this.kaIntroDuration = 48000;
@@ -229,10 +247,11 @@ export default class StartClassScreen extends React.Component {
       () => {
         this.kaIntroFinish();
       },
-      1000,//this.kaIntroDuration,
+      1000, //this.kaIntroDuration,
       1
     );
     this.kaIntroFinishTimer.start();
+    this.activeTimer = this.kaIntroFinishTimer;
   }
 
   async kaIntroFinish() {
@@ -258,7 +277,7 @@ export default class StartClassScreen extends React.Component {
       this.numberOfPumps + 1 // 1 extra to play end of pumping
     );
     this.kaPumpRepeatTimer.start();
-
+    this.activeTimer = this.kaPumpRepeatTimer;
     //this.newTimer2.start();
   }
   async playKaPump() {
@@ -288,6 +307,7 @@ export default class StartClassScreen extends React.Component {
       1
     );
     this.endOfPumpingTimer.start();
+    this.activeTimer = this.endOfPumpingTimer;
   }
   async playWaitAndEndOfRentention() {
     this.kaRoundsPassed++;
@@ -295,22 +315,22 @@ export default class StartClassScreen extends React.Component {
 
     let rounds = this.asanaArray[this.currentAsanaRow].rounds;
 
-    //21500 is the first deep inhale before the pumps
     if (this.kaRoundsPassed == rounds) {
       //go to end
-      //end is at 8:57:000, 537000ms
+      //end breaths is at 8:57:000, 537000ms
       await this.soundObject.setPositionAsync(537000);
 
       //go to next sound to play...
     } else {
-      let deepInhaleTime = 21500
-      let waitTime = this.kaIntroDuration - deepInhaleTime
+      //21500 is the first deep inhale before the pumps
+      let deepInhaleTime = 21500;
+      let waitTime = this.kaIntroDuration - deepInhaleTime;
 
       //go to the deep inhales before the pumpings
       await this.soundObject.setPositionAsync(deepInhaleTime);
 
       //wait till the recording reaches the pumping time wait this.kaIntroDuration
-      //start the pump timer again 
+      //start the pump timer again
       this.kaIntroFinishTimer = new IntervalTimer(
         "kaIntroFinish",
         () => {
@@ -320,14 +340,17 @@ export default class StartClassScreen extends React.Component {
         1
       );
       this.kaIntroFinishTimer.start();
+      this.activeTimer = this.kaIntroFinishTimer;
     }
   }
 
   nextAsana() {
     //highlight next row
-    this.asanaArray[this.currentAsanaRow++].isSelected = false;
-    this.asanaArray[this.currentAsanaRow].isSelected = true;
-    this.nextSound(this.asanaArray[this.currentAsanaRow].sound);
+    if (this.currentAsanaRow < this.asanaArray.length) {
+      this.asanaArray[this.currentAsanaRow++].isSelected = false;
+      this.asanaArray[this.currentAsanaRow].isSelected = true;
+      this.nextSound(this.asanaArray[this.currentAsanaRow].sound);
+    }
   }
   pauseAsanas() {
     clearTimeout(this.state.timer);
