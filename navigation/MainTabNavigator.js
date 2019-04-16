@@ -37,7 +37,7 @@ HomeStack.navigationOptions = {
 };
 
 const LinksStack = createStackNavigator({
-  Links: MainScreen
+  Links: EditClassScreen
 });
 
 LinksStack.navigationOptions = {

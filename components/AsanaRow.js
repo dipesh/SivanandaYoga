@@ -103,10 +103,8 @@ export default class AsanaRow extends Component {
   createPicker(title) {
     let view = [];
 
-    if(title == "Opening Prayer" || title == "Final Prayer"){
-
-    }
-    else if (title == "Kapalabhati") {
+    if (title == "Opening Prayer" || title == "Final Prayer") {
+    } else if (title == "Kapalabhati") {
       view.push(
         <View key={this.keyCount++}>
           <View style={styles.container_text} key={this.keyCount++}>
@@ -187,6 +185,30 @@ export default class AsanaRow extends Component {
           />
         </View>
       );
+    } else if (
+      title == "Surya Namaskar" ||
+      title == "Single Leg Raises" ||
+      title == "Double Leg Raises"
+    ) {
+      let labelText = "Rounds:"
+      if(title == "Surya Namaskar"){
+        labelText = "Rounds (x2):"
+      }
+      view.push(
+        <View style={styles.container_text} key={this.keyCount++}>
+          <Text style={styles.label}>{labelText}</Text>
+          <NumberChooser
+            onValueChange={itemValue => {
+              this.setState({ rounds: itemValue });
+              this.props.updateRounds(this.props.rowNumber, itemValue);
+            }}
+            initialValue={this.props.rounds}
+            minValue={5}
+            //maxValue={10}
+            incrementValue={1}
+          />
+        </View>
+      );
     } else {
       view.push(
         <View style={styles.container_text} key={this.keyCount++}>
@@ -207,65 +229,6 @@ export default class AsanaRow extends Component {
 
     return view;
   }
-  createKapalabatiRoundsRows = () => {
-    let rows = [];
-    for (let i = 3; i < 10; i++) {
-      let num = i;
-      rows.push(<Picker.Item key={i} label={num.toString()} value={num} />);
-    }
-    return rows;
-  };
-  createKapalabatiActionsPerRoundRows = () => {
-    let rows = [];
-    for (let i = 0; i < 10; i++) {
-      let num = i * 5 + 30;
-      rows.push(
-        <Picker.Item key={i} label={num.toString() + " sec"} value={num} />
-      );
-    }
-    return rows;
-  };
-  createKapalabatiRetentionRows = () => {
-    let rows = [];
-    for (let i = 0; i < 10; i++) {
-      let num = i * 5 + 15;
-      rows.push(
-        <Picker.Item key={i} label={num.toString() + " sec"} value={num} />
-      );
-    }
-    return rows;
-  };
-  createAnulomRoundsRows = () => {
-    let rows = [];
-    for (let i = 0; i < 10; i++) {
-      let num = i * 5 + 15;
-      rows.push(<Picker.Item key={i} label={num.toString()} value={num} />);
-    }
-    return rows;
-  };
-  createAnulomRatioRows = () => {
-    let rows = [];
-    for (let i = 4; i < 9; i++) {
-      let num = i;
-      rows.push(
-        <Picker.Item key={i} label={num.toString() + " sec"} value={num} />
-      );
-    }
-    return rows;
-  };
-  createAsanaRows = () => {
-    let rows = [];
-    for (let i = 1; i < 20; i++) {
-      let num = i * 15;
-      rows.push(
-        <Picker.Item key={i} label={num.toString() + " sec"} value={num} />
-      );
-    }
-    // for (let i = 0; i < rows.length; i++) {
-    //     rows[i].key = i.toString();
-    // }
-    return rows;
-  };
 }
 
 const styles = StyleSheet.create({
@@ -310,7 +273,7 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 11,
     fontStyle: "italic",
-    marginBottom: 5,
+    marginBottom: 5
   },
   photo: {
     height: 50,
