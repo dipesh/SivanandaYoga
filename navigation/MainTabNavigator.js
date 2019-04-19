@@ -13,7 +13,7 @@ import MainScreen from "../screens/MainScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 
 const HomeStack = createStackNavigator({
-  Home: StartClassScreen,
+  Home: MainScreen,
   StartClassScreen: {
     screen: StartClassScreen
   },

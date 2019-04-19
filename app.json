@@ -23,7 +23,11 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.sivanada.yoga"
+    },
+    "android": {
+      "package": "com.sivanada.yoga"
     }
   }
 }

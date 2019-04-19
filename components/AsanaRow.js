@@ -103,7 +103,7 @@ export default class AsanaRow extends Component {
   createPicker(title) {
     let view = [];
 
-    if (title == "Opening Prayer" || title == "Final Prayer") {
+    if (title == "Opening Prayer" || title == "Final Prayer" || title == "Savasana") {
     } else if (title == "Kapalabhati") {
       view.push(
         <View key={this.keyCount++}>

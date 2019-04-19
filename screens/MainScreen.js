@@ -19,13 +19,21 @@ export default class MainScreen extends React.Component {
   constructor(props) {
     super(props);
     this.savedClassesKey = "SivanandaSavedClasses";
+    this.savedDailyQuoteArrayKey = "SivanandaSavedDailyQuoteArray";
 
     this.allClasses = [];
-
-    this.state = {
-      allClassesHolder: this.allClasses
+    this.dailyQuoteArray = {
+      date: " ",
+      quote: " "
     };
+    this.state = {
+      allClassesHolder: this.allClasses,
+      dailyQuoteArrayHolder: [],
+      dailyQuote: ""
+    };
+    this.dailyQuote = "";
     this.willFocus = this.props.navigation.addListener("willFocus", () => {
+      //this.dailyQuote = this.getQuote();
       this._retrieveData();
     });
   }
@@ -33,8 +41,30 @@ export default class MainScreen extends React.Component {
   _retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem(this.savedClassesKey);
+      const savedDailyQuoteValue = await AsyncStorage.getItem(
+        this.savedDailyQuoteArrayKey
+      );
 
-      //console.log("load value " + value);
+      let today = new Date();
+      let date =
+        today.getDate() +
+        "/" +
+        parseInt(today.getMonth() + 1) +
+        "/" +
+        today.getFullYear();
+
+      if (savedDailyQuoteValue != null) {
+        this.dailyQuoteArray = JSON.parse(savedDailyQuoteValue);
+
+        if (date == this.dailyQuoteArray.date) {
+          this.setState({ dailyQuote: this.dailyQuoteArray.quote });
+        } else {
+          this.createNewQuote(date);
+        }
+      } else {
+        this.createNewQuote(date);
+      }
+
       if (value !== null) {
         this.allClasses = JSON.parse(value);
         this.setState({ allClassesHolder: [...this.allClasses] });
@@ -42,15 +72,100 @@ export default class MainScreen extends React.Component {
         //there are no saved classes
         return [];
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  async createNewQuote(date) {
+    const min = 0;
+    const max = 808;
+    const rand = Math.floor(min + Math.random() * (max - min));
+
+    let newQuote = quote[rand];
+
+    this.dailyQuoteArray.date = date;
+    this.dailyQuoteArray.quote = newQuote;
+    await AsyncStorage.setItem(
+      this.savedDailyQuoteArrayKey,
+      JSON.stringify(this.dailyQuoteArray)
+    ); 
+
+    this.setState({ dailyQuoteArrayHolder: this.dailyQuoteArray });
+    this.setState({ dailyQuote: this.dailyQuoteArray.quote });
+  }
+  newClass() {
+    this.props.navigation.navigate("EditClassScreen", {
+      key: "[New Class]"
+    });
+  }
+  getQuote() {
+    // await AsyncStorage.removeItem(this.savedDailyQuoteKey);
+    // await AsyncStorage.removeItem(this.savedDailyQuoteSavedDateKey);
+
+    // let savedDailyQuote = "";
+    // let savedDailyQuoteSavedDate = "";
+
+    // const savedDailyQuoteValue = AsyncStorage.getItem(this.savedDailyQuoteArrayKey);
+    // const savedDailyQuoteSavedDateValue = AsyncStorage.getItem(
+    //   this.savedDailyQuoteSavedDateKey
+    // );
+
+    if (savedDailyQuoteSavedValue != null) {
+      console.log(savedDailyQuoteValue);
+      console.log(savedDailyQuoteSavedDateValue);
+
+      this.setState({ dailyQuote: savedDailyQuoteValue });
+      this.setState({ dailyQuoteDate: savedDailyQuoteSavedDateValue });
+    }
+
+    let today = new Date();
+    let date =
+      today.getDate() +
+      "/" +
+      parseInt(today.getMonth() + 1) +
+      "/" +
+      today.getFullYear();
+
+    if (date == savedDailyQuoteSavedDate) {
+      //if date is the same as save then return saved quote
+      console.log("loading old quote");
+      this.setState({ dailyQuote: newQuote });
+    } else {
+      //else return new quote and save date and quote
+      //console.log("saving new quote");
+      const min = 0;
+      const max = 808;
+      const rand = Math.floor(min + Math.random() * (max - min));
+
+      let newQuote = quote[rand];
+      AsyncStorage.setItem(this.savedDailyQuoteKey, newQuote);
+      AsyncStorage.setItem(this.savedDailyQuoteSavedDate, date);
+      console.log("saving new quote " + date.toString());
+
+      this.setState({ dailyQuote: newQuote });
+      return newQuote;
+    }
+  }
+
+  openClass(item) {
+    if (item == 60) {
+    } else if (item == 90) {
+    } else if (item == 120) {
+    } else {
+      //it must be a custom class, so item is a array
+      this.props.navigation.navigate("StartClassScreen", {
+        item: item
+      });
+    }
+  }
 
   render() {
     return (
       <ScrollView style={styles.container}>
         <Text style={styles.headerLabel}>Daily Quote:</Text>
         <View style={styles.dailyQuoteView}>
-          <Text style={styles.dailyQuote}>{this.getQuote()}</Text>
+          <Text style={styles.dailyQuote}>{this.state.dailyQuote}</Text>
         </View>
         <Text style={styles.headerLabel}>Standard Classes:</Text>
         <View style={styles.standardClassView}>
@@ -88,7 +203,7 @@ export default class MainScreen extends React.Component {
         >
           <Text style={styles.linkText}>+ New Ajustable Class</Text>
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => this.playSound()}
           style={styles.headerButton}
         >
@@ -99,34 +214,9 @@ export default class MainScreen extends React.Component {
           style={styles.headerButton}
         >
           <Text style={styles.linkText}>Pause</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </ScrollView>
     );
-  }
-
-  newClass() {
-    this.props.navigation.navigate("EditClassScreen", {
-      key: "[New Class]"
-    });
-  }
-  getQuote() {
-    const min = 0;
-    const max = 808;
-    const rand = Math.floor(min + Math.random() * (max - min));
-
-    return quote[rand];
-  }
-
-  openClass(item) {
-    if (item == 60) {
-    } else if (item == 90) {
-    } else if (item == 120) {
-    } else {
-      //it must be a custom class, so item is a array
-      this.props.navigation.navigate("StartClassScreen", {
-        item: item
-      });
-    }
   }
 }
 
