@@ -25,7 +25,8 @@ import DialogInput from "react-native-dialog-input";
 
 export default class EditClassScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
-    title: "Edit " + `${navigation.state.params.key}`
+    title: "Edit " + `${navigation.state.params.key}`,
+    tabBarVisible: false, 
     //title: "Uncomment " 
   });
   constructor(props) {

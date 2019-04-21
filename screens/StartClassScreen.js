@@ -13,11 +13,12 @@ import {
 import { Audio } from "expo";
 
 import IntervalTimer from "../IntervalTimer";
+import toHHMMSS from "../Tools"; //toHHMMSS is used
 
 export default class StartClassScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
-    title: `${navigation.state.params.item.key}`
-
+    title: `${navigation.state.params.item.key}`,
+    tabBarVisible: false
     //title: "uncomment" //`${navigation.state.params.item.key}`
   });
 
@@ -214,6 +215,7 @@ export default class StartClassScreen extends React.Component {
       //   ]
       // };
     }
+
     this.savedClassName = this.currentClass.key;
     this.asanaArray = this.currentClass.item;
 
@@ -230,6 +232,13 @@ export default class StartClassScreen extends React.Component {
       counter: 0,
       totalTime: 1000
     };
+  }
+  
+  componentWillUnmount() {
+    if (this.activeAsanaTimer != null) {
+      this.activeAsanaTimer.stop();
+    }
+    this.soundObject.stopAsync();
   }
 
   _onPlaybackStatusUpdate = playbackStatus => {
@@ -338,6 +347,9 @@ export default class StartClassScreen extends React.Component {
 
     this.setState({ arrayHolder: [...this.asanaArray] });
   }
+
+  //Each asana/exercise has one sound file
+  //The code will jump through the file to play it so that the timings works
   playAsanaSound() {
     if (this.asanaArray[this.currentAsanaRow].title == "Opening Prayer") {
       this.playOpeningPrayer();
@@ -446,13 +458,11 @@ export default class StartClassScreen extends React.Component {
 
     let roundCounter = 0;
     this.numberOfPumps = actionsPerRound - 2;
-    //console.log("kaIntroFinish ");
 
     await this.soundObject.setPositionAsync(this.kaPumpResetPoint);
     this.kaPumpRepeatTimer = new IntervalTimer(
       "kaPumpRepeat",
       () => {
-        //console.log(this.pumpCounter);
         if (roundCounter == this.numberOfPumps) {
           this.playEndOfPumping();
         } else {
@@ -957,13 +967,13 @@ export default class StartClassScreen extends React.Component {
   }
 
   jumpToAsana(rowNumber) {
-      this.currentAsanaRow = rowNumber
-      this.asanaArray.forEach(element => {
-        element.isSelected = false;
-      });
-      this.asanaArray[rowNumber].isSelected = true;
-      this.playAsanaSound();
-      this.setState({ arrayHolder: [...this.asanaArray] });
+    this.currentAsanaRow = rowNumber;
+    this.asanaArray.forEach(element => {
+      element.isSelected = false;
+    });
+    this.asanaArray[rowNumber].isSelected = true;
+    this.playAsanaSound();
+    this.setState({ arrayHolder: [...this.asanaArray] });
   }
   pauseAsanas() {
     //clearTimeout(this.state.timer);
@@ -1076,7 +1086,7 @@ export default class StartClassScreen extends React.Component {
     );
   };
   asanaClicked(item) {
-    this.jumpToAsana(item.rowNumber)
+    this.jumpToAsana(item.rowNumber);
   }
 
   editClass() {
@@ -1086,23 +1096,23 @@ export default class StartClassScreen extends React.Component {
   }
 }
 
-String.prototype.toHHMMSS = function() {
-  var sec_num = parseInt(this, 10); // don't forget the second param
-  var hours = Math.floor(sec_num / 3600);
-  var minutes = Math.floor((sec_num - hours * 3600) / 60);
-  var seconds = sec_num - hours * 3600 - minutes * 60;
+// String.prototype.toHHMMSS = function() {
+//   var sec_num = parseInt(this, 10); // don't forget the second param
+//   var hours = Math.floor(sec_num / 3600);
+//   var minutes = Math.floor((sec_num - hours * 3600) / 60);
+//   var seconds = sec_num - hours * 3600 - minutes * 60;
 
-  if (hours < 10) {
-    hours = "0" + hours;
-  }
-  if (minutes < 10) {
-    minutes = "0" + minutes;
-  }
-  if (seconds < 10) {
-    seconds = "0" + seconds;
-  }
-  return hours + ":" + minutes + ":" + seconds;
-};
+//   if (hours < 10) {
+//     hours = "0" + hours;
+//   }
+//   if (minutes < 10) {
+//     minutes = "0" + minutes;
+//   }
+//   if (seconds < 10) {
+//     seconds = "0" + seconds;
+//   }
+//   return hours + ":" + minutes + ":" + seconds;
+// };
 
 const styles = StyleSheet.create({
   image: {

@@ -12,10 +12,10 @@ import quote from "../quotes";
 import { Audio } from "expo";
 
 export default class MainScreen extends React.Component {
-  static navigationOptions = {
-    title: "Main"
-  };
-
+  static navigationOptions = ({ navigation }) => ({
+    title: "Main",
+    //tabBarVisible: false, 
+  });
   constructor(props) {
     super(props);
     this.savedClassesKey = "SivanandaSavedClasses";
@@ -33,7 +33,6 @@ export default class MainScreen extends React.Component {
     };
     this.dailyQuote = "";
     this.willFocus = this.props.navigation.addListener("willFocus", () => {
-      //this.dailyQuote = this.getQuote();
       this._retrieveData();
     });
   }
@@ -41,6 +40,7 @@ export default class MainScreen extends React.Component {
   _retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem(this.savedClassesKey);
+      
       const savedDailyQuoteValue = await AsyncStorage.getItem(
         this.savedDailyQuoteArrayKey
       );
@@ -94,58 +94,11 @@ export default class MainScreen extends React.Component {
     this.setState({ dailyQuoteArrayHolder: this.dailyQuoteArray });
     this.setState({ dailyQuote: this.dailyQuoteArray.quote });
   }
+
   newClass() {
     this.props.navigation.navigate("EditClassScreen", {
       key: "[New Class]"
     });
-  }
-  getQuote() {
-    // await AsyncStorage.removeItem(this.savedDailyQuoteKey);
-    // await AsyncStorage.removeItem(this.savedDailyQuoteSavedDateKey);
-
-    // let savedDailyQuote = "";
-    // let savedDailyQuoteSavedDate = "";
-
-    // const savedDailyQuoteValue = AsyncStorage.getItem(this.savedDailyQuoteArrayKey);
-    // const savedDailyQuoteSavedDateValue = AsyncStorage.getItem(
-    //   this.savedDailyQuoteSavedDateKey
-    // );
-
-    if (savedDailyQuoteSavedValue != null) {
-      console.log(savedDailyQuoteValue);
-      console.log(savedDailyQuoteSavedDateValue);
-
-      this.setState({ dailyQuote: savedDailyQuoteValue });
-      this.setState({ dailyQuoteDate: savedDailyQuoteSavedDateValue });
-    }
-
-    let today = new Date();
-    let date =
-      today.getDate() +
-      "/" +
-      parseInt(today.getMonth() + 1) +
-      "/" +
-      today.getFullYear();
-
-    if (date == savedDailyQuoteSavedDate) {
-      //if date is the same as save then return saved quote
-      console.log("loading old quote");
-      this.setState({ dailyQuote: newQuote });
-    } else {
-      //else return new quote and save date and quote
-      //console.log("saving new quote");
-      const min = 0;
-      const max = 808;
-      const rand = Math.floor(min + Math.random() * (max - min));
-
-      let newQuote = quote[rand];
-      AsyncStorage.setItem(this.savedDailyQuoteKey, newQuote);
-      AsyncStorage.setItem(this.savedDailyQuoteSavedDate, date);
-      console.log("saving new quote " + date.toString());
-
-      this.setState({ dailyQuote: newQuote });
-      return newQuote;
-    }
   }
 
   openClass(item) {
