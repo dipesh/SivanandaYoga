@@ -86,9 +86,7 @@ export default class MeditationScreen extends React.Component {
 
     let dateStr =
       date + "/" + month + "/" + year + " " + hours + ":" + min + ":" + sec;
-    // let message =
-    //   "Meditation complete!";
-
+  
     this.logs.unshift({
       key: dateStr + message,
       time: dateStr,
@@ -108,6 +106,7 @@ export default class MeditationScreen extends React.Component {
     if (this.state.meditationCounter == 0) {
       this.counterTimer.stop();
       this.logMessage("Meditation complete!");
+      this.soundObject.playAsync();
     }
     this.setState({
       meditationCounter: this.state.meditationCounter - 1

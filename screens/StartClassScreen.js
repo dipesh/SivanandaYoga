@@ -14,16 +14,19 @@ import { Audio } from "expo";
 
 import IntervalTimer from "../IntervalTimer";
 import toHHMMSS from "../Tools"; //toHHMMSS is used
+import { KeepAwake } from "expo";
 
 export default class StartClassScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
-    title: `${navigation.state.params.item.key}`,
-    tabBarVisible: false
-    //title: "uncomment" //`${navigation.state.params.item.key}`
+    //title: `${navigation.state.params.item.key}`,
+    tabBarVisible: false,
+    title: "uncomment" //`${navigation.state.params.item.key}`
   });
 
   constructor(props) {
     super(props);
+
+    this.buttomComplete = true;
 
     this.savedClassesKey = "SivanandaSavedClasses";
     this.soundObject = new Audio.Sound();
@@ -35,185 +38,185 @@ export default class StartClassScreen extends React.Component {
     this.currentClass = this.props.navigation.getParam("item", "");
     if (__DEV__) {
       //for testing
-      // this.currentClass = {
-      //   key: "tempName2",
-      //   item: [
-      //     {
-      //       key: "0",
-      //       title: "Opening Prayer",
-      //       description: "Opening Prayer",
-      //       image_url: require("../assets/images/OpeningPrayer.jpg")
-      //     },
-      //     // {
-      //     //   key: "1",
-      //     //   title: "Kapalabhati",
-      //     //   description: "Shining Skull Breath",
-      //     //   image_url: require("../assets/images/Kapalabhati.jpg"),
-      //     //   holdTime: 30,
-      //     //   actionsPerRound: 5,
-      //     //   retentionLength: 10,
-      //     //   rounds: 1,
-      //     //   ratioPerRound: 5
-      //     // },
-      //     // {
-      //     //   key: "2",
-      //     //   title: "Anulom Viloma",
-      //     //   description: "Alternate Nostril Breathing",
-      //     //   image_url: require("../assets/images/AnulomViloma.jpg"),
-      //     //   holdTime: 30,
-      //     //   actionsPerRound: 35,
-      //     //   retentionLength: 30,
-      //     //   rounds: 15,
-      //     //   ratioPerRound: 4
-      //     // },
-      //     // {
-      //     //   key: "3",
-      //     //   title: "Surya Namaskar",
-      //     //   description: "Sun Salutations",
-      //     //   image_url: require("../assets/images/SuryaNamaskar.jpg"),
-      //     //   holdTime: 30,
-      //     //   actionsPerRound: 35,
-      //     //   retentionLength: 30,
-      //     //   rounds: 4,
-      //     //   ratioPerRound: 5
-      //     // },
-      //     // {
-      //     //   key: "4",
-      //     //   title: "Single Leg Raises",
-      //     //   description: "Single Leg Raises",
-      //     //   image_url: require("../assets/images/SingleLegRaises.jpg"),
-      //     //   holdTime: 30,
-      //     //   actionsPerRound: 35,
-      //     //   retentionLength: 30,
-      //     //   rounds: 6,
-      //     //   ratioPerRound: 5
-      //     // },
-      //     // {
-      //     //   key: "5",
-      //     //   title: "Double Leg Raises",
-      //     //   description: "Double Leg Raises",
-      //     //   image_url: require("../assets/images/DoubleLegRaises.jpg"),
-      //     //   holdTime: 30,
-      //     //   actionsPerRound: 35,
-      //     //   retentionLength: 30,
-      //     //   rounds: 7,
-      //     //   ratioPerRound: 5
-      //     // },
-      //     // {
-      //     //   key: "6",
-      //     //   title: "Sirshasana",
-      //     //   description: "Headstand",
-      //     //   image_url: require("../assets/images/Sirshasana.jpg"),
-      //     //   holdTime: 10,
-      //     //   actionsPerRound: 35,
-      //     //   retentionLength: 30,
-      //     //   rounds: 20,
-      //     //   ratioPerRound: 5
-      //     // },
-      //     // {
-      //     //   key: "7",
-      //     //   title: "Sarvangasana",
-      //     //   description: "Shoulderstand",
-      //     //   image_url: require("../assets/images/Sarvangasana.jpg"),
-      //     //   holdTime: 30,
-      //     //   actionsPerRound: 35,
-      //     //   retentionLength: 30,
-      //     //   rounds: 20,
-      //     //   ratioPerRound: 5
-      //     // },
-      //     // {
-      //     //   key: "8",
-      //     //   title: "Halasana",
-      //     //   description: "Halasana",
-      //     //   image_url: require("../assets/images/Halasana.jpg"),
-      //     //   holdTime: 30
-      //     // },
-      //     // {
-      //     //   key: "9",
-      //     //   title: "Matsyasana",
-      //     //   description: "Matsyasana",
-      //     //   image_url: require("../assets/images/Matsyasana.jpg"),
-      //     //   holdTime: 30
-      //     // },
-      //     // {
-      //     //   key: "10",
-      //     //   title: "Paschimothanasana",
-      //     //   description: "Paschimothanasana",
-      //     //   image_url: require("../assets/images/Paschimothanasana.jpg"),
-      //     //   holdTime: 10
-      //     // },
-      //     // {
-      //     //   key: "11",
-      //     //   title: "Inclined Plane",
-      //     //   description: "Inclined Plane",
-      //     //   image_url: require("../assets/images/InclinedPlane.jpg"),
-      //     //   holdTime: 10
-      //     // },
-      //     // {
-      //     //   key: "12",
-      //     //   title: "Bhujangasana",
-      //     //   description: "Bhujangasana",
-      //     //   image_url: require("../assets/images/Bhujangasana.jpg"),
-      //     //   holdTime: 10
-      //     // },
-      //     // {
-      //     //   key: "13",
-      //     //   title: "Salabhasana",
-      //     //   description: "Salabhasana",
-      //     //   image_url: require("../assets/images/Salabhasana.jpg"),
-      //     //   holdTime: 10
-      //     // },
-      //     // {
-      //     //   key: "14",
-      //     //   title: "Dhanurasana",
-      //     //   description: "Dhanurasana",
-      //     //   image_url: require("../assets/images/Dhanurasana.jpg"),
-      //     //   holdTime: 10
-      //     // },
-      //     // {
-      //     //   key: "15",
-      //     //   title: "Ardha Matsyendrasana",
-      //     //   description: "Ardha Matsyendrasana",
-      //     //   image_url: require("../assets/images/ArdhaMatsyendrasana.jpg"),
-      //     //   holdTime: 30
-      //     // },
-      //     // {
-      //     //   key: "16",
-      //     //   title: "Kakasana",
-      //     //   description: "Kakasana",
-      //     //   image_url: require("../assets/images/Kakasana.jpg"),
-      //     //   holdTime: 10
-      //     // },
-      //     // {
-      //     //   key: "17",
-      //     //   title: "Pada Hasthasana",
-      //     //   description: "Pada Hasthasana",
-      //     //   image_url: require("../assets/images/PadaHasthasana.jpg"),
-      //     //   holdTime: 10
-      //     // },
-      //     {
-      //       key: "18",
-      //       title: "Trikonasana",
-      //       description: "Trikonasana",
-      //       image_url: require("../assets/images/Trikonasana.jpg"),
-      //       holdTime: 30
-      //     },
-      //     {
-      //       key: "19",
-      //       title: "Savasana",
-      //       description: "Savasana",
-      //       image_url: require("../assets/images/Savasana.jpg"),
-      //       holdTime: 10
-      //     },
-      //     {
-      //       key: "20",
-      //       title: "Final Prayer",
-      //       description: "Final Prayer",
-      //       image_url: require("../assets/images/FinalPrayer.jpg"),
-      //       holdTime: 10
-      //     }
-      //   ]
-      // };
+      this.currentClass = {
+        key: "tempName2",
+        item: [
+          // {
+          //   key: "0",
+          //   title: "Opening Prayer",
+          //   description: "Opening Prayer",
+          //   image_url: require("../assets/images/OpeningPrayer.jpg")
+          // },
+          {
+            key: "1",
+            title: "Kapalabhati",
+            description: "Shining Skull Breath",
+            image_url: require("../assets/images/Kapalabhati.jpg"),
+            holdTime: 30,
+            actionsPerRound: 5,
+            retentionLength: 10,
+            rounds: 1,
+            ratioPerRound: 5
+          },
+          // {
+          //   key: "2",
+          //   title: "Anulom Viloma",
+          //   description: "Alternate Nostril Breathing",
+          //   image_url: require("../assets/images/AnulomViloma.jpg"),
+          //   holdTime: 30,
+          //   actionsPerRound: 35,
+          //   retentionLength: 30,
+          //   rounds: 15,
+          //   ratioPerRound: 4
+          // },
+          // {
+          //   key: "3",
+          //   title: "Surya Namaskar",
+          //   description: "Sun Salutations",
+          //   image_url: require("../assets/images/SuryaNamaskar.jpg"),
+          //   holdTime: 30,
+          //   actionsPerRound: 35,
+          //   retentionLength: 30,
+          //   rounds: 4,
+          //   ratioPerRound: 5
+          // },
+          // {
+          //   key: "4",
+          //   title: "Single Leg Raises",
+          //   description: "Single Leg Raises",
+          //   image_url: require("../assets/images/SingleLegRaises.jpg"),
+          //   holdTime: 30,
+          //   actionsPerRound: 35,
+          //   retentionLength: 30,
+          //   rounds: 6,
+          //   ratioPerRound: 5
+          // },
+          // {
+          //   key: "5",
+          //   title: "Double Leg Raises",
+          //   description: "Double Leg Raises",
+          //   image_url: require("../assets/images/DoubleLegRaises.jpg"),
+          //   holdTime: 30,
+          //   actionsPerRound: 35,
+          //   retentionLength: 30,
+          //   rounds: 7,
+          //   ratioPerRound: 5
+          // },
+          // {
+          //   key: "6",
+          //   title: "Sirshasana",
+          //   description: "Headstand",
+          //   image_url: require("../assets/images/Sirshasana.jpg"),
+          //   holdTime: 10,
+          //   actionsPerRound: 35,
+          //   retentionLength: 30,
+          //   rounds: 20,
+          //   ratioPerRound: 5
+          // },
+          // {
+          //   key: "7",
+          //   title: "Sarvangasana",
+          //   description: "Shoulderstand",
+          //   image_url: require("../assets/images/Sarvangasana.jpg"),
+          //   holdTime: 30,
+          //   actionsPerRound: 35,
+          //   retentionLength: 30,
+          //   rounds: 20,
+          //   ratioPerRound: 5
+          // },
+          // {
+          //   key: "8",
+          //   title: "Halasana",
+          //   description: "Halasana",
+          //   image_url: require("../assets/images/Halasana.jpg"),
+          //   holdTime: 30
+          // },
+          // {
+          //   key: "9",
+          //   title: "Matsyasana",
+          //   description: "Matsyasana",
+          //   image_url: require("../assets/images/Matsyasana.jpg"),
+          //   holdTime: 30
+          // },
+          // {
+          //   key: "10",
+          //   title: "Paschimothanasana",
+          //   description: "Paschimothanasana",
+          //   image_url: require("../assets/images/Paschimothanasana.jpg"),
+          //   holdTime: 10
+          // },
+          // {
+          //   key: "11",
+          //   title: "Inclined Plane",
+          //   description: "Inclined Plane",
+          //   image_url: require("../assets/images/InclinedPlane.jpg"),
+          //   holdTime: 10
+          // },
+          // {
+          //   key: "12",
+          //   title: "Bhujangasana",
+          //   description: "Bhujangasana",
+          //   image_url: require("../assets/images/Bhujangasana.jpg"),
+          //   holdTime: 10
+          // },
+          // {
+          //   key: "13",
+          //   title: "Salabhasana",
+          //   description: "Salabhasana",
+          //   image_url: require("../assets/images/Salabhasana.jpg"),
+          //   holdTime: 10
+          // },
+          // {
+          //   key: "14",
+          //   title: "Dhanurasana",
+          //   description: "Dhanurasana",
+          //   image_url: require("../assets/images/Dhanurasana.jpg"),
+          //   holdTime: 10
+          // },
+          // {
+          //   key: "15",
+          //   title: "Ardha Matsyendrasana",
+          //   description: "Ardha Matsyendrasana",
+          //   image_url: require("../assets/images/ArdhaMatsyendrasana.jpg"),
+          //   holdTime: 30
+          // },
+          // {
+          //   key: "16",
+          //   title: "Kakasana",
+          //   description: "Kakasana",
+          //   image_url: require("../assets/images/Kakasana.jpg"),
+          //   holdTime: 10
+          // },
+          // {
+          //   key: "17",
+          //   title: "Pada Hasthasana",
+          //   description: "Pada Hasthasana",
+          //   image_url: require("../assets/images/PadaHasthasana.jpg"),
+          //   holdTime: 10
+          // },
+          {
+            key: "18",
+            title: "Trikonasana",
+            description: "Trikonasana",
+            image_url: require("../assets/images/Trikonasana.jpg"),
+            holdTime: 30
+          },
+          {
+            key: "19",
+            title: "Savasana",
+            description: "Savasana",
+            image_url: require("../assets/images/Savasana.jpg"),
+            holdTime: 10
+          },
+          {
+            key: "20",
+            title: "Final Prayer",
+            description: "Final Prayer",
+            image_url: require("../assets/images/FinalPrayer.jpg"),
+            holdTime: 10
+          }
+        ]
+      };
     }
 
     this.savedClassName = this.currentClass.key;
@@ -232,8 +235,11 @@ export default class StartClassScreen extends React.Component {
       counter: 0,
       totalTime: 1000
     };
+
+    this.pumpsCounter = 0;
+    this.roundsCounter = 0;
   }
-  
+
   componentWillUnmount() {
     if (this.activeAsanaTimer != null) {
       this.activeAsanaTimer.stop();
@@ -242,14 +248,92 @@ export default class StartClassScreen extends React.Component {
   }
 
   _onPlaybackStatusUpdate = playbackStatus => {
-    const { didJustFinish } = playbackStatus;
+    const { didJustFinish, isLoaded, positionMillis } = playbackStatus;
 
-    if (didJustFinish) {
-      //this.audioInstance.stopAsync();
-      this.nextAsana();
+    if (isLoaded) {
+      //this.asanaPlayback(positionMillis);
+      if (didJustFinish) {
+        this.nextAsana();
+      }
     }
   };
+  // asanaPlayback(positionMillis) {
+  //   if (this.asanaArray[this.currentAsanaRow].title == "Opening Prayer") {
+  //     //this.playOpeningPrayer();
+  //   } else if (this.asanaArray[this.currentAsanaRow].title == "Kapalabhati") {
+  //     //this.playKapalabhati();
+  //     let kaPumpResetPointStart = 55052;
+  //     let kaPumpResetPointEnd = 55882;
+  //     let kaIntroDuration = 48000;
+  //     let kaRoundsPassed = 0;
+  //     let kaEnd = 116000;
+  //     //start of breath retention starts at 2:25:000, 145000ms
+  //     //silence is at 3:06:000, 186000ms
+  //     //silence ends at 3:36:000, 216000ms
+  //     //min retention length is 45sec
+  //     //end breaths is at 8:57:000, 537000ms
+  //     //21500 is the first deep inhale before the pumps
+  //     let deepInhaleTime = 21500;
 
+  //     console.log(this.pumpsCounter + " " + positionMillis);
+  //     if (this.pumpsCounter < 30 && positionMillis > kaPumpResetPointEnd) {
+  //       this.soundObject.setPositionAsync(55052);
+  //       this.pumpsCounter++;
+  //     }
+  //   } else if (this.asanaArray[this.currentAsanaRow].title == "Anulom Viloma") {
+  //     this.playAnulomViloma();
+  //   } else if (
+  //     this.asanaArray[this.currentAsanaRow].title == "Surya Namaskar"
+  //   ) {
+  //     this.playSuryaNamaskar();
+  //   } else if (
+  //     this.asanaArray[this.currentAsanaRow].title == "Single Leg Raises"
+  //   ) {
+  //     this.playSingleLegRaises();
+  //   } else if (
+  //     this.asanaArray[this.currentAsanaRow].title == "Double Leg Raises"
+  //   ) {
+  //     this.playDoubleLegRaises();
+  //   } else if (this.asanaArray[this.currentAsanaRow].title == "Sirshasana") {
+  //     this.playSirshasana();
+  //   } else if (this.asanaArray[this.currentAsanaRow].title == "Sarvangasana") {
+  //     this.playSarvangasana();
+  //   } else if (this.asanaArray[this.currentAsanaRow].title == "Halasana") {
+  //     this.playHalasana();
+  //   } else if (this.asanaArray[this.currentAsanaRow].title == "Matsyasana") {
+  //     this.playMatsyasana();
+  //   } else if (
+  //     this.asanaArray[this.currentAsanaRow].title == "Paschimothanasana"
+  //   ) {
+  //     this.playPaschimothanasana();
+  //   } else if (
+  //     this.asanaArray[this.currentAsanaRow].title == "Inclined Plane"
+  //   ) {
+  //     this.playInclinedPlane();
+  //   } else if (this.asanaArray[this.currentAsanaRow].title == "Bhujangasana") {
+  //     this.playBhujangasana();
+  //   } else if (this.asanaArray[this.currentAsanaRow].title == "Salabhasana") {
+  //     this.playSalabhasana();
+  //   } else if (this.asanaArray[this.currentAsanaRow].title == "Dhanurasana") {
+  //     this.playDhanurasana();
+  //   } else if (
+  //     this.asanaArray[this.currentAsanaRow].title == "Ardha Matsyendrasana"
+  //   ) {
+  //     this.playArdhaMatsyendrasana();
+  //   } else if (this.asanaArray[this.currentAsanaRow].title == "Kakasana") {
+  //     this.playKakasana();
+  //   } else if (
+  //     this.asanaArray[this.currentAsanaRow].title == "Pada Hasthasana"
+  //   ) {
+  //     this.playPadaHasthasana();
+  //   } else if (this.asanaArray[this.currentAsanaRow].title == "Trikonasana") {
+  //     this.playTrikonasana();
+  //   } else if (this.asanaArray[this.currentAsanaRow].title == "Savasana") {
+  //     this.playSavasana();
+  //   } else if (this.asanaArray[this.currentAsanaRow].title == "Final Prayer") {
+  //     this.playFinalPrayer();
+  //   }
+  // }
   _retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem(this.savedClassesKey);
@@ -258,52 +342,34 @@ export default class StartClassScreen extends React.Component {
         this.allClasses = JSON.parse(value);
         this.allClasses.forEach(element => {
           if (element.key == this.savedClassName) {
-            //console.log("updated");
             this.asanaArray = element.item;
           }
         });
 
-        this.setState({ arrayHolder: [...this.asanaArray] });
+        this.setArrayState();
       }
     } catch (error) {
       console.log("load error: " + error);
     }
   };
 
-  async loadPlaySound(sound) {
-    try {
-      //if a sound was already loaded
-      await this.soundObject.unloadAsync();
-    } catch (error) {}
-    try {
-      await this.soundObject.loadAsync(sound);
-      await this.soundObject.playAsync();
-    } catch (error) {
-      console.log("loadSound " + error);
+  setArrayState() {
+    for (let i = 0; i < this.asanaArray.length; i++) {
+      this.asanaArray[i].rowNumber = i.toString();
     }
+    this.setState({ arrayHolder: [...this.asanaArray] });
   }
   failureCallback(result) {
     console.log("failureCallback " + result);
   }
-  async playSound() {
-    try {
-      await this.soundObject.playAsync();
-      console.log("sound playing");
-      // Your sound is playing!
-    } catch (error) {
-      // An error occurred!
-      console.log(error);
-    }
-  }
+
   async pauseSound() {
     try {
-      //await console.log(this.soundObject.getStatusAsync());
       if (this.activeAsanaTimer != null) {
         this.activeAsanaTimer.pause();
       }
       await this.soundObject.pauseAsync();
     } catch (error) {
-      // An error occurred!
       console.log("pauseSound " + error);
     }
   }
@@ -320,16 +386,10 @@ export default class StartClassScreen extends React.Component {
     //the practice is being started for the first time
     if (this.currentAsanaRow == -1) {
       //start the timers
-
       this.counterTimer.start();
-      //this.setState({ timer });
 
       this.currentAsanaRow++;
       this.playAsanaSound();
-
-      // else {
-      //   this.loadPlaySound(this.asanaArray[this.currentAsanaRow].sound);
-      // }
     } else {
       //resume from the last asana and time
       await this.soundObject.playAsync();
@@ -344,13 +404,12 @@ export default class StartClassScreen extends React.Component {
       element.isSelected = false;
     });
     this.asanaArray[this.currentAsanaRow].isSelected = true;
-
-    this.setState({ arrayHolder: [...this.asanaArray] });
+    this.setArrayState();
   }
 
   //Each asana/exercise has one sound file
   //The code will jump through the file to play it so that the timings works
-  playAsanaSound() {
+  async playAsanaSound() {
     if (this.asanaArray[this.currentAsanaRow].title == "Opening Prayer") {
       this.playOpeningPrayer();
     } else if (this.asanaArray[this.currentAsanaRow].title == "Kapalabhati") {
@@ -418,6 +477,7 @@ export default class StartClassScreen extends React.Component {
     await this.soundObject.unloadAsync();
     await this.soundObject.loadAsync(soundAsset);
     await this.soundObject.playAsync();
+    await this.soundObject.setProgressUpdateIntervalAsync(50);
 
     //dev
     //await this.soundObject.setPositionAsync(195000);
@@ -433,9 +493,10 @@ export default class StartClassScreen extends React.Component {
 
     await this.soundObject.loadAsync(soundAsset);
     await this.soundObject.playAsync();
+    //await this.soundObject.setProgressUpdateIntervalAsync(50);
 
-    // await this.soundObject.setPositionAsync(553000);
-    // return;
+    //await this.soundObject.setPositionAsync(45000);
+    //return;
 
     this.kaPumpResetPoint = 55882;
     this.kaIntroDuration = 48000;
@@ -455,19 +516,21 @@ export default class StartClassScreen extends React.Component {
   }
   async kaIntroFinish() {
     let actionsPerRound = this.asanaArray[this.currentAsanaRow].actionsPerRound;
-
+    console.log("kaIntroFinish " + actionsPerRound);
     let roundCounter = 0;
-    this.numberOfPumps = actionsPerRound - 2;
+    this.numberOfPumps = actionsPerRound - 3;
 
     await this.soundObject.setPositionAsync(this.kaPumpResetPoint);
     this.kaPumpRepeatTimer = new IntervalTimer(
       "kaPumpRepeat",
       () => {
         if (roundCounter == this.numberOfPumps) {
+          console.log("kaIntroFinishEnd roundCounter" + roundCounter);
           this.playEndOfPumping();
         } else {
+          console.log("kaIntroFinish roundCounter" + roundCounter);
           this.playKaPump();
-          this.roundCounter++;
+          roundCounter++;
         }
       },
       938,
@@ -713,8 +776,8 @@ export default class StartClassScreen extends React.Component {
   }
   async playMatsyasana() {
     let soundAsset = __DEV__
-      ? require("../assets/sounds/Halasana2.mp3")
-      : require("../assets/sounds/Halasana.mp3");
+      ? require("../assets/sounds/Matsyasana2.mp3")
+      : require("../assets/sounds/Matsyasana.mp3");
 
     //posture hold starts 0:55, 55000 ms
     //silence at 1:30, 90000 ms
@@ -723,8 +786,8 @@ export default class StartClassScreen extends React.Component {
   }
   async playPaschimothanasana() {
     let soundAsset = __DEV__
-      ? require("../assets/sounds/Halasana2.mp3")
-      : require("../assets/sounds/Halasana.mp3");
+      ? require("../assets/sounds/Paschimothanasana2.mp3")
+      : require("../assets/sounds/Paschimothanasana.mp3");
 
     //posture hold starts 1:17, 77000 ms
     //silence at 2:00, 120000 ms
@@ -733,8 +796,8 @@ export default class StartClassScreen extends React.Component {
   }
   async playInclinedPlane() {
     let soundAsset = __DEV__
-      ? require("../assets/sounds/Halasana2.mp3")
-      : require("../assets/sounds/Halasana.mp3");
+      ? require("../assets/sounds/InclinedPlane2.mp3")
+      : require("../assets/sounds/InclinedPlane.mp3");
 
     //posture hold starts 0:21, 21000 ms
     //silence at 0:30, 30000 ms
@@ -743,8 +806,8 @@ export default class StartClassScreen extends React.Component {
   }
   async playBhujangasana() {
     let soundAsset = __DEV__
-      ? require("../assets/sounds/Halasana2.mp3")
-      : require("../assets/sounds/Halasana.mp3");
+      ? require("../assets/sounds/Bhujangasana2.mp3")
+      : require("../assets/sounds/Bhujangasana.mp3");
 
     //posture hold starts 36300 ms
     //silence at 60000 ms
@@ -753,8 +816,8 @@ export default class StartClassScreen extends React.Component {
   }
   async playSalabhasana() {
     let soundAsset = __DEV__
-      ? require("../assets/sounds/Halasana2.mp3")
-      : require("../assets/sounds/Halasana.mp3");
+      ? require("../assets/sounds/Salabhasana2.mp3")
+      : require("../assets/sounds/Salabhasana.mp3");
 
     //posture hold starts 76879 ms
     //silence at 93292 ms
@@ -763,8 +826,8 @@ export default class StartClassScreen extends React.Component {
   }
   async playDhanurasana() {
     let soundAsset = __DEV__
-      ? require("../assets/sounds/Halasana2.mp3")
-      : require("../assets/sounds/Halasana.mp3");
+      ? require("../assets/sounds/Dhanurasana2.mp3")
+      : require("../assets/sounds/Dhanurasana.mp3");
 
     //posture hold starts 39358 ms
     //silence at 116000 ms
@@ -959,22 +1022,41 @@ export default class StartClassScreen extends React.Component {
   nextAsana() {
     //highlight next row
     if (this.currentAsanaRow + 1 < this.asanaArray.length) {
+      if (this.currentAsanaRow == -1) {
+        this.counterTimer.start();
+      }
       this.asanaArray[this.currentAsanaRow++].isSelected = false;
       this.asanaArray[this.currentAsanaRow].isSelected = true;
-      this.playAsanaSound();
-      this.setState({ arrayHolder: [...this.asanaArray] });
+      this.playAsanaSound()
+        .then()
+        .catch(this.failureCallback);
+      this.setArrayState();
     }
   }
 
   jumpToAsana(rowNumber) {
-    this.currentAsanaRow = rowNumber;
-    this.asanaArray.forEach(element => {
-      element.isSelected = false;
-    });
-    this.asanaArray[rowNumber].isSelected = true;
-    this.playAsanaSound();
-    this.setState({ arrayHolder: [...this.asanaArray] });
+    if (this.buttomComplete) {
+      if (this.activeAsanaTimer != null) {
+        this.activeAsanaTimer.stop();
+      }
+      this.soundObject.stopAsync().then().catch(this.failureCallback);
+
+      this.buttomComplete = false;
+      this.currentAsanaRow = rowNumber;
+      this.asanaArray.forEach(element => {
+        element.isSelected = false;
+      });
+
+      console.log("jumpToAsana " + rowNumber);
+      this.asanaArray[rowNumber].isSelected = true;
+      this.playAsanaSound();
+      this.setArrayState();
+
+      this.setState({ started: true });
+      this.buttomComplete = true;
+    }
   }
+
   pauseAsanas() {
     //clearTimeout(this.state.timer);
     this.counterTimer.pause();
@@ -997,6 +1079,7 @@ export default class StartClassScreen extends React.Component {
   render() {
     return (
       <ScrollView style={styles.container}>
+        <KeepAwake />
         <View style={styles.headerView}>
           {this.renderStartPauseButton()}
           <View style={styles.textHeaderView}>
@@ -1089,30 +1172,22 @@ export default class StartClassScreen extends React.Component {
     this.jumpToAsana(item.rowNumber);
   }
 
-  editClass() {
+  editClass = async () => {
+    //await this.foo();
     this.props.navigation.navigate("EditClassScreen", {
       key: this.currentClass.key
     });
   }
+
+  async foo() {
+    let promise = new Promise((resolve, reject) => {
+      setTimeout(() => resolve("done!"), 1000)
+    });
+    let result = await promise; // wait till the promise resolves (*)
+    console.log(result); // "done!"
+  }
+
 }
-
-// String.prototype.toHHMMSS = function() {
-//   var sec_num = parseInt(this, 10); // don't forget the second param
-//   var hours = Math.floor(sec_num / 3600);
-//   var minutes = Math.floor((sec_num - hours * 3600) / 60);
-//   var seconds = sec_num - hours * 3600 - minutes * 60;
-
-//   if (hours < 10) {
-//     hours = "0" + hours;
-//   }
-//   if (minutes < 10) {
-//     minutes = "0" + minutes;
-//   }
-//   if (seconds < 10) {
-//     seconds = "0" + seconds;
-//   }
-//   return hours + ":" + minutes + ":" + seconds;
-// };
 
 const styles = StyleSheet.create({
   image: {
@@ -1120,11 +1195,12 @@ const styles = StyleSheet.create({
     height: 100
   },
   customClassRow: {
-    marginTop: 10,
+    marginTop: 5,
     marginLeft: 10
   },
   rowDescription: {
     marginLeft: 40,
+    marginBottom: 5,
     fontSize: 12
   },
   container: {

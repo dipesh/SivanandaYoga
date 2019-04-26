@@ -103,7 +103,11 @@ export default class AsanaRow extends Component {
   createPicker(title) {
     let view = [];
 
-    if (title == "Opening Prayer" || title == "Final Prayer" || title == "Savasana") {
+    if (
+      title == "Opening Prayer" ||
+      title == "Final Prayer" ||
+      title == "Savasana"
+    ) {
     } else if (title == "Kapalabhati") {
       view.push(
         <View key={this.keyCount++}>
@@ -115,8 +119,8 @@ export default class AsanaRow extends Component {
                 this.props.updateRounds(this.props.rowNumber, itemValue);
               }}
               initialValue={this.props.rounds}
-              minValue={3}
-              //maxValue={10}
+              minValue={1}
+              maxValue={5}
               incrementValue={1}
             />
           </View>
@@ -131,8 +135,8 @@ export default class AsanaRow extends Component {
                 );
               }}
               initialValue={this.props.actionsPerRound}
-              minValue={40}
-              //maxValue={10}
+              minValue={50}
+              maxValue={150}
               incrementValue={5}
             />
           </View>
@@ -147,13 +151,13 @@ export default class AsanaRow extends Component {
               this.props.updateRetentionLength(this.props.rowNumber, itemValue);
             }}
             initialValue={this.props.retentionLength}
-            minValue={45}
-            //maxValue={10}
+            minValue={30} //45
+            maxValue={120}
             incrementValue={5}
           />
         </View>
       );
-    } else if (title == "Anulom" || title == "Anulom Viloma") {
+    } else if (title == "Anulom Viloma") {
       view.push(
         <View style={styles.container_text} key={this.keyCount++}>
           <Text style={styles.label}>Rounds:</Text>
@@ -163,9 +167,9 @@ export default class AsanaRow extends Component {
               this.props.updateRounds(this.props.rowNumber, itemValue);
             }}
             initialValue={this.props.rounds}
-            minValue={15}
-            //maxValue={10}
-            incrementValue={5}
+            minValue={4} //5
+            maxValue={20}
+            incrementValue={1} //5
           />
         </View>
       );
@@ -180,8 +184,8 @@ export default class AsanaRow extends Component {
             }}
             initialValue={this.props.ratioPerRound}
             minValue={4}
-            //maxValue={10}
-            //incrementValue={1}
+            maxValue={8}
+            incrementValue={1}
           />
         </View>
       );
@@ -190,10 +194,22 @@ export default class AsanaRow extends Component {
       title == "Single Leg Raises" ||
       title == "Double Leg Raises"
     ) {
-      let labelText = "Rounds:"
-      if(title == "Surya Namaskar"){
-        labelText = "Rounds (x2):"
+      let labelText = "Rounds:";
+      let minValue = 0;
+      let maxValue = 0;
+
+      if (title == "Surya Namaskar") {
+        labelText = "Rounds (x2):";
+        minValue = 4;
+        maxValue = 54;
+      } else if (title == "Single Leg Raises") {
+        minValue = 3;
+        maxValue = 6;
+      } else if (title == "Double Leg Raises") {
+        minValue = 4;
+        maxValue = 20;
       }
+
       view.push(
         <View style={styles.container_text} key={this.keyCount++}>
           <Text style={styles.label}>{labelText}</Text>
@@ -203,13 +219,46 @@ export default class AsanaRow extends Component {
               this.props.updateRounds(this.props.rowNumber, itemValue);
             }}
             initialValue={this.props.rounds}
-            minValue={5}
-            //maxValue={10}
+            minValue={minValue} //5
+            maxValue={maxValue}
             incrementValue={1}
           />
         </View>
       );
     } else {
+      let minValue = 0;
+      let maxValue = 0;
+
+      if (
+        title == "Sirshasana" ||
+        title == "Sarvangasana" ||
+        title == "Paschimothanasana"
+      ) {
+        minValue = 120;
+        maxValue = 1200;
+      } else if (
+        title == "Halasana" ||
+        title == "Matsyasana" ||
+        title == "Ardha Matsyendrasana" ||
+        title == "Pada Hasthasana" ||
+        title == "Trikonasana"
+      ) {
+        minValue = 30;
+        maxValue = 600;
+      } else if (title == "Inclined Plane") {
+        minValue = 30;
+        maxValue = 60;
+      }
+      if (
+        title == "Bhujangasana" ||
+        title == "Salabhasana" ||
+        title == "Dhanurasana" ||
+        title == "Kakasana"
+      ) {
+        minValue = 30;
+        maxValue = 120;
+      }
+
       view.push(
         <View style={styles.container_text} key={this.keyCount++}>
           <Text style={styles.label}>Hold time (sec):</Text>
@@ -219,7 +268,7 @@ export default class AsanaRow extends Component {
               this.props.updateHoldTime(this.props.rowNumber, itemValue);
             }}
             initialValue={this.props.holdTime}
-            minValue={30}
+            minValue={15} //30
             //maxValue={900}
             incrementValue={15}
           />

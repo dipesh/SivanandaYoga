@@ -15,7 +15,7 @@ import MeditationScreen from "../screens/MeditationScreen";
 
 
 const HomeStack = createStackNavigator({
-  Home: MainScreen,
+  Home: StartClassScreen,
   StartClassScreen: {
     screen: StartClassScreen
   },
@@ -79,7 +79,7 @@ SettingsStack.navigationOptions = {
 };
 
 export default createBottomTabNavigator({
-  MeditationStack,
   HomeStack,
+  MeditationStack,
   //SettingsStack
 });
