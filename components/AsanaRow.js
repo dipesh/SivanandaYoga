@@ -62,27 +62,37 @@ export default class AsanaRow extends Component {
       },
       onClose: () => this.setState({ currentlyOpenSwipeable: null })
     };
-
-    return (
-      <Swipeable
-        rightButtons={[
-          <TouchableOpacity
-            onPress={() => {
-              //console.log("asana row " + this.props.title)
-              this.props.handleRemovePress(this.props.rowNumber);
-              this.state.currentlyOpenSwipeable.recenter();
-            }}
-            style={[styles.rightSwipeItem, { backgroundColor: "red" }]}
-          >
-            <Text style={styles.whiteText}>Remove</Text>
-          </TouchableOpacity>
-        ]}
-        onRightButtonsOpenRelease={itemProps.onOpen}
-        onRightButtonsCloseRelease={itemProps.onClose}
+    let removeButton = [
+      <TouchableOpacity
+        onPress={() => {
+          //console.log("asana row " + this.props.title)
+          this.props.handleRemovePress(this.props.rowNumber);
+          this.state.currentlyOpenSwipeable.recenter();
+        }}
+        style={[styles.rightSwipeItem, { backgroundColor: "red" }]}
       >
-        {this.createView()}
-      </Swipeable>
-    );
+        <Text style={styles.whiteText}>Remove</Text>
+      </TouchableOpacity>
+    ];
+
+    if (
+      this.props.title == "Opening Prayer" ||
+      this.props.title == "Final Prayer"
+    ) {
+
+      //the prayers cannot be removed
+      return this.createView();
+    } else {
+      return (
+        <Swipeable
+          rightButtons={removeButton}
+          onRightButtonsOpenRelease={itemProps.onOpen}
+          onRightButtonsCloseRelease={itemProps.onClose}
+        >
+          {this.createView()}
+        </Swipeable>
+      );
+    }
   };
 
   createView() {
