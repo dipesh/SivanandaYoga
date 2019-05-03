@@ -26,8 +26,8 @@ import DialogInput from "react-native-dialog-input";
 export default class EditClassScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     title: "Edit " + `${navigation.state.params.key}`,
-    tabBarVisible: false, 
-    //title: "Uncomment " 
+    tabBarVisible: false
+    //title: "Uncomment " //this line is used during dev, when the EditClassScreen is at the top of the navigation stack
   });
   constructor(props) {
     super(props);
@@ -35,6 +35,8 @@ export default class EditClassScreen extends React.Component {
     this.savedClassName = this.props.navigation.getParam("key", "[New Class]");
     this.savedClassesKey = "SivanandaSavedClasses";
 
+    //the data in the array will be replaced with the _retrieveData() data
+    //TODO remove this.getAsanasArray(); for live version
     this.asanaArray = this.getAsanasArray();
 
     this.removedAsanaArray = [];
@@ -96,12 +98,14 @@ export default class EditClassScreen extends React.Component {
 
   _retrieveData = async () => {
     try {
+      //get a list of all the saved classes
       const value = await AsyncStorage.getItem(this.savedClassesKey);
 
       if (value !== null) {
         this.allClasses = JSON.parse(value);
 
         this.allClasses.forEach(element => {
+          //get the class we want
           if (element.key == this.savedClassName) {
             this.asanaArray = element.item;
           }
@@ -111,6 +115,9 @@ export default class EditClassScreen extends React.Component {
         let allAsanaArray = this.getAsanasArray();
         this.removedAsanaArray = []; //empty the array
 
+        //the saved class only contains the asana that were saved
+        //the arrays are intersected so that the asanas that were removed can be put 
+        //in the removed asana array, so that they can be readded if the user wants
         allAsanaArray.forEach(element => {
           let found = false;
           this.asanaArray.forEach(e => {
@@ -124,19 +131,12 @@ export default class EditClassScreen extends React.Component {
           }
         });
 
-        this.setArrayRowNumber();
+        this.setArrayRowNumbers();
 
         this.setState({ arrayHolder: [...this.asanaArray] });
-      } else {
-        //there are no saved classes
-      }
+      } //else there are no saved classes
     } catch (error) {
-      // Error retrieving data
       console.log("load error: " + error);
-      // try {
-      //   AsyncStorage.removeItem(this.savedClassesKey);
-      //   console.log("removed data");
-      // } catch (error) {}
     }
   };
 
@@ -146,12 +146,13 @@ export default class EditClassScreen extends React.Component {
 
   getAsanasArray() {
     //the key also represents the order
+    //the default values are stored here
     let arr = [
       {
         key: "0",
         title: "Opening Prayer",
         description: "Opening Prayer",
-        image_url: require("../assets/images/OpeningPrayer.jpg"),
+        image_url: require("../assets/images/OpeningPrayer.jpg")
       },
       {
         key: "1",
@@ -160,13 +161,13 @@ export default class EditClassScreen extends React.Component {
         image_url: require("../assets/images/Kapalabhati.jpg"),
         actionsPerRound: 80,
         retentionLength: 50,
-        rounds: 3,
+        rounds: 3
       },
       {
         key: "2",
-        title: "Anulom Viloma",
+        title: "Anuloma Viloma",
         description: "Alternate Nostril Breathing",
-        image_url: require("../assets/images/AnulomViloma.jpg"),
+        image_url: require("../assets/images/AnulomaViloma.jpg"),
         rounds: 8,
         ratioPerRound: 4
       },
@@ -175,125 +176,125 @@ export default class EditClassScreen extends React.Component {
         title: "Surya Namaskar",
         description: "Sun Salutations",
         image_url: require("../assets/images/SuryaNamaskar.jpg"),
-        rounds: 6,
+        rounds: 6
       },
       {
         key: "4",
         title: "Single Leg Raises",
         description: "Single Leg Raises",
         image_url: require("../assets/images/SingleLegRaises.jpg"),
-        rounds: 3,
+        rounds: 3
       },
       {
         key: "5",
         title: "Double Leg Raises",
         description: "Double Leg Raises",
         image_url: require("../assets/images/DoubleLegRaises.jpg"),
-        rounds: 8,
+        rounds: 8
       },
       {
         key: "6",
         title: "Sirshasana",
         description: "Headstand",
         image_url: require("../assets/images/Sirshasana.jpg"),
-        holdTime: 180,
+        holdTime: 180
       },
       {
         key: "7",
         title: "Sarvangasana",
         description: "Shoulderstand",
         image_url: require("../assets/images/Sarvangasana.jpg"),
-        holdTime: 180,
+        holdTime: 180
       },
       {
         key: "8",
-        title: 'Halasana',
-        description: 'Halasana',
+        title: "Halasana",
+        description: "Halasana",
         image_url: require("../assets/images/Halasana.jpg"),
-        holdTime: 90,
+        holdTime: 90
       },
       {
         key: "9",
-        title: 'Matsyasana',
-        description: 'Matsyasana',
+        title: "Matsyasana",
+        description: "Matsyasana",
         image_url: require("../assets/images/Matsyasana.jpg"),
-        holdTime: 90,
+        holdTime: 90
       },
       {
         key: "10",
-        title: 'Paschimothanasana',
-        description: 'Paschimothanasana',
+        title: "Paschimothanasana",
+        description: "Paschimothanasana",
         image_url: require("../assets/images/Paschimothanasana.jpg"),
-        holdTime: 180,
+        holdTime: 180
       },
       {
         key: "11",
-        title: 'Inclined Plane',
-        description: 'Inclined Plane',
+        title: "Inclined Plane",
+        description: "Inclined Plane",
         image_url: require("../assets/images/InclinedPlane.jpg"),
-        holdTime: 30,
+        holdTime: 30
       },
       {
         key: "12",
-        title: 'Bhujangasana',
-        description: 'Bhujangasana',
+        title: "Bhujangasana",
+        description: "Bhujangasana",
         image_url: require("../assets/images/Bhujangasana.jpg"),
-        holdTime: 45,
+        holdTime: 45
       },
       {
         key: "13",
-        title: 'Salabhasana',
-        description: 'Salabhasana',
+        title: "Salabhasana",
+        description: "Salabhasana",
         image_url: require("../assets/images/Salabhasana.jpg"),
-        holdTime: 45,
+        holdTime: 45
       },
       {
         key: "14",
-        title: 'Dhanurasana',
-        description: 'Dhanurasana',
+        title: "Dhanurasana",
+        description: "Dhanurasana",
         image_url: require("../assets/images/Dhanurasana.jpg"),
-        holdTime: 45,
+        holdTime: 45
       },
       {
         key: "15",
-        title: 'Ardha Matsyendrasana',
-        description: 'Ardha Matsyendrasana',
+        title: "Ardha Matsyendrasana",
+        description: "Ardha Matsyendrasana",
         image_url: require("../assets/images/ArdhaMatsyendrasana.jpg"),
-        holdTime: 90,
+        holdTime: 90
       },
       {
         key: "16",
-        title: 'Kakasana',
-        description: 'Kakasana',
+        title: "Kakasana",
+        description: "Kakasana",
         image_url: require("../assets/images/Kakasana.jpg"),
-        holdTime: 45,
+        holdTime: 45
       },
       {
         key: "17",
-        title: 'Pada Hasthasana',
-        description: 'Pada Hasthasana',
+        title: "Pada Hasthasana",
+        description: "Pada Hasthasana",
         image_url: require("../assets/images/PadaHasthasana.jpg"),
-        holdTime: 90,
+        holdTime: 90
       },
       {
         key: "18",
-        title: 'Trikonasana',
-        description: 'Trikonasana',
+        title: "Trikonasana",
+        description: "Trikonasana",
         image_url: require("../assets/images/Trikonasana.jpg"),
-        holdTime: 45,
+        holdTime: 45
       },
       {
         key: "19",
-        title: 'Savasana',
-        description: 'Savasana',
-        image_url: require("../assets/images/Savasana.jpg"),
+        title: "Savasana",
+        description: "Savasana",
+        image_url: require("../assets/images/Savasana.jpg")
       },
       {
         key: "20",
-        title: 'Final Prayer',
-        description: 'Final Prayer',
-        image_url: require("../assets/images/FinalPrayer.jpg"),
-      },
+        title: "Final Prayer",
+        description: "Final Prayer",
+        image_url: require("../assets/images/FinalPrayer.jpg")
+      }
     ];
     for (i = 0; i < arr.length; i++) {
       arr[i].rowNumber = i.toString();
@@ -305,7 +306,9 @@ export default class EditClassScreen extends React.Component {
     this.setState({ arrayHolder: [...this.asanaArray] });
   }
 
-  setArrayRowNumber() {
+  setArrayRowNumbers() {
+    //save the index of the array inside the array for the array item is passed to the row item,
+    //the row number is used to update the array when the user modifies something
     for (let i = 0; i < this.asanaArray.length; i++) {
       this.asanaArray[i].rowNumber = i.toString();
     }
@@ -316,12 +319,12 @@ export default class EditClassScreen extends React.Component {
   deleteData = rowNumber => {
     this.removedAsanaArray.push(this.asanaArray[rowNumber]);
     this.asanaArray.splice(rowNumber, 1);
-    this.setArrayRowNumber();
+    this.setArrayRowNumbers();
     this.setState({ arrayHolder: [...this.asanaArray] });
   };
 
   joinData = item => {
-    //add the item at the right index, the key contains the proper order
+    //insert the item at the right index, the key contains the proper order
     let indexToAdd = 0;
     if (item.key > this.asanaArray[this.asanaArray.length - 1].key) {
       this.asanaArray.push(item);
@@ -337,7 +340,7 @@ export default class EditClassScreen extends React.Component {
     this.setState({ arrayHolder: [...this.asanaArray] });
     this.removedAsanaArray.splice(item.rowNumber, 1);
 
-    this.setArrayRowNumber();
+    this.setArrayRowNumbers();
   };
 
   updateHoldTime = (rowNumber, holdTime) => {
@@ -414,8 +417,6 @@ export default class EditClassScreen extends React.Component {
             updateRatioPerRound={this.updateRatioPerRound}
           />
         </ScrollView>
-        {/* <Text> {JSON.stringify(this.asanaArray)} </Text> */}
-
         <View style={styles.headerView}>
           <TouchableOpacity
             onPress={() => this._storeData()}
@@ -436,8 +437,6 @@ export default class EditClassScreen extends React.Component {
             <Text style={styles.headerButtonButtonText}>Add Exercise</Text>
           </TouchableOpacity>
         </View>
-
-        {/* <Text>{this.savedClassName}</Text> */}
       </View>
     );
   }
@@ -528,79 +527,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff"
   },
-  developmentModeText: {
-    marginBottom: 20,
-    color: "rgba(0,0,0,0.4)",
-    fontSize: 14,
-    lineHeight: 19,
-    textAlign: "center"
-  },
   contentContainer: {
     paddingTop: 5
-  },
-  welcomeContainer: {
-    alignItems: "center",
-    marginTop: 10,
-    marginBottom: 20
-  },
-  welcomeImage: {
-    width: 100,
-    height: 80,
-    resizeMode: "contain",
-    marginTop: 3,
-    marginLeft: -10
-  },
-  getStartedContainer: {
-    alignItems: "center",
-    marginHorizontal: 50
-  },
-  homeScreenFilename: {
-    marginVertical: 7
-  },
-  codeHighlightText: {
-    color: "rgba(96,100,109, 0.8)"
-  },
-  codeHighlightContainer: {
-    backgroundColor: "rgba(0,0,0,0.05)",
-    borderRadius: 3,
-    paddingHorizontal: 4
   },
   getStartedText: {
     fontSize: 17,
     color: "rgba(96,100,109, 1)",
     lineHeight: 24,
     textAlign: "center"
-  },
-  tabBarInfoContainer: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    ...Platform.select({
-      ios: {
-        shadowColor: "black",
-        shadowOffset: { height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3
-      },
-      android: {
-        elevation: 20
-      }
-    }),
-    alignItems: "center",
-    backgroundColor: "#fbfbfb",
-    paddingVertical: 20
-  },
-  tabBarInfoText: {
-    fontSize: 17,
-    color: "rgba(96,100,109, 1)",
-    textAlign: "center"
-  },
-  navigationFilename: {
-    marginTop: 5
-  },
-  helpContainer: {
-    alignItems: "center"
   },
   addExercises: {
     padding: 15,
@@ -610,6 +544,5 @@ const styles = StyleSheet.create({
   linkText: {
     fontSize: 14,
     color: "#2e78b7"
-  },
-  textInputModal: {}
+  }
 });

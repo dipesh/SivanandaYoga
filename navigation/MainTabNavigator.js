@@ -7,15 +7,14 @@ import {
 
 import TabBarIcon from "../components/TabBarIcon";
 import EditClassScreen from "../screens/EditClassScreen";
-import LinksScreen from "../screens/LinksScreen";
 import StartClassScreen from "../screens/StartClassScreen";
 import MainScreen from "../screens/MainScreen";
-import SettingsScreen from "../screens/SettingsScreen";
 import MeditationScreen from "../screens/MeditationScreen";
+import HowToScreen from "../screens/HowToScreen";
 
 
 const HomeStack = createStackNavigator({
-  Home: StartClassScreen,
+  Home: MainScreen,
   StartClassScreen: {
     screen: StartClassScreen
   },
@@ -40,12 +39,6 @@ HomeStack.navigationOptions = {
 
 const MeditationStack = createStackNavigator({
   Home: MeditationScreen,
-  // StartClassScreen: {
-  //   screen: StartClassScreen
-  // },
-  // EditClassScreen: {
-  //   screen: EditClassScreen
-  // }
 });
 
 MeditationStack.navigationOptions = {
@@ -58,18 +51,12 @@ MeditationStack.navigationOptions = {
   )
 };
 
-const SettingsStack = createStackNavigator({
-  Home: MainScreen,
-  StartClassScreen: {
-    screen: StartClassScreen
-  },
-  EditClassScreen: {
-    screen: EditClassScreen
-  }
+const HowToStack = createStackNavigator({
+  Home: HowToScreen,
 });
 
-SettingsStack.navigationOptions = {
-  tabBarLabel: "Settings",
+HowToStack.navigationOptions = {
+  tabBarLabel: "How To",
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
@@ -80,6 +67,6 @@ SettingsStack.navigationOptions = {
 
 export default createBottomTabNavigator({
   HomeStack,
+  HowToStack,
   MeditationStack,
-  //SettingsStack
 });

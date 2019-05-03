@@ -1,5 +1,5 @@
-export default class IntervalTimer{
-  constructor(name, callback, interval, maxFires = null){
+export default class IntervalTimer {
+  constructor(name, callback, interval, maxFires = null) {
     this.remaining = 0;
     this.state = 0; //  0 = idle, 1 = running, 2 = paused, 3= resumed
 
@@ -10,10 +10,10 @@ export default class IntervalTimer{
     this.pausedTime = 0; //how long we've been paused for
 
     this.fires = 0;
-  } 
+  }
 
-  proxyCallback(){
-    if(this.maxFires != null && this.fires >= this.maxFires){
+  proxyCallback() {
+    if (this.maxFires != null && this.fires >= this.maxFires) {
       this.stop();
       return;
     }
@@ -22,36 +22,39 @@ export default class IntervalTimer{
     this.callback();
   }
 
-  start(){
-    console.log('Starting Timer ' + this.name);
+  start() {
+    console.log("Starting Timer " + this.name);
     this.timerId = setInterval(() => this.proxyCallback(), this.interval);
     this.lastTimeFired = new Date();
     this.state = 1;
     this.fires = 0;
   }
 
-  pause(){
+  pause() {
     if (this.state != 1 && this.state != 3) return;
 
-    console.log('Pausing Timer ' + this.name);
+    console.log("Pausing Timer " + this.name);
 
-    this.remaining = this.interval - (new Date() - this.lastTimeFired) + this.pausedTime;
+    this.remaining =
+      this.interval - (new Date() - this.lastTimeFired) + this.pausedTime;
     this.lastPauseTime = new Date();
     clearInterval(this.timerId);
     clearTimeout(this.resumeId);
     this.state = 2;
   }
 
-  resume(){
+  resume() {
     if (this.state != 2) return;
 
     this.pausedTime += new Date() - this.lastPauseTime;
-    console.log(`Resuming Timer ${this.name} with ${this.remaining} remaining`);
+    console.log(
+      "Resuming Timer " + this.name + " with " + this.remaining + " remaining"
+    );
     this.state = 3;
     this.resumeId = setTimeout(() => this.timeoutCallback(), this.remaining);
   }
 
-  timeoutCallback(){
+  timeoutCallback() {
     if (this.state != 3) return;
 
     this.pausedTime = 0;
@@ -59,33 +62,48 @@ export default class IntervalTimer{
     this.start();
   }
 
-  stop(){
-    if(this.state === 0) return;
+  stop() {
+    if (this.state === 0) return;
 
-    console.log('Stopping Timer %s. Fired %s/%s times', this.name, this.fires, this.maxFires);
+    console.log(
+      "Stopping Timer " +
+        this.name +
+        ". Fired " +
+        this.fires +
+        "/" +
+        this.maxFires +
+        " times"
+    ); //, this.name, this.fires, this.maxFires);
     clearInterval(this.timerId);
     clearTimeout(this.resumeId);
     this.state = 0;
   }
 
   //set a new interval to use on the next interval loop
-  setInterval(newInterval){
-    console.log('Changing interval from %s to %s for %s', this.interval, newInterval, this.name);
+  setInterval(newInterval) {
+    console.log(
+      "Changing interval from " +
+      this.interval +
+      " to " +
+      newInterval +
+      " for " +
+      this.name +
+      "");
 
     //if we're running do a little switch-er-oo
-    if(this.state == 1){
+    if (this.state == 1) {
       this.pause();
       this.interval = newInterval;
       this.resume();
     }
     //if we're already stopped, idle, or paused just switch it
-    else{
+    else {
       this.interval = newInterval;
     }
   }
 
-  setMaxFires(newMax){
-    if(newMax != null && this.fires >= newMax){
+  setMaxFires(newMax) {
+    if (newMax != null && this.fires >= newMax) {
       this.stop();
     }
     this.maxFires = newMax;

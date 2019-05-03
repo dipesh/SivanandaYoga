@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { View, ListView, FlatList, StyleSheet, Text } from "react-native";
-import CustomRow from "./CustomRow";
 import AsanaRow from "./AsanaRow";
 
 const styles = StyleSheet.create({

@@ -18,14 +18,14 @@ import { KeepAwake } from "expo";
 
 export default class StartClassScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
-    //title: `${navigation.state.params.item.key}`,
-    tabBarVisible: false,
-    title: "uncomment" //`${navigation.state.params.item.key}`
+    title: `${navigation.state.params.item.key}`,
+    tabBarVisible: false
+    //title: "uncomment" //`${navigation.state.params.item.key}`
   });
 
   constructor(props) {
     super(props);
-
+    //this is used to make sure that multiple sound button presses don't happen if the sound functions are running
     this.buttomComplete = true;
 
     this.savedClassesKey = "SivanandaSavedClasses";
@@ -54,14 +54,14 @@ export default class StartClassScreen extends React.Component {
             image_url: require("../assets/images/Kapalabhati.jpg"),
             actionsPerRound: 5,
             retentionLength: 10,
-            rounds: 2,
+            rounds: 2
           },
           {
             key: "2",
-            title: "Anulom Viloma",
+            title: "Anuloma Viloma",
             description: "Alternate Nostril Breathing",
-            image_url: require("../assets/images/AnulomViloma.jpg"),
-            rounds: 2,
+            image_url: require("../assets/images/AnulomaViloma.jpg"),
+            rounds: 3,
             ratioPerRound: 4
           },
           {
@@ -69,55 +69,35 @@ export default class StartClassScreen extends React.Component {
             title: "Surya Namaskar",
             description: "Sun Salutations",
             image_url: require("../assets/images/SuryaNamaskar.jpg"),
-            holdTime: 30,
-            actionsPerRound: 35,
-            retentionLength: 30,
-            rounds: 4,
-            ratioPerRound: 5
+            rounds: 4
           },
           {
             key: "4",
             title: "Single Leg Raises",
             description: "Single Leg Raises",
             image_url: require("../assets/images/SingleLegRaises.jpg"),
-            holdTime: 30,
-            actionsPerRound: 35,
-            retentionLength: 30,
-            rounds: 6,
-            ratioPerRound: 5
+            rounds: 4
           },
           {
             key: "5",
             title: "Double Leg Raises",
             description: "Double Leg Raises",
             image_url: require("../assets/images/DoubleLegRaises.jpg"),
-            holdTime: 30,
-            actionsPerRound: 35,
-            retentionLength: 30,
-            rounds: 7,
-            ratioPerRound: 5
+            rounds: 4
           },
           {
             key: "6",
             title: "Sirshasana",
             description: "Headstand",
             image_url: require("../assets/images/Sirshasana.jpg"),
-            holdTime: 10,
-            actionsPerRound: 35,
-            retentionLength: 30,
-            rounds: 20,
-            ratioPerRound: 5
+            holdTime: 10
           },
           {
             key: "7",
             title: "Sarvangasana",
             description: "Shoulderstand",
             image_url: require("../assets/images/Sarvangasana.jpg"),
-            holdTime: 30,
-            actionsPerRound: 35,
-            retentionLength: 30,
-            rounds: 20,
-            ratioPerRound: 5
+            holdTime: 30
           },
           {
             key: "8",
@@ -218,6 +198,7 @@ export default class StartClassScreen extends React.Component {
     this.asanaArray = this.currentClass.item;
 
     this.willFocus = this.props.navigation.addListener("willFocus", () => {
+      //for when the app goes from the edit screen to this screen reload the new data
       this._retrieveData();
     });
 
@@ -230,12 +211,11 @@ export default class StartClassScreen extends React.Component {
       counter: 0,
       totalTime: 1000
     };
-
-    this.pumpsCounter = 0;
-    this.roundsCounter = 0;
   }
 
   componentWillUnmount() {
+    //the sound automically stops if the screen closes
+    //the sound needs to be stopped when the user leaves the screen
     if (this.activeAsanaTimer != null) {
       this.activeAsanaTimer.stop();
     }
@@ -246,96 +226,21 @@ export default class StartClassScreen extends React.Component {
     const { didJustFinish, isLoaded, positionMillis } = playbackStatus;
 
     if (isLoaded) {
-      //this.asanaPlayback(positionMillis);
       if (didJustFinish) {
+        console.log("didJustFinish");
         this.nextAsana();
       }
     }
   };
-  // asanaPlayback(positionMillis) {
-  //   if (this.asanaArray[this.currentAsanaRow].title == "Opening Prayer") {
-  //     //this.playOpeningPrayer();
-  //   } else if (this.asanaArray[this.currentAsanaRow].title == "Kapalabhati") {
-  //     //this.playKapalabhati();
-  //     let kaPumpResetPointStart = 55052;
-  //     let kaPumpResetPointEnd = 55882;
-  //     let kaIntroDuration = 48000;
-  //     let kaRoundsPassed = 0;
-  //     let kaEnd = 116000;
-  //     //start of breath retention starts at 2:25:000, 145000ms
-  //     //silence is at 3:06:000, 186000ms
-  //     //silence ends at 3:36:000, 216000ms
-  //     //min retention length is 45sec
-  //     //end breaths is at 8:57:000, 537000ms
-  //     //21500 is the first deep inhale before the pumps
-  //     let deepInhaleTime = 21500;
 
-  //     console.log(this.pumpsCounter + " " + positionMillis);
-  //     if (this.pumpsCounter < 30 && positionMillis > kaPumpResetPointEnd) {
-  //       this.soundObject.setPositionAsync(55052);
-  //       this.pumpsCounter++;
-  //     }
-  //   } else if (this.asanaArray[this.currentAsanaRow].title == "Anulom Viloma") {
-  //     this.playAnulomViloma();
-  //   } else if (
-  //     this.asanaArray[this.currentAsanaRow].title == "Surya Namaskar"
-  //   ) {
-  //     this.playSuryaNamaskar();
-  //   } else if (
-  //     this.asanaArray[this.currentAsanaRow].title == "Single Leg Raises"
-  //   ) {
-  //     this.playSingleLegRaises();
-  //   } else if (
-  //     this.asanaArray[this.currentAsanaRow].title == "Double Leg Raises"
-  //   ) {
-  //     this.playDoubleLegRaises();
-  //   } else if (this.asanaArray[this.currentAsanaRow].title == "Sirshasana") {
-  //     this.playSirshasana();
-  //   } else if (this.asanaArray[this.currentAsanaRow].title == "Sarvangasana") {
-  //     this.playSarvangasana();
-  //   } else if (this.asanaArray[this.currentAsanaRow].title == "Halasana") {
-  //     this.playHalasana();
-  //   } else if (this.asanaArray[this.currentAsanaRow].title == "Matsyasana") {
-  //     this.playMatsyasana();
-  //   } else if (
-  //     this.asanaArray[this.currentAsanaRow].title == "Paschimothanasana"
-  //   ) {
-  //     this.playPaschimothanasana();
-  //   } else if (
-  //     this.asanaArray[this.currentAsanaRow].title == "Inclined Plane"
-  //   ) {
-  //     this.playInclinedPlane();
-  //   } else if (this.asanaArray[this.currentAsanaRow].title == "Bhujangasana") {
-  //     this.playBhujangasana();
-  //   } else if (this.asanaArray[this.currentAsanaRow].title == "Salabhasana") {
-  //     this.playSalabhasana();
-  //   } else if (this.asanaArray[this.currentAsanaRow].title == "Dhanurasana") {
-  //     this.playDhanurasana();
-  //   } else if (
-  //     this.asanaArray[this.currentAsanaRow].title == "Ardha Matsyendrasana"
-  //   ) {
-  //     this.playArdhaMatsyendrasana();
-  //   } else if (this.asanaArray[this.currentAsanaRow].title == "Kakasana") {
-  //     this.playKakasana();
-  //   } else if (
-  //     this.asanaArray[this.currentAsanaRow].title == "Pada Hasthasana"
-  //   ) {
-  //     this.playPadaHasthasana();
-  //   } else if (this.asanaArray[this.currentAsanaRow].title == "Trikonasana") {
-  //     this.playTrikonasana();
-  //   } else if (this.asanaArray[this.currentAsanaRow].title == "Savasana") {
-  //     this.playSavasana();
-  //   } else if (this.asanaArray[this.currentAsanaRow].title == "Final Prayer") {
-  //     this.playFinalPrayer();
-  //   }
-  // }
   _retrieveData = async () => {
     try {
+      //gets a list of all the saved classes
       const value = await AsyncStorage.getItem(this.savedClassesKey);
-      //console.log(value);
       if (value !== null) {
         this.allClasses = JSON.parse(value);
         this.allClasses.forEach(element => {
+          //select the class we want
           if (element.key == this.savedClassName) {
             this.asanaArray = element.item;
           }
@@ -349,11 +254,13 @@ export default class StartClassScreen extends React.Component {
   };
 
   setArrayState() {
+    //store the index in each item, this is used when we need to jump to an asana
     for (let i = 0; i < this.asanaArray.length; i++) {
       this.asanaArray[i].rowNumber = i.toString();
     }
     this.setState({ arrayHolder: [...this.asanaArray] });
   }
+
   failureCallback(result) {
     console.log("failureCallback " + result);
   }
@@ -384,6 +291,8 @@ export default class StartClassScreen extends React.Component {
       this.counterTimer.start();
 
       this.currentAsanaRow++;
+      console.log("startAsanas currentAsanaRow" + this.currentAsanaRow);
+
       this.playAsanaSound();
     } else {
       //resume from the last asana and time
@@ -405,16 +314,21 @@ export default class StartClassScreen extends React.Component {
   //Each asana/exercise has one sound file
   //The code will jump through the file to play it so that the timings works
   async playAsanaSound() {
+    console.log(
+      "playAsanaSound " + this.asanaArray[this.currentAsanaRow].title
+    );
     if (this.asanaArray[this.currentAsanaRow].title == "Opening Prayer") {
       await this.playOpeningPrayer();
     } else if (this.asanaArray[this.currentAsanaRow].title == "Kapalabhati") {
       await this.playKapalabhati();
-    } else if (this.asanaArray[this.currentAsanaRow].title == "Anulom Viloma") {
-      await  this.playAnulomViloma();
     } else if (
-      await this.asanaArray[this.currentAsanaRow].title == "Surya Namaskar"
+      this.asanaArray[this.currentAsanaRow].title == "Anuloma Viloma"
     ) {
-      await  this.playSuryaNamaskar();
+      await this.playAnulomaViloma();
+    } else if (
+      (await this.asanaArray[this.currentAsanaRow].title) == "Surya Namaskar"
+    ) {
+      await this.playSuryaNamaskar();
     } else if (
       this.asanaArray[this.currentAsanaRow].title == "Single Leg Raises"
     ) {
@@ -422,6 +336,7 @@ export default class StartClassScreen extends React.Component {
     } else if (
       this.asanaArray[this.currentAsanaRow].title == "Double Leg Raises"
     ) {
+      console.log("playAsanaSound playDoubleLegRaises");
       await this.playDoubleLegRaises();
     } else if (this.asanaArray[this.currentAsanaRow].title == "Sirshasana") {
       await this.playSirshasana();
@@ -516,7 +431,7 @@ export default class StartClassScreen extends React.Component {
     this.numberOfPumps = actionsPerRound - 3;
 
     await this.soundObject.setPositionAsync(this.kaPumpResetPoint);
-    this.AnulomRepeatTimer = new IntervalTimer(
+    this.repeatTimer = new IntervalTimer(
       "kaPumpRepeat",
       () => {
         if (roundCounter == this.numberOfPumps) {
@@ -531,8 +446,8 @@ export default class StartClassScreen extends React.Component {
       938,
       this.numberOfPumps + 1 // 1 extra to play end of pumping
     );
-    this.AnulomRepeatTimer.start();
-    this.activeAsanaTimer = this.AnulomRepeatTimer;
+    this.repeatTimer.start();
+    this.activeAsanaTimer = this.repeatTimer;
   }
   async playKaPump() {
     try {
@@ -598,68 +513,63 @@ export default class StartClassScreen extends React.Component {
     }
   }
   //#endregion
-  //#region Anulom Viloma
-  async playAnulomViloma() {
-
+  //#region Anuloma Viloma
+  async playAnulomaViloma() {
     //TODO need to add code for ratio
     let soundAsset = __DEV__
-      ? require("../assets/sounds/AnulomViloma2.mp3")
-      : require("../assets/sounds/AnulomViloma.mp3");
+      ? require("../assets/sounds/AnulomaViloma2.mp3")
+      : require("../assets/sounds/AnulomaViloma.mp3");
 
+    //round starts with inhale thru left
+    let roundStart = 94500; //round start point
+    let roundEnd = 153500;
+    let soundEnd = 505700;
+
+    await this.playRoundTimer(soundAsset, roundStart, roundEnd, soundEnd);
+  }
+
+  async playRoundTimer(soundAsset, roundStart, roundEnd, soundEnd) {
     await this.soundObject.unloadAsync();
     await this.soundObject.loadAsync(soundAsset);
     await this.soundObject.playAsync();
 
-    //round starts with inhale thru left 
-    let roundStart = 94500 //round start point
-    let roundEnd = 153500
-
-    this.roundTimer = new IntervalTimer(
+    this.dlrIntro = new IntervalTimer(
       "roundTimer",
       () => {
-        this.playAnulomRepeat(roundStart, roundEnd);
+        this.playRoundRepeater(roundStart, roundEnd, soundEnd);
       },
       roundStart,
       1
     );
-    this.roundTimer.start();
-    this.activeAsanaTimer = this.roundTimer;
-    //dev
-    //await this.soundObject.setPositionAsync(537000);
-    // return;
+    this.dlrIntro.start();
+    this.activeAsanaTimer = this.dlrIntro;
   }
 
-  async playAnulomRepeat(roundStart, roundEnd){
+  async playRoundRepeater(roundStart, roundEnd, anulomLastBreath) {
     let rounds = this.asanaArray[this.currentAsanaRow].rounds;
     let roundCounter = 0;
     let waitTime = roundEnd - roundStart;
-    
-    //await this.soundObject.setPositionAsync(roundStart);
-    this.AnulomRepeatTimer = new IntervalTimer(
-      "AnulomRepeatTimer",
+
+    this.repeatTimer = new IntervalTimer(
+      "repeatTimer",
       () => {
-        if (roundCounter == rounds) {
-          console.log("AnulomRepeatTimer roundCounterEnd " + roundCounter);
-          this.playEndOfAnulom();
+        if (roundCounter == rounds - 2) {
+          //console.log("repeatTimer roundCounterEnd "+ (rounds - 2) +"=?"+ roundCounter);
+          this.soundSetPosition(anulomLastBreath);
         } else {
-          console.log("AnulomRepeatTimer roundCounter " + roundCounter);
-          this.playAnulomRound(roundStart);
+          //console.log("repeatTimer roundCounter " + roundCounter);
+          this.soundSetPosition(roundStart);
           roundCounter++;
         }
       },
       waitTime,
-      rounds -1 // 1 extra to play end of pumping, -2 cause one already played
+      rounds - 1 // 1 extra to play end, -2 cause one already played
     );
-    this.AnulomRepeatTimer.start();
-    this.activeAsanaTimer = this.AnulomRepeatTimer;
+    this.repeatTimer.start();
+    this.activeAsanaTimer = this.repeatTimer;
   }
-
-  async playEndOfAnulom(){
-    let anulomLastBreath = 505700;
-    await this.soundObject.setPositionAsync(anulomLastBreath)
-  }
-  async playAnulomRound(roundStart){
-    await this.soundObject.setPositionAsync(roundStart)
+  async soundSetPosition(position) {
+    await this.soundObject.setPositionAsync(position);
   }
   //#endregion
   async playSuryaNamaskar() {
@@ -699,8 +609,15 @@ export default class StartClassScreen extends React.Component {
       "suryaNamaskarRounds",
       () => {
         if (roundCounter == rounds - 2) {
+          console.log(
+            "suryaNamaskarRounds roundCounterEnd " +
+              (rounds - 2) +
+              "=?" +
+              roundCounter
+          );
           this.playEndOfSuryaNamaskarRounds();
         } else {
+          console.log("suryaNamaskarRounds roundCounter " + roundCounter);
           this.playSuryaNamaskarSingleRound();
           roundCounter++;
         }
@@ -718,22 +635,69 @@ export default class StartClassScreen extends React.Component {
     await this.soundObject.setPositionAsync(511500);
   }
   async playSingleLegRaises() {
-    await this.soundObject.unloadAsync();
     let soundAsset = __DEV__
       ? require("../assets/sounds/SingleLegRaises2.mp3")
       : require("../assets/sounds/SingleLegRaises.mp3");
 
-    await this.soundObject.loadAsync(soundAsset);
-    await this.soundObject.playAsync();
+    let roundStart = 63769; //right leg up
+    let roundEnd = 81073; //left down
+    let endTime = 160802;
+
+    await this.playRoundTimer(soundAsset, roundStart, roundEnd, endTime);
   }
   async playDoubleLegRaises() {
-    await this.soundObject.unloadAsync();
     let soundAsset = __DEV__
       ? require("../assets/sounds/DoubleLegRaises2.mp3")
       : require("../assets/sounds/DoubleLegRaises.mp3");
 
+    await this.soundObject.unloadAsync();
     await this.soundObject.loadAsync(soundAsset);
     await this.soundObject.playAsync();
+
+    //the first dlr ends at 35293
+    //the minimum number of raises is 3 which end at 52316
+    //52316 - 60131 is a clean cycle for a dlr
+    //66845 is the final dlr then play till end
+
+    let introEnd = 35293;
+    let roundStart = 52316;
+    let roundEnd = 60131;
+    let endingStart = 66845;
+
+    this.dlrIntro = new IntervalTimer(
+      "dlrIntro",
+      () => {
+        this.playdlrRoundRepeater(introEnd, roundStart, roundEnd, endingStart);
+      },
+      introEnd,
+      1
+    );
+    this.dlrIntro.start();
+    this.activeAsanaTimer = this.dlrIntro;
+  }
+  async playdlrRoundRepeater(introEnd, roundStart, roundEnd, endingStart) {
+    let rounds = this.asanaArray[this.currentAsanaRow].rounds;
+    let roundCounter = 0;
+    let waitTime = roundEnd - roundStart;
+
+    this.soundObject.setPositionAsync(roundStart);
+    this.repeatTimer = new IntervalTimer(
+      "repeatTimer",
+      () => {
+        if (roundCounter == rounds - 2) {
+          //console.log("repeatTimer roundCounterEnd "+ (rounds - 2) +"=?"+ roundCounter);
+          this.soundSetPosition(endingStart);
+        } else {
+          //console.log("repeatTimer roundCounter " + roundCounter);
+          this.soundSetPosition(roundStart);
+          roundCounter++;
+        }
+      },
+      waitTime,
+      rounds - 1 // 1 extra to play end, -2 cause one already played
+    );
+    this.repeatTimer.start();
+    this.activeAsanaTimer = this.repeatTimer;
   }
   async startSoundAndTimers(
     soundAsset,
@@ -746,12 +710,17 @@ export default class StartClassScreen extends React.Component {
     await this.soundObject.playAsync();
 
     //dev
-    if (this.asanaArray[this.currentAsanaRow].title == "Sirshasana") {
-      this.soundObject.setPositionAsync(120500);
-      postureHoldStartTime = 2000;
-    } else if (this.asanaArray[this.currentAsanaRow].title == "Sarvangasana") {
-      //this.soundObject.setPositionAsync(195000);
+    if (__DEV__) {
+      if (this.asanaArray[this.currentAsanaRow].title == "Sirshasana") {
+        this.soundObject.setPositionAsync(120500);
+        postureHoldStartTime = 2000;
+      } else if (
+        this.asanaArray[this.currentAsanaRow].title == "Sarvangasana"
+      ) {
+        //this.soundObject.setPositionAsync(195000);
+      }
     }
+
     this.postureIntroTimer = new IntervalTimer(
       "postureIntroTimer",
       () => {
@@ -1064,52 +1033,57 @@ export default class StartClassScreen extends React.Component {
   }
 
   nextAsana() {
-    //highlight next row
-    if (this.currentAsanaRow + 1 < this.asanaArray.length) {
-      // console.log("nextAsana " +this.currentAsanaRow)
-      // if (this.currentAsanaRow == -1) {
-      //   this.counterTimer.start();
-      // }
+    console.log(
+      "nextAsana " + this.currentAsanaRow + "<" + this.asanaArray.length
+    );
+    if (this.currentAsanaRow < this.asanaArray.length - 1) {
+      console.log("nextAsana " + this.currentAsanaRow);
+      //highlight next row
       this.asanaArray[this.currentAsanaRow++].isSelected = false;
       this.asanaArray[this.currentAsanaRow].isSelected = true;
       this.playAsanaSound()
         .then()
         .catch(this.failureCallback);
       this.setArrayState();
+    } else {
+      console.log("nextAsana else");
     }
+    console.log("nextAsana end");
   }
   editClass = async () => {
     //await this.foo();
     this.props.navigation.navigate("EditClassScreen", {
       key: this.currentClass.key
     });
-  }
+  };
 
-  async foo() {
-    let promise = new Promise((resolve, reject) => {
-      setTimeout(() => resolve("done!"), 1000)
-    });
-    let result = await promise; // wait till the promise resolves (*)
-    console.log(result); // "done!"
-  }
+  // async foo() {
+  //   let promise = new Promise((resolve, reject) => {
+  //     setTimeout(() => resolve("done!"), 1000);
+  //   });
+  //   let result = await promise; // wait till the promise resolves (*)
+  //   console.log(result); // "done!"
+  // }
   asanaClicked(item) {
     this.jumpToAsana(item.rowNumber);
   }
- async jumpToAsana(rowNumber) {
-    console.log("jump to asana start")
+  async jumpToAsana(rowNumber) {
+    console.log("jump to asana start");
     if (this.buttomComplete) {
       if (this.currentAsanaRow == -1) {
         this.counterTimer.start();
-      }
-      else{
+      } else {
         this.counterTimer.resume();
       }
       this.buttomComplete = false;
       if (this.activeAsanaTimer != null) {
         this.activeAsanaTimer.stop();
-      } 
-      await this.soundObject.stopAsync().then().catch(this.failureCallback);
-
+      }
+      await this.soundObject
+        .stopAsync()
+        .then()
+        .catch(this.failureCallback);
+      console.log("jumpToAsana " + this.currentAsanaRow);
       this.currentAsanaRow = rowNumber;
       this.asanaArray.forEach(element => {
         element.isSelected = false;
@@ -1121,15 +1095,13 @@ export default class StartClassScreen extends React.Component {
 
       this.setState({ started: true });
       this.buttomComplete = true;
-      console.log("jump to asana end")
-    }
-    else{
-      console.log("jump to asana skipped")
+      console.log("jump to asana end");
+    } else {
+      console.log("jump to asana skipped");
     }
   }
 
   pauseAsanas() {
-    //clearTimeout(this.state.timer);
     this.counterTimer.pause();
     this.pauseSound();
     this.setState({ started: false });
@@ -1149,8 +1121,9 @@ export default class StartClassScreen extends React.Component {
 
   render() {
     return (
-      <ScrollView style={styles.container}>
+      <View style={styles.container}>
         <KeepAwake />
+
         <View style={styles.headerView}>
           {this.renderStartPauseButton()}
           <View style={styles.textHeaderView}>
@@ -1166,12 +1139,14 @@ export default class StartClassScreen extends React.Component {
             <Text style={styles.headerButtonButtonText}>Edit</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.imageView}>{this.renderImage()}</View>
-        <FlatList
-          data={this.state.arrayHolder}
-          renderItem={({ item }) => this.renderItem(item)}
-        />
-      </ScrollView>
+        <ScrollView style={styles.container}>
+          {/* <View style={styles.imageView}>{this.renderImage()}</View> */}
+          <FlatList
+            data={this.state.arrayHolder}
+            renderItem={({ item }) => this.renderItem(item)}
+          />
+        </ScrollView>
+      </View>
     );
   }
   renderImage() {
@@ -1215,9 +1190,9 @@ export default class StartClassScreen extends React.Component {
         " pumps and " +
         item.retentionLength +
         " sec retention";
-    } else if (item.title == "Anulom" || item.title == "Anulom Viloma") {
+    } else if (item.title == "Anulom" || item.title == "Anuloma Viloma") {
       description =
-        item.rounds + " rounds with ration of " + item.ratioPerRound + " sec";
+        item.rounds + " rounds with count of " + item.ratioPerRound + " secs";
     } else if (item.title == "Surya Namaskar") {
       description = item.rounds + " rounds x 2";
     } else if (
@@ -1239,10 +1214,6 @@ export default class StartClassScreen extends React.Component {
       </TouchableOpacity>
     );
   };
-  
-
- 
-
 }
 
 const styles = StyleSheet.create({

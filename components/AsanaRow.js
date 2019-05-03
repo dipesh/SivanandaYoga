@@ -110,6 +110,8 @@ export default class AsanaRow extends Component {
     );
   }
 
+  //each asana has their own attributes, min and max value
+  //so they will be drawn differently
   createPicker(title) {
     let view = [];
 
@@ -167,7 +169,7 @@ export default class AsanaRow extends Component {
           />
         </View>
       );
-    } else if (title == "Anulom Viloma") {
+    } else if (title == "Anuloma Viloma") {
       view.push(
         <View style={styles.container_text} key={this.keyCount++}>
           <Text style={styles.label}>Rounds:</Text>

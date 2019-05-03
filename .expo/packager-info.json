@@ -1,10 +1,10 @@
 {
   "expoServerPort": 19000,
-  "webpackServerPort": null,
   "expoServerNgrokUrl": "https://xm-nhr.dipesh1990.sivanandayoga.exp.direct",
   "packagerNgrokUrl": "https://packager.xm-nhr.dipesh1990.sivanandayoga.exp.direct",
-  "ngrokPid": 16044,
+  "ngrokPid": 66240,
   "packagerPort": 19001,
-  "packagerPid": 660,
-  "devToolsPort": 19002
+  "packagerPid": 60504,
+  "devToolsPort": 19002,
+  "webpackServerPort": null
 }

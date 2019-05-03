@@ -11,10 +11,14 @@ import {
 import quote from "../quotes";
 import { Audio } from "expo";
 
+/**
+ * The MainScreen will show the daily quote
+ * it contains links the standard 60,90,120 min courses
+ * it shows the list of adjustable classes and lets you create them
+ */
 export default class MainScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     title: "Main",
-    //tabBarVisible: false, 
   });
   constructor(props) {
     super(props);
@@ -45,6 +49,7 @@ export default class MainScreen extends React.Component {
         this.savedDailyQuoteArrayKey
       );
 
+      //make sure that a quote is generated once a day by comparing the last saved date
       let today = new Date();
       let date =
         today.getDate() +
@@ -52,7 +57,6 @@ export default class MainScreen extends React.Component {
         parseInt(today.getMonth() + 1) +
         "/" +
         today.getFullYear();
-
       if (savedDailyQuoteValue != null) {
         this.dailyQuoteArray = JSON.parse(savedDailyQuoteValue);
 
@@ -156,18 +160,6 @@ export default class MainScreen extends React.Component {
         >
           <Text style={styles.linkText}>+ New Ajustable Class</Text>
         </TouchableOpacity>
-        {/* <TouchableOpacity
-          onPress={() => this.playSound()}
-          style={styles.headerButton}
-        >
-          <Text style={styles.linkText}>Play</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => this.pauseSound()}
-          style={styles.headerButton}
-        >
-          <Text style={styles.linkText}>Pause</Text>
-        </TouchableOpacity> */}
       </ScrollView>
     );
   }
@@ -213,9 +205,6 @@ const styles = StyleSheet.create({
     minHeight: 100,
     padding: 15,
     margin: 10,
-    // textAlign: 'center',
-    // justifyContent: 'center',
-    // alignItems: 'center',
     backgroundColor: "#eff0f1",
     borderRadius: 4,
     borderWidth: 0.5,

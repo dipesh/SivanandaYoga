@@ -16,6 +16,15 @@ import { Audio } from "expo";
 
 import toHHMMSS from "../Tools"; //toHHMMSS is used
 
+/**
+ * MeditationScreen has a timer which counts down. 
+ * A bell is played at the start and at the end of the meditation
+ * Each time a meditation is started, stopped or completed it is logged.
+ * 
+ * TODO:
+ * Create stats with the recorded data, 
+ * the data is just being logged, a better structure is required for stats
+ */
 export default class MeditationScreen extends React.Component {
   static navigationOptions = {
     title: "Meditation"
@@ -27,13 +36,14 @@ export default class MeditationScreen extends React.Component {
 
     this.state = {
       meditationLength: 1,
-      meditationCounter: 0,
+      meditationCounter: 0, //the counter will count from the meditation length to 0
       started: false,
       logHolder: this.logs
     };
 
     this.logs = [];
 
+    //the logs are stored as [{timestamp1, message1}, {timestamp2, message2}, ...]
     this.getLogs();
 
     this.soundObject = new Audio.Sound();
@@ -73,7 +83,7 @@ export default class MeditationScreen extends React.Component {
 
   async logMessage(message) {
     var date = new Date().getDate().toString(); //Current Date
-    date = date.replace(/\b(\d{1})\b/g, "0$1");
+    date = date.replace(/\b(\d{1})\b/g, "0$1"); //this line just adds a 0 in front if the value is a single digit
     var month = (new Date().getMonth() + 1).toString(); //Current Month
     month = month.replace(/\b(\d{1})\b/g, "0$1");
     var year = new Date().getFullYear().toString(); //Current Year
@@ -87,8 +97,10 @@ export default class MeditationScreen extends React.Component {
     let dateStr =
       date + "/" + month + "/" + year + " " + hours + ":" + min + ":" + sec;
   
+    //add the latest value to the top of the array, 
+    //so that the user sees the latest entries at the top
     this.logs.unshift({
-      key: dateStr + message,
+      key: dateStr + message, 
       time: dateStr,
       message: message
     });
