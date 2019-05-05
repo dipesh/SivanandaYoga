@@ -137,7 +137,7 @@ export default class AsanaRow extends Component {
             />
           </View>
           <View style={styles.container_text} key={this.keyCount++}>
-            <Text style={styles.label}>Actions Per Round:</Text>
+            <Text style={styles.label}>Pumpings Per Round:</Text>
             <NumberChooser
               onValueChange={itemValue => {
                 this.setState({ actionsPerRound: itemValue });
@@ -148,7 +148,7 @@ export default class AsanaRow extends Component {
               }}
               initialValue={this.props.actionsPerRound}
               minValue={50}
-              maxValue={150}
+              maxValue={200}
               incrementValue={5}
             />
           </View>
@@ -188,7 +188,7 @@ export default class AsanaRow extends Component {
 
       view.push(
         <View style={styles.container_text} key={this.keyCount++}>
-          <Text style={styles.label}>Ratio Per Round:</Text>
+          <Text style={styles.label}>Count Per Round:</Text>
           <NumberChooser
             onValueChange={itemValue => {
               this.setState({ ratioPerRound: itemValue });
@@ -211,7 +211,7 @@ export default class AsanaRow extends Component {
       let maxValue = 0;
 
       if (title == "Surya Namaskar") {
-        labelText = "Rounds (x2):";
+        labelText = "Rounds (per leg):";
         minValue = 4;
         maxValue = 54;
       } else if (title == "Single Leg Raises") {

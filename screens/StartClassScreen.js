@@ -313,6 +313,7 @@ export default class StartClassScreen extends React.Component {
 
   //Each asana/exercise has one sound file
   //The code will jump through the file to play it so that the timings works
+  //the __DEV__ files are smaller and faster to load on the emulator
   async playAsanaSound() {
     console.log(
       "playAsanaSound " + this.asanaArray[this.currentAsanaRow].title
@@ -515,16 +516,59 @@ export default class StartClassScreen extends React.Component {
   //#endregion
   //#region Anuloma Viloma
   async playAnulomaViloma() {
-    //TODO need to add code for ratio
-    let soundAsset = __DEV__
-      ? require("../assets/sounds/AnulomaViloma2.mp3")
-      : require("../assets/sounds/AnulomaViloma.mp3");
+    //TODO need to add code for  5,6,7,8
 
-    //round starts with inhale thru left
-    let roundStart = 94500; //round start point
-    let roundEnd = 153500;
-    let soundEnd = 505700;
+    //The file  AnulomaViloma-MasterFile has all the ratios in it,
+    //the timings need to be adjusted.
 
+    //the master file may need to be split so that the transition between asana is fast,
+    //the sequence must begin with hold the right nostril and inhale from left,
+
+    //round starts with inhale thru left, hold, then ex right, then in right, hold
+    //round ends on exhale left
+    let ratioPerRound = this.asanaArray[this.currentAsanaRow].ratioPerRound;
+    let soundAsset = null;
+    let roundStart = 0;
+    let roundEnd = 0;
+    let soundEnd = 0;
+
+    if (ratioPerRound == 5) {
+      soundAsset = __DEV__
+        ? require("../assets/sounds/AnulomaVilomaRatio52.mp3")
+        : require("../assets/sounds/AnulomaVilomaRatio5.mp3");
+        roundStart = 108000; //1m48000ms starts with thru left exhale
+        roundEnd = 189000; //3m09500ms ends at right inhale, then end hold
+        soundEnd = 189000; //starts with thru left exhale, but the last one then the end sequence is played
+    } else if (ratioPerRound == 6) {
+      soundAsset = __DEV__
+        ? require("../assets/sounds/AnulomaVilomaRatio62.mp3")
+        : require("../assets/sounds/AnulomaVilomaRatio6.mp3");
+        roundStart = 117817; //1m57817
+        roundEnd = 208766; //3m28766
+        soundEnd = 208766;
+    } else if (ratioPerRound == 7) {
+      soundAsset = __DEV__
+        ? require("../assets/sounds/AnulomaVilomaRatio72.mp3")
+        : require("../assets/sounds/AnulomaVilomaRatio7.mp3");
+        roundStart = 133614; //2m13614
+        roundEnd = 243770; //4m03770
+        soundEnd = 243770;
+    } else if (ratioPerRound == 8) {
+      soundAsset = __DEV__
+        ? require("../assets/sounds/AnulomaVilomaRatio82.mp3")
+        : require("../assets/sounds/AnulomaVilomaRatio8.mp3");
+        roundStart = 145400; //2m25400
+        roundEnd = 269250; //4m29250
+        soundEnd = 269250;
+    } else {
+      soundAsset = __DEV__
+        ? require("../assets/sounds/AnulomaViloma2.mp3")
+        : require("../assets/sounds/AnulomaViloma.mp3");
+      roundStart = 94500; //starts with thru left exhale
+      roundEnd = 153500; //2m33500ms ends at right inhale, then end hold
+      soundEnd = 505700; //8m25700ms starts with thru left exhale, but the last one then the end sequence is played
+    }
+ 
     await this.playRoundTimer(soundAsset, roundStart, roundEnd, soundEnd);
   }
 
@@ -545,7 +589,7 @@ export default class StartClassScreen extends React.Component {
     this.activeAsanaTimer = this.dlrIntro;
   }
 
-  async playRoundRepeater(roundStart, roundEnd, anulomLastBreath) {
+  async playRoundRepeater(roundStart, roundEnd, soundEnd) {
     let rounds = this.asanaArray[this.currentAsanaRow].rounds;
     let roundCounter = 0;
     let waitTime = roundEnd - roundStart;
@@ -555,7 +599,7 @@ export default class StartClassScreen extends React.Component {
       () => {
         if (roundCounter == rounds - 2) {
           //console.log("repeatTimer roundCounterEnd "+ (rounds - 2) +"=?"+ roundCounter);
-          this.soundSetPosition(anulomLastBreath);
+          this.soundSetPosition(soundEnd);
         } else {
           //console.log("repeatTimer roundCounter " + roundCounter);
           this.soundSetPosition(roundStart);
@@ -1187,7 +1231,7 @@ export default class StartClassScreen extends React.Component {
         item.rounds +
         " rounds of " +
         item.actionsPerRound +
-        " pumps and " +
+        " pumpings and " +
         item.retentionLength +
         " sec retention";
     } else if (item.title == "Anulom" || item.title == "Anuloma Viloma") {

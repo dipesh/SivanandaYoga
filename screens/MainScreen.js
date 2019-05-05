@@ -158,7 +158,7 @@ export default class MainScreen extends React.Component {
           onPress={() => this.newClass()}
           style={styles.headerButton}
         >
-          <Text style={styles.linkText}>+ New Ajustable Class</Text>
+          <Text style={styles.linkText}>+ New Adjustable Class</Text>
         </TouchableOpacity>
       </ScrollView>
     );
