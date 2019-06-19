@@ -106,11 +106,13 @@ export default class MainScreen extends React.Component {
   }
 
   openClass(item) {
-    if (item == 60) {
-    } else if (item == 90) {
-    } else if (item == 120) {
-    } else {
-      //it must be a custom class, so item is a array
+    if (item == 60 || item == 90 || item == 120) {
+      this.props.navigation.navigate("StartStandardClassScreen", {
+        item: item,
+        title:  item.toString() + ' minute class'
+      });
+    } 
+    else {
       this.props.navigation.navigate("StartClassScreen", {
         item: item
       });

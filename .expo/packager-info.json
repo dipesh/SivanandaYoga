@@ -2,9 +2,9 @@
   "expoServerPort": 19000,
   "expoServerNgrokUrl": "https://xm-nhr.dipesh1990.sivanandayoga.exp.direct",
   "packagerNgrokUrl": "https://packager.xm-nhr.dipesh1990.sivanandayoga.exp.direct",
-  "ngrokPid": 111608,
-  "packagerPort": null,
-  "packagerPid": null,
+  "ngrokPid": 6064,
+  "packagerPort": 19001,
+  "packagerPid": 7304,
   "devToolsPort": 19002,
   "webpackServerPort": null
 }

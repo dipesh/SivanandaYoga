@@ -79,7 +79,6 @@ export default class AsanaRow extends Component {
       this.props.title == "Opening Prayer" ||
       this.props.title == "Final Prayer"
     ) {
-
       //the prayers cannot be removed
       return this.createView();
     } else {
@@ -127,8 +126,11 @@ export default class AsanaRow extends Component {
             <Text style={styles.label}>Rounds:</Text>
             <NumberChooser
               onValueChange={itemValue => {
-                this.setState({ rounds: itemValue });
-                this.props.updateRounds(this.props.rowNumber, itemValue);
+                () => {
+                  //this allows the numberChooser to not lag
+                  this.setState({ rounds: itemValue });
+                  this.props.updateRounds(this.props.rowNumber, itemValue);
+                };
               }}
               initialValue={this.props.rounds}
               minValue={1}
@@ -140,11 +142,14 @@ export default class AsanaRow extends Component {
             <Text style={styles.label}>Pumpings Per Round:</Text>
             <NumberChooser
               onValueChange={itemValue => {
-                this.setState({ actionsPerRound: itemValue });
-                this.props.updateActionsPerRound(
-                  this.props.rowNumber,
-                  itemValue
-                );
+                () => {
+                  //this allows the numberChooser to not lag
+                  this.setState({ actionsPerRound: itemValue });
+                  this.props.updateActionsPerRound(
+                    this.props.rowNumber,
+                    itemValue
+                  );
+                };
               }}
               initialValue={this.props.actionsPerRound}
               minValue={50}
@@ -159,8 +164,14 @@ export default class AsanaRow extends Component {
           <Text style={styles.label}>Retention Length</Text>
           <NumberChooser
             onValueChange={itemValue => {
-              this.setState({ retentionLength: itemValue });
-              this.props.updateRetentionLength(this.props.rowNumber, itemValue);
+              () => {
+                //this allows the numberChooser to not lag
+                this.setState({ retentionLength: itemValue });
+                this.props.updateRetentionLength(
+                  this.props.rowNumber,
+                  itemValue
+                );
+              };
             }}
             initialValue={this.props.retentionLength}
             minValue={30} //45
@@ -175,8 +186,11 @@ export default class AsanaRow extends Component {
           <Text style={styles.label}>Rounds:</Text>
           <NumberChooser
             onValueChange={itemValue => {
-              this.setState({ rounds: itemValue });
-              this.props.updateRounds(this.props.rowNumber, itemValue);
+              () => {
+                //this allows the numberChooser to not lag
+                this.setState({ rounds: itemValue });
+                this.props.updateRounds(this.props.rowNumber, itemValue);
+              };
             }}
             initialValue={this.props.rounds}
             minValue={4} //5
@@ -191,8 +205,11 @@ export default class AsanaRow extends Component {
           <Text style={styles.label}>Count Per Round:</Text>
           <NumberChooser
             onValueChange={itemValue => {
-              this.setState({ ratioPerRound: itemValue });
-              this.props.updateRatioPerRound(this.props.rowNumber, itemValue);
+              () => {
+                //this allows the numberChooser to not lag
+                this.setState({ ratioPerRound: itemValue });
+                this.props.updateRatioPerRound(this.props.rowNumber, itemValue);
+              };
             }}
             initialValue={this.props.ratioPerRound}
             minValue={4}
@@ -227,8 +244,11 @@ export default class AsanaRow extends Component {
           <Text style={styles.label}>{labelText}</Text>
           <NumberChooser
             onValueChange={itemValue => {
-              this.setState({ rounds: itemValue });
-              this.props.updateRounds(this.props.rowNumber, itemValue);
+              () => {
+                //this allows the numberChooser to not lag
+                this.setState({ rounds: itemValue });
+                this.props.updateRounds(this.props.rowNumber, itemValue);
+              };
             }}
             initialValue={this.props.rounds}
             minValue={minValue} //5
@@ -276,8 +296,11 @@ export default class AsanaRow extends Component {
           <Text style={styles.label}>Hold time (sec):</Text>
           <NumberChooser
             onValueChange={itemValue => {
-              this.setState({ holdTime: itemValue });
-              this.props.updateHoldTime(this.props.rowNumber, itemValue);
+              () => {
+                //this allows the numberChooser to not lag
+                this.setState({ holdTime: itemValue });
+                this.props.updateHoldTime(this.props.rowNumber, itemValue);
+              };
             }}
             initialValue={this.props.holdTime}
             minValue={15} //30

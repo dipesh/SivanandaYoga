@@ -159,12 +159,12 @@ export default class HowToScreen extends React.Component {
       {
         key: "17",
         title: "Pada Hasthasana",
-        description: ""
+        description: "https://www.youtube.com/watch?v=r2P7Qg9ZyhQ&list=PL8S-896CdoehMZg0D_BFaBLjGxCkoK8cL&index=12"
       },
       {
         key: "18",
         title: "Trikonasana",
-        description: ""
+        description: "https://www.youtube.com/watch?v=jIgE9UO3Zs0&list=PL8S-896CdoehMZg0D_BFaBLjGxCkoK8cL&index=13"
       },
       // {
       //   key: "19",

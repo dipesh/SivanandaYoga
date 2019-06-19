@@ -8,6 +8,7 @@ import {
 import TabBarIcon from "../components/TabBarIcon";
 import EditClassScreen from "../screens/EditClassScreen";
 import StartClassScreen from "../screens/StartClassScreen";
+import StartStandardClassScreen from "../screens/StartStandardClassScreen";
 import MainScreen from "../screens/MainScreen";
 import MeditationScreen from "../screens/MeditationScreen";
 import HowToScreen from "../screens/HowToScreen";
@@ -17,6 +18,9 @@ const HomeStack = createStackNavigator({
   Home: MainScreen,
   StartClassScreen: {
     screen: StartClassScreen
+  },
+  StartStandardClassScreen:{
+    screen: StartStandardClassScreen
   },
   EditClassScreen: {
     screen: EditClassScreen
@@ -28,11 +32,12 @@ HomeStack.navigationOptions = {
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={
-        Platform.OS === "ios"
-          ? `ios-information-circle${focused ? "" : "-outline"}`
-          : "md-information-circle"
-      }
+      // name={
+      //   Platform.OS === "ios"
+      //     ? `ios-information-circle${focused ? "" : "-outline"}`
+      //     : "md-information-circle"
+      // }
+      name={"ios-body"}
     />
   )
 };
@@ -46,11 +51,11 @@ MeditationStack.navigationOptions = {
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === "ios" ? "ios-link" : "md-link"}
+      name={"md-rose"}
     />
   )
 };
-
+ 
 const HowToStack = createStackNavigator({
   Home: HowToScreen,
 });
@@ -60,7 +65,7 @@ HowToStack.navigationOptions = {
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === "ios" ? "ios-options" : "md-options"}
+      name={"md-help-circle"}
     />
   )
 };
