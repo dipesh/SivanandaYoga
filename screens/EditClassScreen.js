@@ -116,7 +116,7 @@ export default class EditClassScreen extends React.Component {
         this.removedAsanaArray = []; //empty the array
 
         //the saved class only contains the asana that were saved
-        //the arrays are intersected so that the asanas that were removed can be put 
+        //the arrays are intersected so that the asanas that were removed can be put
         //in the removed asana array, so that they can be readded if the user wants
         allAsanaArray.forEach(element => {
           let found = false;
@@ -349,8 +349,11 @@ export default class EditClassScreen extends React.Component {
   };
 
   updateRounds = (rowNumber, rounds) => {
+    //console.log("updateRounds")
     this.asanaArray[rowNumber].rounds = rounds;
+    //setTimeout(() => {
     this.setState({ arrayHolder: [...this.asanaArray] });
+    //}, 0);
   };
 
   updateActionsPerRound = (rowNumber, actionsPerRound) => {

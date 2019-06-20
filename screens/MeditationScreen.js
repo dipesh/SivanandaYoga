@@ -35,7 +35,7 @@ export default class MeditationScreen extends React.Component {
     this.savedLogsKey = "SivanandaSavedLogs";
 
     this.state = {
-      meditationLength: 1,
+      meditationLength: 5,
       meditationCounter: 0, //the counter will count from the meditation length to 0
       started: false,
       logHolder: this.logs

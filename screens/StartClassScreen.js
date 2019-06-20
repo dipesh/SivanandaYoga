@@ -36,7 +36,7 @@ export default class StartClassScreen extends React.Component {
     this.counterTimer = new IntervalTimer("Counter", this.tick, 1000, null);
 
     this.currentClass = this.props.navigation.getParam("item", "");
-    //  
+    //
 
     this.savedClassName = this.currentClass.key;
     this.asanaArray = this.currentClass.item;
@@ -63,7 +63,9 @@ export default class StartClassScreen extends React.Component {
     if (this.activeAsanaTimer != null) {
       this.activeAsanaTimer.stop();
     }
-    this.soundObject.stopAsync();
+    
+    this.soundObject.stopAsync().then().catch(this.failureCallback);
+   
   }
 
   _onPlaybackStatusUpdate = playbackStatus => {
@@ -380,30 +382,30 @@ export default class StartClassScreen extends React.Component {
       soundAsset = __DEV__
         ? require("../assets/sounds/AnulomaVilomaRatio52.mp3")
         : require("../assets/sounds/AnulomaVilomaRatio5.mp3");
-        roundStart = 108000; //1m48000ms starts with thru left exhale
-        roundEnd = 189000; //3m09500ms ends at right inhale, then end hold
-        soundEnd = 189000; //starts with thru left exhale, but the last one then the end sequence is played
+      roundStart = 108000; //1m48000ms starts with thru left exhale
+      roundEnd = 189000; //3m09500ms ends at right inhale, then end hold
+      soundEnd = 189000; //starts with thru left exhale, but the last one then the end sequence is played
     } else if (ratioPerRound == 6) {
       soundAsset = __DEV__
         ? require("../assets/sounds/AnulomaVilomaRatio62.mp3")
         : require("../assets/sounds/AnulomaVilomaRatio6.mp3");
-        roundStart = 117817; //1m57817
-        roundEnd = 208766; //3m28766
-        soundEnd = 208766;
+      roundStart = 117817; //1m57817
+      roundEnd = 208766; //3m28766
+      soundEnd = 208766;
     } else if (ratioPerRound == 7) {
       soundAsset = __DEV__
         ? require("../assets/sounds/AnulomaVilomaRatio72.mp3")
         : require("../assets/sounds/AnulomaVilomaRatio7.mp3");
-        roundStart = 133614; //2m13614
-        roundEnd = 243770; //4m03770
-        soundEnd = 243770;
+      roundStart = 133614; //2m13614
+      roundEnd = 243770; //4m03770
+      soundEnd = 243770;
     } else if (ratioPerRound == 8) {
       soundAsset = __DEV__
         ? require("../assets/sounds/AnulomaVilomaRatio82.mp3")
         : require("../assets/sounds/AnulomaVilomaRatio8.mp3");
-        roundStart = 145400; //2m25400
-        roundEnd = 269250; //4m29250
-        soundEnd = 269250;
+      roundStart = 145400; //2m25400
+      roundEnd = 269250; //4m29250
+      soundEnd = 269250;
     } else {
       soundAsset = __DEV__
         ? require("../assets/sounds/AnulomaViloma2.mp3")
@@ -412,7 +414,7 @@ export default class StartClassScreen extends React.Component {
       roundEnd = 153500; //2m33500ms ends at right inhale, then end hold
       soundEnd = 505700; //8m25700ms starts with thru left exhale, but the last one then the end sequence is played
     }
- 
+
     await this.playRoundTimer(soundAsset, roundStart, roundEnd, soundEnd);
   }
 
@@ -1091,7 +1093,7 @@ export default class StartClassScreen extends React.Component {
     } else {
       description = "Hold for " + item.holdTime + " seconds ";
     }
- 
+
     return (
       <TouchableOpacity
         style={{ backgroundColor: color }}

@@ -314,6 +314,11 @@ export default class StartStandardClassScreen extends React.Component {
     };
   }
 
+  componentWillUnmount() {
+    //the sound needs to be stopped when the user leaves the screen
+    this.soundObject.stopAsync().then().catch(this.failureCallback);;
+  }
+
   _onPlaybackStatusUpdate = playbackStatus => {
     const { didJustFinish, isLoaded, positionMillis } = playbackStatus;
 
@@ -463,15 +468,6 @@ export default class StartStandardClassScreen extends React.Component {
         onPress={() => this.asanaClicked(item)}
       >
         <Text style={styles.customClassRow}>{item.title}</Text>
-        <NumberChooser
-              onValueChange={itemValue => {
-                console.log(itemValue)
-              }}
-              initialValue={0}
-              minValue={1}
-              maxValue={5}
-              incrementValue={1}
-            />
       </TouchableOpacity>
       
     );

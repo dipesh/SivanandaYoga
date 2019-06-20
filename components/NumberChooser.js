@@ -24,6 +24,9 @@ export default class NumberChooser extends Component {
     super(props);
 
     this.number = this.props.initialValue;
+    if(this.number==undefined){
+      this.number = 0;
+    }
     this.incrementValue = "incrementValue" in this.props ? this.props.incrementValue : 1;
     this.state = {
       number: this.number
@@ -44,7 +47,7 @@ export default class NumberChooser extends Component {
           style={styles.textBox}
           onChangeText={(number) => {
             this.setState({ number: number })
-            }}
+            }} 
           value={this.state.number.toString()}
         />
         <TouchableOpacity
