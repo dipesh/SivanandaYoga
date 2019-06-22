@@ -9,7 +9,6 @@ import {
   AsyncStorage
 } from "react-native";
 import quote from "../quotes";
-import { Audio } from "expo";
 
 /**
  * The MainScreen will show the daily quote
@@ -18,7 +17,7 @@ import { Audio } from "expo";
  */
 export default class MainScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
-    title: "Main",
+    title: "Main"
   });
   constructor(props) {
     super(props);
@@ -44,7 +43,7 @@ export default class MainScreen extends React.Component {
   _retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem(this.savedClassesKey);
-      
+
       const savedDailyQuoteValue = await AsyncStorage.getItem(
         this.savedDailyQuoteArrayKey
       );
@@ -93,7 +92,7 @@ export default class MainScreen extends React.Component {
     await AsyncStorage.setItem(
       this.savedDailyQuoteArrayKey,
       JSON.stringify(this.dailyQuoteArray)
-    ); 
+    );
 
     this.setState({ dailyQuoteArrayHolder: this.dailyQuoteArray });
     this.setState({ dailyQuote: this.dailyQuoteArray.quote });
@@ -109,10 +108,9 @@ export default class MainScreen extends React.Component {
     if (item == 60 || item == 90 || item == 120) {
       this.props.navigation.navigate("StartStandardClassScreen", {
         item: item,
-        title:  item.toString() + ' minute class'
+        title: item.toString() + " minute class"
       });
-    } 
-    else {
+    } else {
       this.props.navigation.navigate("StartClassScreen", {
         item: item
       });

@@ -11,8 +11,6 @@ const styles = StyleSheet.create({
 export default class AsanaListview extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {};
   }
 
   static propTypes = {
@@ -24,9 +22,8 @@ export default class AsanaListview extends Component {
       <View style={styles.container}>
         <FlatList
           data={this.props.itemList}
-          extraData={this.props.itemList}
           renderItem={({ item }) => (
-            <AsanaRow 
+            <AsanaRow
               rowNumber={item.rowNumber}
               key={item.key}
               title={item.title}

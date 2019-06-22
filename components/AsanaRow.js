@@ -12,7 +12,7 @@ import NumberChooser from "../components/NumberChooser";
 import Swipeable from "react-native-swipeable-row";
 import NumericInput from "react-native-numeric-input";
 
-export default class AsanaRow extends Component {
+export default class AsanaRow extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -121,7 +121,7 @@ export default class AsanaRow extends Component {
     ) {
     } else if (title == "Kapalabhati") {
       view.push(
-        <View key={this.keyCount++}>
+        <View style={styles.container_text} key={this.keyCount++}>
           <View style={styles.container_text} key={this.keyCount++}>
             <Text style={styles.label}>Rounds:</Text>
             <NumberChooser
@@ -151,55 +151,62 @@ export default class AsanaRow extends Component {
               incrementValue={5}
             />
           </View>
+          <View style={styles.container_text} key={this.keyCount++}>
+            <Text style={styles.label}>Retention Length</Text>
+            <NumberChooser
+              onValueChange={itemValue => {
+                this.setState({ retentionLength: itemValue });
+                this.props.updateRetentionLength(
+                  this.props.rowNumber,
+                  itemValue
+                );
+              }}
+              initialValue={this.props.retentionLength}
+              minValue={30} //45
+              maxValue={120}
+              incrementValue={5}
+            />
+          </View>
         </View>
       );
-      view.push(
-        <View style={styles.container_text} key={this.keyCount++}>
-          <Text style={styles.label}>Retention Length</Text>
-          <NumberChooser
-            onValueChange={itemValue => {
-              this.setState({ retentionLength: itemValue });
-              this.props.updateRetentionLength(this.props.rowNumber, itemValue);
-            }}
-            initialValue={this.props.retentionLength}
-            minValue={30} //45
-            maxValue={120}
-            incrementValue={5}
-          />
-        </View>
-      );
+      // view.push(
+
+      // );
     } else if (title == "Anuloma Viloma") {
       view.push(
         <View style={styles.container_text} key={this.keyCount++}>
-          <Text style={styles.label}>Rounds:</Text>
-          <NumberChooser
-            onValueChange={itemValue => {
-              this.setState({ rounds: itemValue });
-              this.props.updateRounds(this.props.rowNumber, itemValue);
-            }}
-            initialValue={this.props.rounds}
-            minValue={4} //5
-            maxValue={20}
-            incrementValue={1} //5
-          />
+          <View style={styles.container_text} key={this.keyCount++}>
+            <Text style={styles.label}>Rounds:</Text>
+            <NumberChooser
+              onValueChange={itemValue => {
+                this.setState({ rounds: itemValue });
+                this.props.updateRounds(this.props.rowNumber, itemValue);
+              }}
+              initialValue={this.props.rounds}
+              minValue={4} //5
+              maxValue={20}
+              incrementValue={1} //5
+            />
+          </View>
+          <View style={styles.container_text} key={this.keyCount++}>
+            <Text style={styles.label}>Count Per Round:</Text>
+            <NumberChooser
+              onValueChange={itemValue => {
+                this.setState({ ratioPerRound: itemValue });
+                this.props.updateRatioPerRound(this.props.rowNumber, itemValue);
+              }}
+              initialValue={this.props.ratioPerRound}
+              minValue={4}
+              maxValue={8}
+              incrementValue={1}
+            />
+          </View>
         </View>
       );
 
-      view.push(
-        <View style={styles.container_text} key={this.keyCount++}>
-          <Text style={styles.label}>Count Per Round:</Text>
-          <NumberChooser
-            onValueChange={itemValue => {
-              this.setState({ ratioPerRound: itemValue });
-              this.props.updateRatioPerRound(this.props.rowNumber, itemValue);
-            }}
-            initialValue={this.props.ratioPerRound}
-            minValue={4}
-            maxValue={8}
-            incrementValue={1}
-          />
-        </View>
-      );
+      // view.push(
+
+      // );
     } else if (
       title == "Surya Namaskar" ||
       title == "Single Leg Raises" ||

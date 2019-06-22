@@ -349,10 +349,19 @@ export default class EditClassScreen extends React.Component {
   };
 
   updateRounds = (rowNumber, rounds) => {
-    //console.log("updateRounds")
+    // console.log(
+    //   "updateRounds " + rounds + " " + this.asanaArray[rowNumber].rounds
+    // );
     this.asanaArray[rowNumber].rounds = rounds;
-    //setTimeout(() => {
     this.setState({ arrayHolder: [...this.asanaArray] });
+
+    //this.resetAsanaList();
+    // this.setState({
+    //   refresh: !this.state.refresh
+    // });
+    //this.forceUpdate();
+    //setTimeout(() => {
+    //this.setState({ arrayHolder: [...this.asanaArray] });
     //}, 0);
   };
 
@@ -369,6 +378,10 @@ export default class EditClassScreen extends React.Component {
   updateRatioPerRound = (rowNumber, ratioPerRound) => {
     this.asanaArray[rowNumber].ratioPerRound = ratioPerRound;
     this.setState({ arrayHolder: [...this.asanaArray] });
+  };
+
+  resetAsanaList = () => {
+    this._asanaListView.setNativeProps({ extraData: !this.refreshList });
   };
 
   render() {
@@ -411,6 +424,7 @@ export default class EditClassScreen extends React.Component {
           contentContainerStyle={styles.contentContainer}
         >
           <AsanaListview
+            ref={component => (this._asanaListView = component)}
             itemList={this.state.arrayHolder}
             handleRemovePress={this.deleteData}
             updateHoldTime={this.updateHoldTime}

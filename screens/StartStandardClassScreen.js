@@ -112,7 +112,7 @@ export default class StartStandardClassScreen extends React.Component {
           sound: require("../assets/sounds/120minYogaClass/15.mp3")
         }
       ];
-    } else if ((this.currentClass = 90)) {
+    } else if (this.currentClass == 90) {
       this.asanaArray = [
         {
           key: "0",
@@ -220,7 +220,7 @@ export default class StartStandardClassScreen extends React.Component {
           sound: require("../assets/sounds/90minClass/21.mp3")
         }
       ];
-    } else if ((this.currentClass = 60)) {
+    } else if (this.currentClass == 60) {
       //track is 62 min long
       this.asanaArray = [
         {
@@ -230,75 +230,75 @@ export default class StartStandardClassScreen extends React.Component {
         },
         {
           key: "1",
-          title: "04 Surya Namaskar",
+          title: "02 Surya Namaskar",
           sound: require("../assets/sounds/90minClass/04.mp3")
         },
         {
           key: "2",
-          title: "07 Headstand",
+          title: "03 Headstand",
           sound: require("../assets/sounds/90minClass/07.mp3")
         },
         {
           key: "3",
-          title: "08 Shoulderstand",
+          title: "04 Shoulderstand",
           sound: require("../assets/sounds/90minClass/08.mp3")
         },
         {
           key: "4",
-          title: "09 Plough",
+          title: "05 Plough",
           sound: require("../assets/sounds/90minClass/09.mp3")
         },
         {
           key: "5",
-          title: "10 Fish",
+          title: "06 Fish",
           sound: require("../assets/sounds/90minClass/10.mp3")
         },
         {
           key: "6",
-          title: "11 Sitting Forward Bend",
+          title: "07 Sitting Forward Bend",
           sound: require("../assets/sounds/90minClass/11.mp3")
         },
         {
           key: "7",
-          title: "12 Inclined Plane",
+          title: "08 Inclined Plane",
           sound: require("../assets/sounds/90minClass/12.mp3")
         },
         {
           key: "8",
-          title: "13 Cobra",
+          title: "09 Cobra",
           sound: require("../assets/sounds/90minClass/13.mp3")
         },
         {
           key: "9",
-          title: "14 Locust",
+          title: "10 Locust",
           sound: require("../assets/sounds/90minClass/14.mp3")
         },
         {
           key: "10",
-          title: "15 Bow",
+          title: "11 Bow",
           sound: require("../assets/sounds/90minClass/15.mp3")
         },
         {
           key: "11",
-          title: "16 Half Spinal Twist",
+          title: "12 Half Spinal Twist",
           sound: require("../assets/sounds/90minClass/16.mp3")
         },
         {
           key: "12",
-          title: "19 Triangle",
+          title: "13 Triangle",
           sound: require("../assets/sounds/90minClass/19.mp3")
         },
         {
           key: "13",
-          title: "20 Final Relaxation",
+          title: "14 Final Relaxation",
           sound: require("../assets/sounds/90minClass/20.mp3")
         },
         {
           key: "14",
-          title: "21 Final Prayer",
+          title: "15 Final Prayer",
           sound: require("../assets/sounds/90minClass/21.mp3")
         }
-      ];
+      ];  
     }
 
     this.asanaArray.forEach(element => {
