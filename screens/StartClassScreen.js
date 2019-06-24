@@ -969,10 +969,7 @@ export default class StartClassScreen extends React.Component {
       if (this.activeAsanaTimer != null) {
         this.activeAsanaTimer.stop();
       }
-      await this.soundObject
-        .stopAsync()
-        .then()
-        .catch(this.failureCallback);
+    
       console.log("jumpToAsana " + this.currentAsanaRow);
       this.currentAsanaRow = rowNumber;
       this.asanaArray.forEach(element => {
@@ -980,11 +977,17 @@ export default class StartClassScreen extends React.Component {
       });
 
       this.asanaArray[rowNumber].isSelected = true;
-      await this.playAsanaSound();
+      
       this.setArrayState();
 
       this.setState({ started: true });
       this.buttomComplete = true;
+
+      await this.soundObject
+      .stopAsync()
+      .then()
+      .catch(this.failureCallback);
+      await this.playAsanaSound();
       console.log("jump to asana end");
     } else {
       console.log("jump to asana skipped");

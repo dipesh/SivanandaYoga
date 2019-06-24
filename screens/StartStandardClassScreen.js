@@ -298,7 +298,7 @@ export default class StartStandardClassScreen extends React.Component {
           title: "15 Final Prayer",
           sound: require("../assets/sounds/90minClass/21.mp3")
         }
-      ];  
+      ];
     }
 
     this.asanaArray.forEach(element => {
@@ -316,7 +316,10 @@ export default class StartStandardClassScreen extends React.Component {
 
   componentWillUnmount() {
     //the sound needs to be stopped when the user leaves the screen
-    this.soundObject.stopAsync().then().catch(this.failureCallback);;
+    this.soundObject
+      .stopAsync()
+      .then()
+      .catch(this.failureCallback);
   }
 
   _onPlaybackStatusUpdate = playbackStatus => {
@@ -396,7 +399,10 @@ export default class StartStandardClassScreen extends React.Component {
     let soundAsset = this.asanaArray[this.currentAsanaRow].sound;
 
     await this.soundObject.unloadAsync();
-    await this.soundObject.loadAsync(soundAsset);
+    await this.soundObject
+      .loadAsync(soundAsset)
+      .then()
+      .catch(this.failureCallback);
     await this.soundObject.playAsync();
   }
 
@@ -404,24 +410,24 @@ export default class StartStandardClassScreen extends React.Component {
     this.jumpToAsana(item.key);
   }
   async jumpToAsana(rowNumber) {
-    if (this.currentAsanaRow == -1) {
-    } else {
-    }
-    await this.soundObject
-      .stopAsync()
-      .then()
-      .catch(this.failureCallback);
+    // if (this.currentAsanaRow == -1) {
+    // } else {
+
+    // }
+
     this.currentAsanaRow = rowNumber;
     this.asanaArray.forEach(element => {
       element.isSelected = false;
     });
 
     this.asanaArray[rowNumber].isSelected = true;
+    this.setState({ started: true, arrayHolder: [...this.asanaArray] });
+
+    await this.soundObject
+      .stopAsync()
+      .then()
+      .catch(this.failureCallback);
     await this.playAsanaSound();
-
-    this.setState({ started: true });
-
-    this.setState({ arrayHolder: [...this.asanaArray] });
   }
 
   render() {
@@ -469,7 +475,6 @@ export default class StartStandardClassScreen extends React.Component {
       >
         <Text style={styles.customClassRow}>{item.title}</Text>
       </TouchableOpacity>
-      
     );
   };
 }

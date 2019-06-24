@@ -119,6 +119,7 @@ export default class MeditationScreen extends React.Component {
       this.counterTimer.stop();
       this.logMessage("Meditation complete!");
       this.soundObject.playAsync();
+      this.setState({ meditationCounter: 0, started: false });
     }
     this.setState({
       meditationCounter: this.state.meditationCounter - 1
@@ -154,7 +155,8 @@ export default class MeditationScreen extends React.Component {
         <TouchableOpacity onPress={() => this.startStopMeditation()}>
           <Text style={styles.linkText}>{startStopButtonText}</Text>
         </TouchableOpacity>
-        <Text>Remaining Time : {elapsedTimeStr}</Text>
+        
+        <Text style={styles.timeText}>Remaining Time : {elapsedTimeStr}</Text>
 
         <FlatList
           style={styles.list}
@@ -185,9 +187,12 @@ const styles = StyleSheet.create({
   list: {
     paddingTop: 10
   },
+  timeText:{
+    fontSize: 18 ,
+  },
   linkText: {
     fontSize: 14,
     color: "#2e78b7",
-    margin: 10
+    margin: 15
   }
 });
