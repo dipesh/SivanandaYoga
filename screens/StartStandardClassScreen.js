@@ -403,7 +403,10 @@ export default class StartStandardClassScreen extends React.Component {
       .loadAsync(soundAsset)
       .then()
       .catch(this.failureCallback);
-    await this.soundObject.playAsync();
+    await this.soundObject
+      .playAsync()
+      .then()
+      .catch(this.failureCallback);
   }
 
   asanaClicked(item) {
@@ -412,7 +415,6 @@ export default class StartStandardClassScreen extends React.Component {
   async jumpToAsana(rowNumber) {
     // if (this.currentAsanaRow == -1) {
     // } else {
-
     // }
 
     this.currentAsanaRow = rowNumber;
@@ -473,6 +475,7 @@ export default class StartStandardClassScreen extends React.Component {
         style={{ backgroundColor: color }}
         onPress={() => this.asanaClicked(item)}
       >
+        
         <Text style={styles.customClassRow}>{item.title}</Text>
       </TouchableOpacity>
     );
@@ -515,7 +518,10 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   headerButtonButtonText: {
-    textAlign: "center"
+    textAlign: "center",
+    fontSize: 18,
+    color: "#fff",
+    fontWeight: "bold"
   },
   headerButton: {
     flex: 0.3,
@@ -524,7 +530,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: 50,
     height: 50,
-    backgroundColor: "powderblue",
+    backgroundColor: "#72c9ba",
+    borderRadius: 10,
+    borderWidth: 0,
     padding: 10,
     margin: 10
   }

@@ -176,12 +176,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: 50,
     height: 50,
-    backgroundColor: "powderblue",
+    backgroundColor: "#72c9ba",
+    borderRadius:10,
+    borderWidth: 0,
     padding: 10,
     margin: 10
   },
   standardClassButtonText: {
-    textAlign: "center"
+    textAlign: "center",
+    fontSize: 18,
+    color:"#fff",
+    fontWeight: 'bold'
   },
   standardClassLabel: {
     padding: 5,

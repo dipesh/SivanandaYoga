@@ -439,19 +439,19 @@ export default class EditClassScreen extends React.Component {
             onPress={() => this._storeData()}
             style={styles.headerButton}
           >
-            <Text style={styles.headerButtonButtonText}>Save Class</Text>
+            <Text style={styles.headerButtonButtonText}>Save{"\n"}Class</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => this._removeClass()}
             style={styles.headerButton}
           >
-            <Text style={styles.headerButtonButtonText}>Delete Class</Text>
+            <Text style={styles.headerButtonButtonText}>Delete{"\n"}Class</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => this._handleAddExercisePress()}
             style={styles.headerButton}
           >
-            <Text style={styles.headerButtonButtonText}>Add Exercise</Text>
+            <Text style={styles.headerButtonButtonText}>Add{"\n"}Exercise</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -519,7 +519,10 @@ const styles = StyleSheet.create({
     justifyContent: "space-between"
   },
   headerButtonButtonText: {
-    textAlign: "center"
+    textAlign: "center",
+    fontSize: 18,
+    color:"#fff",
+    fontWeight: 'bold'
   },
   headerButton: {
     flex: 0.3,
@@ -528,7 +531,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: 50,
     height: 50,
-    backgroundColor: "powderblue",
+    backgroundColor: "#72c9ba",
+    borderRadius:10,
+    borderWidth: 0,
     padding: 10,
     margin: 10
   },
