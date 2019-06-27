@@ -10,6 +10,8 @@ import {
   AsyncStorage
 } from "react-native";
 
+var globalStyle = require("../style");
+
 import { Audio } from "expo";
 
 import IntervalTimer from "../IntervalTimer";
@@ -63,9 +65,11 @@ export default class StartClassScreen extends React.Component {
     if (this.activeAsanaTimer != null) {
       this.activeAsanaTimer.stop();
     }
-    
-    this.soundObject.stopAsync().then().catch(this.failureCallback);
-   
+
+    this.soundObject
+      .stopAsync()
+      .then()
+      .catch(this.failureCallback);
   }
 
   _onPlaybackStatusUpdate = playbackStatus => {
@@ -908,9 +912,14 @@ export default class StartClassScreen extends React.Component {
       ? require("../assets/sounds/Savasana2.mp3")
       : require("../assets/sounds/Savasana.mp3");
 
-    await this.soundObject.unloadAsync();
-    await this.soundObject.loadAsync(soundAsset);
-    await this.soundObject.playAsync();
+    // await this.soundObject.unloadAsync();
+    // await this.soundObject.loadAsync(soundAsset);
+    // await this.soundObject.playAsync();
+
+    //posture hold starts 480000 ms
+    //silence at 480000 ms
+    //posture ends at 535000 ms
+    this.startSoundAndTimers(soundAsset, 480000, 480000, 535000);
   }
   async playFinalPrayer() {
     let soundAsset = __DEV__
@@ -969,7 +978,7 @@ export default class StartClassScreen extends React.Component {
       if (this.activeAsanaTimer != null) {
         this.activeAsanaTimer.stop();
       }
-    
+
       console.log("jumpToAsana " + this.currentAsanaRow);
       this.currentAsanaRow = rowNumber;
       this.asanaArray.forEach(element => {
@@ -977,16 +986,16 @@ export default class StartClassScreen extends React.Component {
       });
 
       this.asanaArray[rowNumber].isSelected = true;
-      
+
       this.setArrayState();
 
       this.setState({ started: true });
       this.buttomComplete = true;
 
       await this.soundObject
-      .stopAsync()
-      .then()
-      .catch(this.failureCallback);
+        .stopAsync()
+        .then()
+        .catch(this.failureCallback);
       await this.playAsanaSound();
       console.log("jump to asana end");
     } else {
@@ -1014,16 +1023,16 @@ export default class StartClassScreen extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={globalStyle.mainContainer}>
         <KeepAwake />
 
-        <View style={styles.headerView}>
+        <View style={[globalStyle.sectionContainer, globalStyle.buttonRow]}>
           {this.renderStartPauseButton()}
           <View style={styles.textHeaderView}>
-            <Text>
-              Elapsed Time: {this.state.counter.toString().toHHMMSS()}
+            <Text style={styles.elapsedTimeText}>Elapsed Time</Text>
+            <Text style={styles.elapsedTimeText}>
+              {this.state.counter.toString().toHHMMSS()}
             </Text>
-            {/* <Text>Total: {this.state.totalTime.toString().toHHMMSS()}</Text> */}
           </View>
           <TouchableOpacity
             onPress={() => this.editClass()}
@@ -1032,8 +1041,8 @@ export default class StartClassScreen extends React.Component {
             <Text style={styles.headerButtonButtonText}>Edit</Text>
           </TouchableOpacity>
         </View>
-        <ScrollView style={styles.container}>
-          {/* <View style={styles.imageView}>{this.renderImage()}</View> */}
+
+        <ScrollView style={globalStyle.sectionContainer}>
           <FlatList
             data={this.state.arrayHolder}
             renderItem={({ item }) => this.renderItem(item)}
@@ -1070,11 +1079,19 @@ export default class StartClassScreen extends React.Component {
       color = "#eff0f1";
     }
     let description = "";
-    if (
-      item.title == "Opening Prayer" ||
-      item.title == "Final Prayer" ||
-      item.title == "Savasana"
-    ) {
+
+    if (item.title == "Opening Prayer") {
+      if (item.isSelected) {
+        description =
+          "Gajananam Bhutagaanadi Sevitam\nKapittha Jambu Phala Saara Bhakshakam\nUma Sutam Shokavinaasha Kaaranam\nNamaami Vigneshvara Paada Pankajam\n\nShadananam Kumkuma Raktavarnam\nMahaamatim Divya Mayura Vaahanam\nRudrasya Sunam Surasainya Natham\nGuhaam Sadaaham Sharanam Prapadye\n\nYaa Kundendu Tushaara Haara Dhavalaa\nYaa Shubhra Vastraavritaa\nYaa Vina Varadanda Mantita Karaa\nYaa Shvetaa Padmaasanaa\nYaa Brahmaachyuta Shankara Prabhritibhi\nDevaihi Sadaa Pujitaa\nSaa Maam Paatu Saraswati Bhagavati\nNishesha Jaadyaapahaa\n\nOm Namah Shivaaya Gurave\nSat-chit-ananda Murtaye\nNishprapanchaaya Shaantaaya\nSri Sivanandaya Te Namaha\nSri Vishnudevanandaya Te Namaha\n\nOm Sarve Mangala Mangalye\nShive Sarvartha Sadhike\nSharanye Trayambake Gauri\nNaaraayani Namostute\nNaaraayani Namostute\n\nOm Shanti, Shanti, Shanti";
+      }
+    } else if (item.title == "Final Prayer") {
+      if (item.isSelected) {
+        description =
+          "Om Tryambakam Yajamahe\nSugandhim Pushtivardhanam\nUrvarukamiva Bandhanan\nMrityor Mukshiya Maamritat (repeat 3 times)\n\nOm Sarvesham Svastir Bhavatu\nSarvesham Shantir Bhavatu\nSarvesham Purnam Bhavatu\nSarvesham Mangalam Bhavatu\n\nSarve Bhavantu Sukhinah\nSarve Santu Niramayaah\nSarve Bhadrani Pasyantu\nMa Kaschid-Dukha-Bhag-Bhavet\n\nAsato Ma Sat Gamaya\nTamaso Ma Jyotir Gamaya\nMrityor Mamritam Gamaya\n\nOm Purnamadah Purnamidam\nPurnat Purnamudachyate\nPurnasya Purnamadaya\nPurnameva Vashishyate\n\nOm Shantih Shantih Shantih\nOm Peace Peace Peace\n\n";
+      }
+    } else if (item.title == "Savasana") {
+      description = "Rest for " + item.holdTime + " seconds ";
     } else if (item.title == "Kapalabhati") {
       description =
         item.rounds +
@@ -1104,31 +1121,37 @@ export default class StartClassScreen extends React.Component {
       >
         <Text style={styles.customClassRow}>{item.title}</Text>
         <Text style={styles.rowDescription}>{description}</Text>
+
+        <View style={globalStyle.separator} />
       </TouchableOpacity>
     );
   };
 }
 
 const styles = StyleSheet.create({
+  elapsedTimeText: {
+    fontSize: 18
+  },
   image: {
     width: 100,
     height: 100
   },
   customClassRow: {
     marginTop: 5,
-    marginLeft: 10
+    marginLeft: 10,
+    fontSize: 18
   },
   rowDescription: {
     marginLeft: 40,
     marginBottom: 5,
-    fontSize: 12
+    fontSize: 14
   },
   container: {
     flex: 1,
     paddingTop: 15,
     backgroundColor: "#fff"
   },
-  headerView: {
+  row: {
     flexDirection: "row",
     justifyContent: "space-between"
   },
@@ -1145,8 +1168,8 @@ const styles = StyleSheet.create({
   headerButtonButtonText: {
     textAlign: "center",
     fontSize: 18,
-    color:"#fff",
-    fontWeight: 'bold'
+    color: "#fff",
+    fontWeight: "bold"
   },
   headerButton: {
     flex: 0.3,
@@ -1156,9 +1179,9 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     backgroundColor: "#72c9ba",
-    borderRadius:10,
+    borderRadius: 10,
     borderWidth: 0,
     padding: 10,
     margin: 10
-  },
+  }
 });

@@ -10,6 +10,8 @@ import {
 } from "react-native";
 import quote from "../quotes";
 
+var globalStyle = require("../style");
+
 /**
  * The MainScreen will show the daily quote
  * it contains links the standard 60,90,120 min courses
@@ -119,108 +121,72 @@ export default class MainScreen extends React.Component {
 
   render() {
     return (
-      <ScrollView style={styles.container}>
-        <Text style={styles.headerLabel}>Daily Quote:</Text>
-        <View style={styles.dailyQuoteView}>
+      <ScrollView style={globalStyle.mainContainer}>
+        <View style={globalStyle.sectionContainer}>
+          <Text style={globalStyle.headerLabel}>Daily Quote</Text>
           <Text style={styles.dailyQuote}>{this.state.dailyQuote}</Text>
         </View>
-        <Text style={styles.headerLabel}>Standard Classes:</Text>
-        <View style={styles.standardClassView}>
+
+        <View style={globalStyle.sectionContainer}>
+          <Text style={globalStyle.headerLabel}>Standard Classes</Text>
+
+            <View style={globalStyle.buttonRow}>
+              <TouchableOpacity
+                onPress={() => this.openClass(60)}
+                style={[globalStyle.button, styles.standardButton]}
+              >
+                <Text style={globalStyle.buttonText}>60 min</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => this.openClass(90)}
+                style={[globalStyle.button, styles.standardButton]}
+              >
+                <Text style={globalStyle.buttonText}>90 min</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => this.openClass(120)}
+                style={[globalStyle.button, styles.standardButton]}
+              >
+                <Text style={globalStyle.buttonText}>120 min</Text>
+              </TouchableOpacity>
+            </View>
+        </View>
+
+        <View style={globalStyle.sectionContainer}>
+          <Text style={globalStyle.headerLabel}>Adjustable Classes</Text>
+          <FlatList
+            data={this.state.allClassesHolder}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => this.openClass(item)}>
+                <Text style={globalStyle.listItemText}>{item.key}</Text>
+                <View style={globalStyle.separator} />
+              </TouchableOpacity>
+            )}
+          />
           <TouchableOpacity
-            onPress={() => this.openClass(60)}
-            style={styles.standardClassButton}
+            onPress={() => this.newClass()}
+            style={globalStyle.button}
           >
-            <Text style={styles.standardClassButtonText}>60 min</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => this.openClass(90)}
-            style={styles.standardClassButton}
-          >
-            <Text style={styles.standardClassButtonText}>90 min</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => this.openClass(120)}
-            style={styles.standardClassButton}
-          >
-            <Text style={styles.standardClassButtonText}>120 min</Text>
+            <Text style={globalStyle.buttonText}>New</Text>
           </TouchableOpacity>
         </View>
-        <Text style={styles.headerLabel}>Adjustable Classes:</Text>
-        <FlatList
-          data={this.state.allClassesHolder}
-          renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => this.openClass(item)}>
-              <Text style={styles.customClassRow}>{item.key}</Text>
-            </TouchableOpacity>
-          )}
-        />
-        <TouchableOpacity
-          onPress={() => this.newClass()}
-          style={styles.headerButton}
-        >
-          <Text style={styles.linkText}>+ New Adjustable Class</Text>
-        </TouchableOpacity>
       </ScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  customClassRow: {
-    margin: 10
-  },
-  standardClassButton: {
-    flex: 0.3,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    width: 50,
-    height: 50,
-    backgroundColor: "#72c9ba",
-    borderRadius:10,
-    borderWidth: 0,
-    padding: 10,
-    margin: 10
-  },
-  standardClassButtonText: {
-    textAlign: "center",
-    fontSize: 18,
-    color:"#fff",
-    fontWeight: 'bold'
-  },
-  standardClassLabel: {
-    padding: 5,
-    paddingBottom: 10,
-    textAlign: "center"
-  },
-  standardClassView: {
-    flexDirection: "row",
-    justifyContent: "space-between"
-  },
-  container: {
-    flex: 1,
-    paddingTop: 15,
-    backgroundColor: "#fff"
-  },
-  headerLabel: {
-    padding: 5,
-    textAlign: "center"
+  standardButton:{
+    flex: 0.333,
   },
   dailyQuote: {
     minHeight: 100,
+    fontSize: 18,
     padding: 15,
     margin: 10,
-    backgroundColor: "#eff0f1",
     borderRadius: 4,
     borderWidth: 0.5,
-    borderColor: "#d6d7da"
-  },
-  dailyQuoteView: {
-    justifyContent: "center"
-  },
-  linkText: {
-    fontSize: 14,
-    color: "#2e78b7",
-    margin: 10
+    borderColor: "#f1f0f1",
+    backgroundColor: "#f1f0f1"
   }
 });

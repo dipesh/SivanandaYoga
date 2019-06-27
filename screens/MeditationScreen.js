@@ -16,13 +16,14 @@ import { Audio } from "expo";
 
 import toHHMMSS from "../Tools"; //toHHMMSS is used
 
+var globalStyle = require("../style");
 /**
- * MeditationScreen has a timer which counts down. 
+ * MeditationScreen has a timer which counts down.
  * A bell is played at the start and at the end of the meditation
  * Each time a meditation is started, stopped or completed it is logged.
- * 
+ *
  * TODO:
- * Create stats with the recorded data, 
+ * Create stats with the recorded data,
  * the data is just being logged, a better structure is required for stats
  */
 export default class MeditationScreen extends React.Component {
@@ -35,7 +36,7 @@ export default class MeditationScreen extends React.Component {
     this.savedLogsKey = "SivanandaSavedLogs";
 
     this.state = {
-      meditationLength: 5,
+      meditationLength: 1, //TODO change to 5
       meditationCounter: 0, //the counter will count from the meditation length to 0
       started: false,
       logHolder: this.logs
@@ -96,11 +97,11 @@ export default class MeditationScreen extends React.Component {
 
     let dateStr =
       date + "/" + month + "/" + year + " " + hours + ":" + min + ":" + sec;
-  
-    //add the latest value to the top of the array, 
+
+    //add the latest value to the top of the array,
     //so that the user sees the latest entries at the top
     this.logs.unshift({
-      key: dateStr + message, 
+      key: dateStr + message,
       time: dateStr,
       message: message
     });
@@ -118,81 +119,83 @@ export default class MeditationScreen extends React.Component {
     if (this.state.meditationCounter == 0) {
       this.counterTimer.stop();
       this.logMessage("Meditation complete!");
-      this.soundObject.playAsync();
+      this.replaySound();
+      console.log("should play sound")
       this.setState({ meditationCounter: 0, started: false });
     }
     this.setState({
       meditationCounter: this.state.meditationCounter - 1
     });
   };
-
+ 
+  async replaySound(){
+    await this.soundObject.stopAsync();
+    await this.soundObject.playAsync();
+  }
   render() {
     let elapsedTimeStr = "00:00:00";
     let startStopButtonText = "Start";
     if (this.state.started) {
-      startStopButtonText = "Stop";
 
       let elapsedTime = this.state.meditationCounter;
       if (elapsedTime > 0) {
         elapsedTimeStr = elapsedTime.toString().toHHMMSS();
       }
+      startStopButtonText = "[Stop] Remaining " + elapsedTimeStr;
     }
 
     return (
-      <ScrollView style={styles.container}>
-        <View style={styles.horView}>
-          <Text style={styles.textStyle}>Meditation Length (min):</Text>
-          <NumberChooser
-            onValueChange={itemValue => {
-              this.setState({ meditationLength: itemValue });
-            }}
-            initialValue={this.state.meditationLength}
-            minValue={5}
-            incrementValue={5}
-          />
+      <ScrollView style={globalStyle.mainContainer}>
+        <View style={globalStyle.sectionContainer}>
+          <View>
+            <Text style={globalStyle.headerLabel}>Meditation Length (min)</Text>
+            <View style={styles.numberChooser}>
+              <NumberChooser
+                onValueChange={itemValue => {
+                  this.setState({ meditationLength: itemValue });
+                }}
+                initialValue={this.state.meditationLength}
+                minValue={5}
+                incrementValue={5}
+              />
+            </View>
+          </View>
+          <TouchableOpacity
+            style={globalStyle.button}
+            onPress={() => this.startStopMeditation()}
+          >
+            <Text style={globalStyle.buttonText}>{startStopButtonText}</Text>
+          </TouchableOpacity>
+          {/* <Text style={styles.timeText}>Remaining Time : {elapsedTimeStr}</Text> */}
         </View>
 
-        <TouchableOpacity onPress={() => this.startStopMeditation()}>
-          <Text style={styles.linkText}>{startStopButtonText}</Text>
-        </TouchableOpacity>
-        
-        <Text style={styles.timeText}>Remaining Time : {elapsedTimeStr}</Text>
-
-        <FlatList
-          style={styles.list}
-          data={this.state.logHolder}
-          renderItem={({ item }) => (
-            <View style={styles.horView}>
-              <Text style={styles.listRowTime}>{item.time} : </Text>
-              <Text style={styles.listRowMessage}>{item.message}</Text>
-            </View>
-          )}
-        />
+        <View style={globalStyle.sectionContainer}>
+          <Text style={globalStyle.headerLabel}>Log</Text>
+          <FlatList
+            style={styles.list}
+            data={this.state.logHolder}
+            renderItem={({ item }) => (
+              <View style={globalStyle.horizontalContainer}>
+                <Text style={styles.listRowTime}>{item.time} : </Text>
+                <Text style={styles.listRowMessage}>{item.message}</Text>
+              </View>
+            )}
+          />
+        </View>
       </ScrollView>
     );
   }
 }
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    margin: 10,
-    backgroundColor: "#fff"
-  },
-  horView: {
-    flexDirection: "row"
-  },
-  textStyle: {
-    marginRight: 5
+  numberChooser: {
+    alignItems: "center",
+    margin: 10
   },
   list: {
-    paddingTop: 10
+    margin: 10
   },
-  timeText:{
-    fontSize: 18 ,
-  },
-  linkText: {
-    fontSize: 14,
-    color: "#2e78b7",
-    margin: 15
+  timeText: {
+    margin: 10,
+    fontSize: 18
   }
 });

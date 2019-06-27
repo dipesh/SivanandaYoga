@@ -5,13 +5,16 @@ import {
   FlatList,
   TouchableOpacity,
   Text,
-  Linking
+  Linking,
+  View
 } from "react-native";
+
+var globalStyle = require('../style');
 
 /**
  * HowToScreen will display a list of asanas and the user can click them
  * to view a tutorial on youtube
- * 
+ *
  * TODO:
  * Some tutorials for the asanas and pranayam are still being done.
  * For the prayers a link to the lyrics of the chant can be shown
@@ -33,8 +36,9 @@ export default class HowToScreen extends React.Component {
 
   render() {
     return (
-      <ScrollView style={styles.container}>
+      <ScrollView style={globalStyle.mainContainer}>
         <FlatList
+          style={globalStyle.sectionContainer}
           data={this.state.arrayHolder}
           renderItem={({ item }) => this.renderItem(item)}
         />
@@ -42,21 +46,17 @@ export default class HowToScreen extends React.Component {
     );
   }
   renderItem = item => {
-    if (item.description == "") {
-      return (
-          <Text style={styles.textRow}>{item.title} (Not Available)</Text>
-      );
-    } else {
-      return (
+    return (
+      <View>
         <TouchableOpacity onPress={() => this.openLink(item.description)}>
-          <Text style={styles.linkRow}>{item.title}</Text>
+          <Text style={globalStyle.listItemText}>{item.title}</Text>
         </TouchableOpacity>
-      );
-    }
+        <View style={globalStyle.separator} />
+      </View>
+    );
   };
   openLink(url) {
-    //On android this will open the youtube app,
-    //
+    //this will open the youtube app,
     Linking.openURL(url);
   }
   getAsanaArray() {
@@ -159,13 +159,15 @@ export default class HowToScreen extends React.Component {
       {
         key: "17",
         title: "Pada Hasthasana",
-        description: "https://www.youtube.com/watch?v=r2P7Qg9ZyhQ&list=PL8S-896CdoehMZg0D_BFaBLjGxCkoK8cL&index=12"
+        description:
+          "https://www.youtube.com/watch?v=r2P7Qg9ZyhQ&list=PL8S-896CdoehMZg0D_BFaBLjGxCkoK8cL&index=12"
       },
       {
         key: "18",
         title: "Trikonasana",
-        description: "https://www.youtube.com/watch?v=jIgE9UO3Zs0&list=PL8S-896CdoehMZg0D_BFaBLjGxCkoK8cL&index=13"
-      },
+        description:
+          "https://www.youtube.com/watch?v=jIgE9UO3Zs0&list=PL8S-896CdoehMZg0D_BFaBLjGxCkoK8cL&index=13"
+      }
       // {
       //   key: "19",
       //   title: "Savasana",
@@ -182,19 +184,3 @@ export default class HowToScreen extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 15,
-    backgroundColor: "#fff"
-  },
-  linkRow: {
-    margin: 5,
-    fontSize: 14,
-    color: "#2e78b7"
-  },
-  textRow: {
-    margin: 5,
-    fontSize: 14,
-  }
-});

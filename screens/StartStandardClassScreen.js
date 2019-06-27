@@ -16,6 +16,8 @@ import IntervalTimer from "../IntervalTimer";
 import toHHMMSS from "../Tools"; //toHHMMSS is used
 import { KeepAwake } from "expo";
 
+var globalStyle = require("../style");
+
 export default class StartStandardClassScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     title: `${navigation.state.params.title}`,
@@ -433,34 +435,31 @@ export default class StartStandardClassScreen extends React.Component {
   }
 
   render() {
-    return (
-      <View style={styles.container}>
-        <KeepAwake />
+    let text = "Start";
+    if (this.state.started) {
+      text = "Pause";
+    }
 
-        <View style={styles.headerView}>{this.renderStartPauseButton()}</View>
-        <ScrollView style={styles.container}>
-          {/* <View style={styles.imageView}>{this.renderImage()}</View> */}
+    return (
+      <View style={globalStyle.mainContainer}>
+
+        <View style={globalStyle.sectionContainer}>
+          <TouchableOpacity
+            onPress={() => this.startPause()}
+            style={globalStyle.button}
+          >
+            <Text style={globalStyle.buttonText}>{text}</Text>
+          </TouchableOpacity>
+        </View>
+        
+        <ScrollView style={globalStyle.sectionContainer}>
           <FlatList
             data={this.state.arrayHolder}
             renderItem={({ item }) => this.renderItem(item)}
           />
         </ScrollView>
-      </View>
-    );
-  }
 
-  renderStartPauseButton() {
-    let text = "Start";
-    if (this.state.started) {
-      text = "Pause";
-    }
-    return (
-      <TouchableOpacity
-        onPress={() => this.startPause()}
-        style={styles.headerButton}
-      >
-        <Text style={styles.headerButtonButtonText}>{text}</Text>
-      </TouchableOpacity>
+      </View>
     );
   }
 
@@ -475,65 +474,9 @@ export default class StartStandardClassScreen extends React.Component {
         style={{ backgroundColor: color }}
         onPress={() => this.asanaClicked(item)}
       >
-        
-        <Text style={styles.customClassRow}>{item.title}</Text>
+        <Text style={globalStyle.listItemText}>{item.title}</Text>
+        <View style={globalStyle.separator} />
       </TouchableOpacity>
     );
   };
 }
-
-const styles = StyleSheet.create({
-  image: {
-    width: 100,
-    height: 100
-  },
-  customClassRow: {
-    marginTop: 5,
-    marginLeft: 10,
-    marginBottom: 5,
-    fontSize: 18
-  },
-  rowDescription: {
-    marginLeft: 40,
-    marginBottom: 5,
-    fontSize: 12
-  },
-  container: {
-    flex: 1,
-    paddingTop: 15,
-    backgroundColor: "#fff"
-  },
-  headerView: {
-    flexDirection: "row",
-    justifyContent: "space-between"
-  },
-  imageView: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  textHeaderView: {
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  headerButtonButtonText: {
-    textAlign: "center",
-    fontSize: 18,
-    color: "#fff",
-    fontWeight: "bold"
-  },
-  headerButton: {
-    flex: 0.3,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    width: 50,
-    height: 50,
-    backgroundColor: "#72c9ba",
-    borderRadius: 10,
-    borderWidth: 0,
-    padding: 10,
-    margin: 10
-  }
-});

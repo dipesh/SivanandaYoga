@@ -40,7 +40,7 @@ export default class NumberChooser extends Component {
           onPress={() => this.buttonPress(0 - this.incrementValue)}
           style={styles.button}
         >
-          <Text style={styles.buttonText}>-</Text>
+          <Text>-</Text>
         </TouchableOpacity>
         <TextInput
           editable={false}
@@ -54,7 +54,7 @@ export default class NumberChooser extends Component {
           onPress={() => this.buttonPress(this.incrementValue)}
           style={styles.button}
         >
-          <Text style={styles.buttonText}>+</Text>
+          <Text>+</Text>
         </TouchableOpacity>
       </View>
     );
@@ -81,9 +81,7 @@ export default class NumberChooser extends Component {
 }
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     flexDirection: "row",
-    marginBottom: 5,
   },
   button: {
     height: 40,
@@ -93,7 +91,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center"
   },
-  buttonText: {},
   textBox: {
     height: 40,
     width: 50,

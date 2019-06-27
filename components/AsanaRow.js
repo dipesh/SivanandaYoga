@@ -12,6 +12,8 @@ import NumberChooser from "../components/NumberChooser";
 import Swipeable from "react-native-swipeable-row";
 import NumericInput from "react-native-numeric-input";
 
+var globalStyle = require("../style");
+
 export default class AsanaRow extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -96,15 +98,18 @@ export default class AsanaRow extends React.PureComponent {
 
   createView() {
     return (
-      <View style={styles.container}>
-        {/* <Image source={{ uri: this.props.image_url }} style={styles.photo} /> */}
+      <View>
+        <View style={styles.container}>
+          {/* <Image source={{ uri: this.props.image_url }} style={styles.photo} /> */}
 
-        <View style={styles.container_text}>
-          <Text style={styles.title}>{this.props.title}</Text>
-          <Text style={styles.description}>{this.props.description}</Text>
+          <View style={styles.container_text}>
+            <Text style={styles.title}>{this.props.title}</Text>
+            <Text style={styles.description}>{this.props.description}</Text>
+          </View>
+
+          {this.createPicker(this.props.title)}
         </View>
-
-        {this.createPicker(this.props.title)}
+        <View style={globalStyle.separator} />
       </View>
     );
   }
@@ -116,8 +121,7 @@ export default class AsanaRow extends React.PureComponent {
 
     if (
       title == "Opening Prayer" ||
-      title == "Final Prayer" ||
-      title == "Savasana"
+      title == "Final Prayer" 
     ) {
     } else if (title == "Kapalabhati") {
       view.push(
@@ -203,10 +207,6 @@ export default class AsanaRow extends React.PureComponent {
           </View>
         </View>
       );
-
-      // view.push(
-
-      // );
     } else if (
       title == "Surya Namaskar" ||
       title == "Single Leg Raises" ||
@@ -246,6 +246,7 @@ export default class AsanaRow extends React.PureComponent {
     } else {
       let minValue = 0;
       let maxValue = 0;
+      let incrementValue = 0;
 
       if (
         title == "Sirshasana" ||
@@ -254,6 +255,7 @@ export default class AsanaRow extends React.PureComponent {
       ) {
         minValue = 120;
         maxValue = 1200;
+        incrementValue = 15;
       } else if (
         title == "Halasana" ||
         title == "Matsyasana" ||
@@ -263,18 +265,27 @@ export default class AsanaRow extends React.PureComponent {
       ) {
         minValue = 30;
         maxValue = 600;
+        incrementValue = 15;
       } else if (title == "Inclined Plane") {
         minValue = 30;
         maxValue = 60;
-      }
-      if (
+        incrementValue = 5;
+      } else if (
         title == "Bhujangasana" ||
-        title == "Salabhasana" ||
         title == "Dhanurasana" ||
         title == "Kakasana"
       ) {
         minValue = 30;
         maxValue = 120;
+        incrementValue = 5;
+      } else if (title == "Salabhasana") {
+        minValue = 30;
+        maxValue = 120;
+        incrementValue = 5;
+      } else if(title == "Savasana"){
+        minValue = 60;
+        maxValue = 1200;
+        incrementValue = 30;
       }
 
       view.push(
@@ -286,9 +297,9 @@ export default class AsanaRow extends React.PureComponent {
               this.props.updateHoldTime(this.props.rowNumber, itemValue);
             }}
             initialValue={this.props.holdTime}
-            minValue={15} //30
-            //maxValue={900}
-            incrementValue={15}
+            minValue={minValue} //30
+            maxValue={maxValue}
+            incrementValue={incrementValue}
           />
         </View>
       );
@@ -316,13 +327,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "row",
+    margin: 10,
     borderRadius: 5,
     backgroundColor: "#FFF",
     elevation: 2,
     alignItems: "flex-start"
   },
   title: {
-    fontSize: 16,
+    fontSize: 18,
     color: "#000"
   },
   container_text: {
@@ -338,7 +350,7 @@ const styles = StyleSheet.create({
     marginBottom: 5
   },
   description: {
-    fontSize: 11,
+    fontSize: 14,
     fontStyle: "italic",
     marginBottom: 5
   },

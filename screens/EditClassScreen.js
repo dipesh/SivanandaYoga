@@ -23,6 +23,8 @@ import AddAsanaListview from "../components/AddAsanaListview";
 import DialogInput from "react-native-dialog-input";
 //import SoundPlayer from "react-native-sound-player";
 
+var globalStyle = require("../style");
+
 export default class EditClassScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     title: "Edit " + `${navigation.state.params.key}`,
@@ -209,21 +211,21 @@ export default class EditClassScreen extends React.Component {
       {
         key: "8",
         title: "Halasana",
-        description: "Halasana",
+        description: "Plough",
         image_url: require("../assets/images/Halasana.jpg"),
         holdTime: 90
       },
       {
         key: "9",
         title: "Matsyasana",
-        description: "Matsyasana",
+        description: "Fish",
         image_url: require("../assets/images/Matsyasana.jpg"),
         holdTime: 90
       },
       {
         key: "10",
         title: "Paschimothanasana",
-        description: "Paschimothanasana",
+        description: "Seated Forward Bend",
         image_url: require("../assets/images/Paschimothanasana.jpg"),
         holdTime: 180
       },
@@ -237,57 +239,58 @@ export default class EditClassScreen extends React.Component {
       {
         key: "12",
         title: "Bhujangasana",
-        description: "Bhujangasana",
+        description: "Cobra",
         image_url: require("../assets/images/Bhujangasana.jpg"),
         holdTime: 45
       },
       {
         key: "13",
         title: "Salabhasana",
-        description: "Salabhasana",
+        description: "Locust",
         image_url: require("../assets/images/Salabhasana.jpg"),
         holdTime: 45
       },
       {
         key: "14",
         title: "Dhanurasana",
-        description: "Dhanurasana",
+        description: "Bow",
         image_url: require("../assets/images/Dhanurasana.jpg"),
         holdTime: 45
       },
       {
         key: "15",
         title: "Ardha Matsyendrasana",
-        description: "Ardha Matsyendrasana",
+        description: "Half Spinal Twist",
         image_url: require("../assets/images/ArdhaMatsyendrasana.jpg"),
         holdTime: 90
       },
       {
         key: "16",
         title: "Kakasana",
-        description: "Kakasana",
+        description: "Crow",
         image_url: require("../assets/images/Kakasana.jpg"),
         holdTime: 45
       },
       {
         key: "17",
         title: "Pada Hasthasana",
-        description: "Pada Hasthasana",
+        description: "Standing Forward Bend",
         image_url: require("../assets/images/PadaHasthasana.jpg"),
         holdTime: 90
       },
       {
         key: "18",
         title: "Trikonasana",
-        description: "Trikonasana",
+        description: "Triangle",
         image_url: require("../assets/images/Trikonasana.jpg"),
         holdTime: 45
       },
       {
         key: "19",
         title: "Savasana",
-        description: "Savasana",
-        image_url: require("../assets/images/Savasana.jpg")
+        description: "Corpse Pose",
+        image_url: require("../assets/images/Savasana.jpg"),
+        holdTime: 60
       },
       {
         key: "20",
@@ -386,7 +389,7 @@ export default class EditClassScreen extends React.Component {
 
   render() {
     return (
-      <View style={styles.mainContainer}>
+      <View style={globalStyle.mainContainer}>
         <Modal
           animationType={"slide"}
           transparent={false}
@@ -395,16 +398,18 @@ export default class EditClassScreen extends React.Component {
             console.log("Modal has been closed.");
           }}
         >
-          <View style={styles.mainContainer}>
+          <View style={[globalStyle.mainContainer, styles.modalHeader]}>
             {this.renderRemovedItems()}
-            <TouchableOpacity
-              style={styles.addExercises}
-              onPress={() => {
-                this.toggleModal(!this.state.modalVisible);
-              }}
-            >
-              <Text style={styles.linkText}>Close Modal</Text>
-            </TouchableOpacity>
+            <View style={styles.sectionContainer}>
+              <TouchableOpacity
+                style={globalStyle.button}
+                onPress={() => {
+                  this.toggleModal(!this.state.modalVisible);
+                }}
+              >
+                <Text style={globalStyle.buttonText}>Close Modal</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </Modal>
         <DialogInput
@@ -419,10 +424,7 @@ export default class EditClassScreen extends React.Component {
           }}
         />
 
-        <ScrollView
-          style={styles.scrollViewContainer}
-          contentContainerStyle={styles.contentContainer}
-        >
+        <ScrollView style={globalStyle.sectionContainer}>
           <AsanaListview
             ref={component => (this._asanaListView = component)}
             itemList={this.state.arrayHolder}
@@ -434,24 +436,24 @@ export default class EditClassScreen extends React.Component {
             updateRatioPerRound={this.updateRatioPerRound}
           />
         </ScrollView>
-        <View style={styles.headerView}>
+        <View style={[globalStyle.sectionContainer, globalStyle.buttonRow]}>
           <TouchableOpacity
             onPress={() => this._storeData()}
-            style={styles.headerButton}
+            style={[globalStyle.button, styles.buttonFlex]}
           >
-            <Text style={styles.headerButtonButtonText}>Save{"\n"}Class</Text>
+            <Text style={globalStyle.buttonText}>Save{"\n"}Class</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => this._removeClass()}
-            style={styles.headerButton}
+            style={[globalStyle.button, styles.buttonFlex]}
           >
-            <Text style={styles.headerButtonButtonText}>Delete{"\n"}Class</Text>
+            <Text style={globalStyle.buttonText}>Delete{"\n"}Class</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => this._handleAddExercisePress()}
-            style={styles.headerButton}
+            style={[globalStyle.button, styles.buttonFlex]}
           >
-            <Text style={styles.headerButtonButtonText}>Add{"\n"}Exercise</Text>
+            <Text style={globalStyle.buttonText}>Add{"\n"}Exercise</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -484,10 +486,16 @@ export default class EditClassScreen extends React.Component {
   }
   renderRemovedItems() {
     if (this.removedAsanaArray.length == 0) {
-      return <Text>There is nothing to add </Text>;
+      return (
+        <Text styles={styles.modalText}>
+          There is nothing to add. Asanas which are removed by swiping left will
+          appear here.{" "}
+        </Text>
+      );
     } else {
       return (
         <FlatList
+          style={globalStyle.sectionContainer}
           data={this.removedAsanaArray}
           renderItem={({ item }) => (
             <TouchableOpacity
@@ -501,6 +509,7 @@ export default class EditClassScreen extends React.Component {
                 title={item.title}
                 description={item.description}
               />
+              <View style={globalStyle.separator} />
             </TouchableOpacity>
           )}
         />
@@ -514,57 +523,13 @@ export default class EditClassScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  headerView: {
-    flexDirection: "row",
-    justifyContent: "space-between"
+  modalHeader: {
+    paddingTop: 25
   },
-  headerButtonButtonText: {
-    textAlign: "center",
-    fontSize: 18,
-    color:"#fff",
-    fontWeight: 'bold'
-  },
-  headerButton: {
-    flex: 0.3,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    width: 50,
-    height: 50,
-    backgroundColor: "#72c9ba",
-    borderRadius:10,
-    borderWidth: 0,
-    padding: 10,
+  modalText: {
     margin: 10
   },
-  buttonContainer: {
-    margin: 10
-  },
-  mainContainer: {
-    flex: 1,
-    padding: 5,
-    backgroundColor: "#fff"
-  },
-  scrollViewContainer: {
-    flex: 1,
-    backgroundColor: "#fff"
-  },
-  contentContainer: {
-    paddingTop: 5
-  },
-  getStartedText: {
-    fontSize: 17,
-    color: "rgba(96,100,109, 1)",
-    lineHeight: 24,
-    textAlign: "center"
-  },
-  addExercises: {
-    padding: 15,
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  linkText: {
-    fontSize: 14,
-    color: "#2e78b7"
+  buttonFlex: {
+    flex: 0.333
   }
 });
