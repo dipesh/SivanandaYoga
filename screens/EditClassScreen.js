@@ -266,8 +266,8 @@ export default class EditClassScreen extends React.Component {
       },
       {
         key: "16",
-        title: "Kakasana",
-        description: "Crow",
+        title: "Kakasana-Mayurasana",
+        description: "Crow-Peacock",
         image_url: require("../assets/images/Kakasana.jpg"),
         holdTime: 45
       },

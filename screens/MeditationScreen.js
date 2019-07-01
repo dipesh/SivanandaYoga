@@ -12,7 +12,7 @@ import {
 import NumberChooser from "../components/NumberChooser";
 import IntervalTimer from "../IntervalTimer";
 
-import { Audio } from "expo";
+import { Audio, TaskManager  } from "expo";
 
 import toHHMMSS from "../Tools"; //toHHMMSS is used
 
@@ -31,10 +31,11 @@ export default class MeditationScreen extends React.Component {
     title: "Meditation"
   };
 
+
   constructor(props) {
     super(props);
     this.savedLogsKey = "SivanandaSavedLogs";
-
+    this.BACKGROUND_TIMER_TASK = 'background-timer';
     this.state = {
       meditationLength: 1, //TODO change to 5
       meditationCounter: 0, //the counter will count from the meditation length to 0
@@ -50,6 +51,13 @@ export default class MeditationScreen extends React.Component {
     this.soundObject = new Audio.Sound();
     this.soundObject.loadAsync(require("../assets/sounds/bell.mp3"));
 
+    
+    // TaskManager.defineTask(BACKGROUND_TIMER_TASK, () => {
+    //   try {
+        
+    //   } catch (error) {
+    //   }
+    // });
     this.counterTimer = new IntervalTimer("Counter", this.tick, 1000, null);
   }
 
@@ -116,6 +124,7 @@ export default class MeditationScreen extends React.Component {
   }
 
   tick = () => {
+    
     if (this.state.meditationCounter == 0) {
       this.counterTimer.stop();
       this.logMessage("Meditation complete!");

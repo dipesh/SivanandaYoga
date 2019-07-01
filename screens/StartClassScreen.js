@@ -77,6 +77,9 @@ export default class StartClassScreen extends React.Component {
 
     if (isLoaded) {
       if (didJustFinish) {
+        if (this.currentAsanaRow == this.asanaArray.length - 1) {
+          this.counterTimer.pause();
+        }
         console.log("didJustFinish");
         this.nextAsana();
       }
@@ -108,6 +111,7 @@ export default class StartClassScreen extends React.Component {
     for (let i = 0; i < this.asanaArray.length; i++) {
       this.asanaArray[i].rowNumber = i.toString();
     }
+
     this.setState({ arrayHolder: [...this.asanaArray] });
   }
 
@@ -215,7 +219,7 @@ export default class StartClassScreen extends React.Component {
       this.asanaArray[this.currentAsanaRow].title == "Ardha Matsyendrasana"
     ) {
       await this.playArdhaMatsyendrasana();
-    } else if (this.asanaArray[this.currentAsanaRow].title == "Kakasana") {
+    } else if (this.asanaArray[this.currentAsanaRow].title == "Kakasana-Mayurasana") {
       await this.playKakasana();
     } else if (
       this.asanaArray[this.currentAsanaRow].title == "Pada Hasthasana"
@@ -223,7 +227,7 @@ export default class StartClassScreen extends React.Component {
       await this.playPadaHasthasana();
     } else if (this.asanaArray[this.currentAsanaRow].title == "Trikonasana") {
       await this.playTrikonasana();
-    } else if (this.asanaArray[this.currentAsanaRow].title == "Savasana") {
+    } else if (this.asanaArray[this.currentAsanaRow].title == "Savasana") { 
       await this.playSavasana();
     } else if (this.asanaArray[this.currentAsanaRow].title == "Final Prayer") {
       await this.playFinalPrayer();
@@ -526,7 +530,7 @@ export default class StartClassScreen extends React.Component {
     await this.soundObject.setPositionAsync(184000);
   }
   async playEndOfSuryaNamaskarRounds() {
-    await this.soundObject.setPositionAsync(511500);
+    await this.soundObject.setPositionAsync(511500); //8m31s500ms
   }
   async playSingleLegRaises() {
     let soundAsset = __DEV__
@@ -932,11 +936,7 @@ export default class StartClassScreen extends React.Component {
   }
 
   nextAsana() {
-    console.log(
-      "nextAsana " + this.currentAsanaRow + "<" + this.asanaArray.length
-    );
     if (this.currentAsanaRow < this.asanaArray.length - 1) {
-      console.log("nextAsana " + this.currentAsanaRow);
       //highlight next row
       this.asanaArray[this.currentAsanaRow++].isSelected = false;
       this.asanaArray[this.currentAsanaRow].isSelected = true;
@@ -944,10 +944,7 @@ export default class StartClassScreen extends React.Component {
         .then()
         .catch(this.failureCallback);
       this.setArrayState();
-    } else {
-      console.log("nextAsana else");
     }
-    console.log("nextAsana end");
   }
   editClass = async () => {
     //await this.foo();
@@ -967,7 +964,14 @@ export default class StartClassScreen extends React.Component {
     this.jumpToAsana(item.rowNumber);
   }
   async jumpToAsana(rowNumber) {
-    console.log("jump to asana start");
+    
+    // this.flatListRef.scrollToIndex({
+    //   animated: true,
+    //   index:  rowNumber,
+    //   viewPosition: 0
+    // });
+
+    //console.log("jump to asana start");
     if (this.buttomComplete) {
       if (this.currentAsanaRow == -1) {
         this.counterTimer.start();
@@ -979,7 +983,7 @@ export default class StartClassScreen extends React.Component {
         this.activeAsanaTimer.stop();
       }
 
-      console.log("jumpToAsana " + this.currentAsanaRow);
+      //console.log("jumpToAsana " + rowNumber + "/" + this.asanaArray.length);
       this.currentAsanaRow = rowNumber;
       this.asanaArray.forEach(element => {
         element.isSelected = false;
@@ -989,17 +993,26 @@ export default class StartClassScreen extends React.Component {
 
       this.setArrayState();
 
+
       this.setState({ started: true });
       this.buttomComplete = true;
 
+      //let indexToScroll =;
+     
+      // if (this.currentAsanaRow == this.asanaArray.length - 1) {
+      //   console.log("jumpToAsana jumptoEnd");
+
+      //   this.flatListRef.scrollToEnd(true);
+      // } else {
+      //   
+
+        
+      //}
       await this.soundObject
         .stopAsync()
         .then()
         .catch(this.failureCallback);
       await this.playAsanaSound();
-      console.log("jump to asana end");
-    } else {
-      console.log("jump to asana skipped");
     }
   }
 
@@ -1044,6 +1057,11 @@ export default class StartClassScreen extends React.Component {
 
         <ScrollView style={globalStyle.sectionContainer}>
           <FlatList
+            ref={ref => {
+              this.flatListRef = ref;
+            }}
+            keyExtractor={(item, index) => item.rowNumber}
+            initialScrollIndex={0}
             data={this.state.arrayHolder}
             renderItem={({ item }) => this.renderItem(item)}
           />

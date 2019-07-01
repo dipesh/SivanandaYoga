@@ -72,7 +72,7 @@ export default class MainScreen extends React.Component {
 
       if (value !== null) {
         this.allClasses = JSON.parse(value);
-        this.setState({ allClassesHolder: [...this.allClasses] });
+        this.setState({ allClassesHolder: [...this.allClasses] });  
       } else {
         //there are no saved classes
         return [];

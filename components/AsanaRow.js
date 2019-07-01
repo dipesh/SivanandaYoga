@@ -273,7 +273,7 @@ export default class AsanaRow extends React.PureComponent {
       } else if (
         title == "Bhujangasana" ||
         title == "Dhanurasana" ||
-        title == "Kakasana"
+        title == "Kakasana-Mayurasana"
       ) {
         minValue = 30;
         maxValue = 120;
