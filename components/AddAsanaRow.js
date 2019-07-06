@@ -18,7 +18,6 @@ export default class AddAsanaRow extends Component {
     render = () => {
         return (
             <View style={styles.container}>
-                {/* <Image source={{ uri: this.props.image_url }} style={styles.photo} /> */}
                 <View style={styles.container_text}>
                     <Text style={styles.title}>
                         {this.props.title}

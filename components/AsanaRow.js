@@ -100,8 +100,6 @@ export default class AsanaRow extends React.PureComponent {
     return (
       <View>
         <View style={styles.container}>
-          {/* <Image source={{ uri: this.props.image_url }} style={styles.photo} /> */}
-
           <View style={styles.container_text}>
             <Text style={styles.title}>{this.props.title}</Text>
             <Text style={styles.description}>{this.props.description}</Text>
