@@ -13,6 +13,7 @@ import NumberChooser from "../components/NumberChooser";
 import IntervalTimer from "../IntervalTimer";
 
 import { Audio, TaskManager  } from "expo";
+import { FileSystem } from "expo-file-system";
 
 import toHHMMSS from "../Tools"; //toHHMMSS is used
 
@@ -49,7 +50,10 @@ export default class MeditationScreen extends React.Component {
     this.getLogs();
 
     this.soundObject = new Audio.Sound();
-    this.soundObject.loadAsync(require("../assets/sounds/bell.mp3"));
+    let soundAsset = {
+      uri: FileSystem.documentDirectory + "OpeningPrayer.mp3"
+    };
+    this.soundObject.loadAsync(soundAsset);
 
     
     // TaskManager.defineTask(BACKGROUND_TIMER_TASK, () => {
