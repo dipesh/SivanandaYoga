@@ -38,7 +38,8 @@ export default class EditClassScreen extends React.Component {
     this.savedClassesKey = "SivanandaSavedClasses";
 
     //the data in the array will be replaced with the _retrieveData() data
-    //TODO remove this.getAsanasArray(); for live version
+   
+    //load some test data
     this.asanaArray = this.getAsanasArray();
 
     this.removedAsanaArray = [];

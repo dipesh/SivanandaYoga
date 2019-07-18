@@ -358,6 +358,9 @@ export default class StartStandardClassScreen extends React.Component {
       .catch(this.failureCallback);
   }
 
+  failureCallback(result) {
+    console.log("failureCallback " + result);
+  }
   _onPlaybackStatusUpdate = playbackStatus => {
     const { didJustFinish, isLoaded, positionMillis } = playbackStatus;
 
@@ -382,9 +385,6 @@ export default class StartStandardClassScreen extends React.Component {
     }
   }
 
-  failureCallback(result) {
-    console.log("failureCallback " + result);
-  }
 
   startPause() {
     if (this.state.started) {

@@ -1,10 +1,10 @@
 {
-  "expoServerPort": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
-  "packagerPort": null,
-  "packagerPid": null,
+  "expoServerPort": 19000,
+  "expoServerNgrokUrl": "https://9y-dgr.dipesh1990.sivanandayoga.exp.direct",
+  "packagerNgrokUrl": "https://packager.9y-dgr.dipesh1990.sivanandayoga.exp.direct",
+  "ngrokPid": 8848,
+  "packagerPort": 19001,
+  "packagerPid": 1612,
   "devToolsPort": 19002,
   "webpackServerPort": null
 }

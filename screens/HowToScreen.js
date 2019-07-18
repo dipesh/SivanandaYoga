@@ -14,10 +14,6 @@ var globalStyle = require('../style');
 /**
  * HowToScreen will display a list of asanas and the user can click them
  * to view a tutorial on youtube
- *
- * TODO:
- * Some tutorials for the asanas and pranayam are still being done.
- * For the prayers a link to the lyrics of the chant can be shown
  */
 
 export default class HowToScreen extends React.Component {

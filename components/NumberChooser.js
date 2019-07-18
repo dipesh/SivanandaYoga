@@ -15,9 +15,6 @@ import {
  * There is a - and + button to the left and right of the number
  * which will increment the chosen value by 'incrementValue'
  * There can also be a initial value
- * 
- * TODO:
- * The button don't react as quickly as they should
  */
 export default class NumberChooser extends Component {
   constructor(props) {

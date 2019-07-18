@@ -371,7 +371,6 @@ export default class StartClassScreen extends React.Component {
   //#endregion
   //#region Anuloma Viloma
   async playAnulomaViloma() {
-    //TODO need to add code for  5,6,7,8
 
     //The file  AnulomaViloma-MasterFile has all the ratios in it,
     //the timings need to be adjusted.
@@ -917,6 +916,16 @@ export default class StartClassScreen extends React.Component {
   }
   editClass = async () => {
     //await this.foo();
+
+    if (this.activeAsanaTimer != null) {
+      this.activeAsanaTimer.stop();
+    }
+
+    this.soundObject
+      .stopAsync()
+      .then()
+      .catch(this.failureCallback);
+      
     this.props.navigation.navigate("EditClassScreen", {
       key: this.currentClass.key
     });

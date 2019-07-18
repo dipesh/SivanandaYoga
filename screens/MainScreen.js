@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import quote from "../quotes";
 import { FileSystem } from "expo-file-system";
+import { KeepAwake } from "expo";
 
 let appjson = require("../app.json");
 
@@ -22,9 +23,39 @@ var globalStyle = require("../style");
  * it shows the list of adjustable classes and lets you create them
  */
 export default class MainScreen extends React.Component {
-  static navigationOptions = ({ navigation }) => ({
-    title: "Main"
-  });
+  // static navigationOptions = ({ navigation }) => ({
+  //   title: "Main"
+  // });
+
+  static navigationOptions = ({ navigation }) => {
+    //let  routeName  = navigation.state.routes[];
+
+    console.log("navigationOptions " + navigation.state.routes);
+    let navigationOptions = {};
+
+    navigationOptions.tabBarVisible = true;
+    navigationOptions.title = "Main";
+
+    const { params = {} } = navigation.state;
+    let tabBarVisible = false;
+
+    // if (params.hideHeader) {
+    //   tabBarVisible = false;
+    //   return {
+    //     header: null,
+    //   };
+    // }
+    const routeParams = navigation.state.params;
+
+    return navigationOptions;
+
+    // {
+    //   // hideTabBar: true,
+    //   // tabBarVisible: routeParams && routeParams.tabBarVisible,
+    //   title: "Main",
+    // };
+  };
+
   constructor(props) {
     super(props);
     this.savedClassesKey = "SivanandaSavedClasses";
@@ -39,6 +70,7 @@ export default class MainScreen extends React.Component {
       date: " ",
       quote: " "
     };
+
     this.state = {
       loadingText: "",
       allClassesHolder: this.allClasses,
@@ -50,15 +82,26 @@ export default class MainScreen extends React.Component {
     this.willFocus = this.props.navigation.addListener("willFocus", () => {
       this._retrieveData();
     });
+    //this.props.navigation.setParams({showTabBar: false});
+    //this.props.navigation.setParams({tabBar:{visible:false}})
+    this.props.navigation.setParams({ tabBarVisible: true });
+    //this.props.navigation.setParams({ visible: false });
 
+    console.log("file")
     this.file();
   }
-
+  componentDidMount() {
+    this.props.navigation.setParams({
+      hideHeader: true
+    });
+  }
   async file() {
+    let deleteFiles = true; //should false for release
 
-    //for testing
-    //await AsyncStorage.removeItem(this.savedFileDownloadStatusKey );
-
+    if (deleteFiles) {
+      //for testing
+      await AsyncStorage.removeItem(this.savedFileDownloadStatusKey);
+    }
     //if the app updates the version will be different and all the files will be redownloaded
     //this solution allow me not to check each file individually
 
@@ -71,14 +114,14 @@ export default class MainScreen extends React.Component {
 
     let downloadFiles = true;
 
-    console.log("data" + savedFileDownloadStatusValue);
+    //console.log("data" + savedFileDownloadStatusValue);
     //if the version was never saved or is different from the current version, download the files
 
     if (savedFileDownloadStatusValue != null) {
       this.savedFileDownloadStatusArray = JSON.parse(
         savedFileDownloadStatusValue
       );
-      console.log(this.savedFileDownloadStatusArray);
+      //console.log(this.savedFileDownloadStatusArray);
       if (this.savedFileDownloadStatusArray.version == currentVersion) {
         downloadFiles = false;
       }
@@ -87,100 +130,98 @@ export default class MainScreen extends React.Component {
     //this.savedFileDownloadStatusArray.version = version
 
     if (downloadFiles) {
-      this.setState({ loadingText: "Downloading file... v" + currentVersion });
+      this.setState({
+        loadingText: "Downloading sound file... v" + currentVersion
+      });
       // let arrFiles = await FileSystem.readDirectoryAsync(
       //   FileSystem.documentDirectory
       // );
-      
 
       // console.log(arrFiles + "\n" + arrFiles.length);
       // console.log(arrFiles2 + "\n" + arrFiles2.length);
       // console.log(arrFiles3 + "\n" + arrFiles3.length);
-      let serverLocation = "https://sivanandacanada.org/camp/wp-content/uploads/2019/07/";
+      let serverLocation =
+        "https://sivanandacanada.org/camp/wp-content/uploads/2019/07/";
+      
+        //todo 
       let soundFiles = [
         "bell.mp3",
         "OpeningPrayer.mp3",
         "Kapalabhati.mp3",
-        "AnulomaViloma.mp3",
-        "AnulomaVilomaRatio5.mp3",
-        "AnulomaVilomaRatio6.mp3",
-        "AnulomaVilomaRatio7.mp3",
-        "AnulomaVilomaRatio8.mp3",
-        "SuryaNamaskar.mp3",
-        "SingleLegRaises.mp3",
-        "DoubleLegRaises.mp3",
-        "Sarvangasana.mp3",
-        "Sirshasana.mp3",
-        "Halasana.mp3",
-        "Matsyasana.mp3",
-        "Paschimothanasana.mp3",
-        "InclinedPlane.mp3",
-        "Bhujangasana.mp3",
-        "Salabhasana.mp3",
-        "Dhanurasana.mp3",
-        "ArdhaMatsyendrasana.mp3",
-        "Kakasana.mp3",
-        "PadaHasthasana.mp3",
-        "Trikonasana.mp3",
-        "Savasana.mp3",
-        "FinalPrayer.mp3",
-        "90minClass01.mp3",
-        "90minClass02.mp3",
-        "90minClass03.mp3",
-        "90minClass04.mp3",
-        "90minClass05.mp3",
-        "90minClass06.mp3",
-        "90minClass07.mp3",
-        "90minClass08.mp3",
-        "90minClass09.mp3",
-        "90minClass10.mp3",
-        "90minClass11.mp3",
-        "90minClass12.mp3",
-        "90minClass13.mp3",
-        "90minClass14.mp3",
-        "90minClass15.mp3",
-        "90minClass16.mp3",
-        "90minClass17.mp3",
-        "90minClass18.mp3",
-        "90minClass19.mp3",
-        "90minClass20.mp3",
-        "90minClass21.mp3",
-        "120minClass01.mp3",
-        "120minClass02.mp3",
-        "120minClass03.mp3",
-        "120minClass04.mp3",
-        "120minClass05.mp3",
-        "120minClass06.mp3",
-        "120minClass07.mp3",
-        "120minClass08.mp3",
-        "120minClass09.mp3",
-        "120minClass10.mp3",
-        "120minClass11.mp3",
-        "120minClass12.mp3",
-        "120minClass13.mp3",
-        "120minClass14.mp3",
-        "120minClass15.mp3"
+        //"AnulomaViloma.mp3",
+        //"AnulomaVilomaRatio5.mp3",
+        //"AnulomaVilomaRatio6.mp3",
+        //"AnulomaVilomaRatio7.mp3",
+        //"AnulomaVilomaRatio8.mp3",
+        // "SuryaNamaskar.mp3",
+        // "SingleLegRaises.mp3",
+        // "DoubleLegRaises.mp3",
+        // "Sarvangasana.mp3",
+        // "Sirshasana.mp3",
+        // "Halasana.mp3",
+        // "Matsyasana.mp3",
+        // "Paschimothanasana.mp3",
+        // "InclinedPlane.mp3",
+        // "Bhujangasana.mp3",
+        // "Salabhasana.mp3",
+        // "Dhanurasana.mp3",
+        // "ArdhaMatsyendrasana.mp3",
+        // "Kakasana.mp3",
+        // "PadaHasthasana.mp3",
+        // "Trikonasana.mp3",
+        // "Savasana.mp3",
+        // "FinalPrayer.mp3",
+        // "90minClass01.mp3",
+        // "90minClass02.mp3",
+        // "90minClass03.mp3",
+        // "90minClass04.mp3",
+        // "90minClass05.mp3",
+        // "90minClass06.mp3",
+        // "90minClass07.mp3",
+        // "90minClass08.mp3",
+        // "90minClass09.mp3",
+        // "90minClass10.mp3",
+        // "90minClass11.mp3",
+        // "90minClass12.mp3",
+        // "90minClass13.mp3",
+        // "90minClass14.mp3",
+        // "90minClass15.mp3",
+        // "90minClass16.mp3",
+        // "90minClass17.mp3",
+        // "90minClass18.mp3",
+        // "90minClass19.mp3",
+        // "90minClass20.mp3",
+        // "90minClass21.mp3",
+        // "120minClass01.mp3",
+        // "120minClass02.mp3",
+        // "120minClass03.mp3",
+        // "120minClass04.mp3",
+        // "120minClass05.mp3",
+        // "120minClass06.mp3",
+        // "120minClass07.mp3",
+        // "120minClass08.mp3",
+        // "120minClass09.mp3",
+        // "120minClass10.mp3",
+        // "120minClass11.mp3",
+        // "120minClass12.mp3",
+        // "120minClass13.mp3",
+        // "120minClass14.mp3",
+        // "120minClass15.mp3"
       ];
-
-      //soundFiles = await this.removeExistingFiles(soundFiles);
-      // //remove the elements that were already downloaded
-      // await items.forEach(async function(item, index, object) {
-      //   let fileInfo = await FileSystem.getInfoAsync(
-      //     FileSystem.documentDirectory + item
-      //   );
-      //   if (fileInfo.exists) {
-      //     items.splice(index, 1);
-      //     console.log("removing " + item)
-      //   }
-      // });
-      //console.log("items " + items);
 
       this.fileCount = soundFiles.length;
       this.currentFileCount = 0;
-      // for (let i = 0; i < soundFiles.length; i++) {
-      //   console.log("deleting " + FileSystem.documentDirectory + soundFiles[i])
-      //   await FileSystem.deleteAsync(FileSystem.documentDirectory + soundFiles[i], {idempotent: true});
-      // }
+      if (deleteFiles) {
+        for (let i = 0; i < soundFiles.length; i++) {
+          console.log(
+            "deleting " + FileSystem.documentDirectory + soundFiles[i]
+          );
+          await FileSystem.deleteAsync(
+            FileSystem.documentDirectory + soundFiles[i],
+            { idempotent: true }
+          );
+        }
+      }
 
       // await FileSystem.deleteAsync(
       //   FileSystem.documentDirectory + "fileThatDoesntExist.mp3"
@@ -205,7 +246,6 @@ export default class MainScreen extends React.Component {
           let filename = arr[arr.length - 1];
 
           this.currentFile = filename;
-          //console.log(this.currentFile);
           const directoryData = await FileSystem.getInfoAsync(
             FileSystem.documentDirectory + filename
           );
@@ -217,22 +257,28 @@ export default class MainScreen extends React.Component {
             {},
             this.callback
           );
+          //.catch(this.failureCallback);
+
           this.currentFileCount++;
           this.setState({
             loadingText:
-              "downloading file " +
+              "Downloading sound file " +
               this.currentFileCount +
               "/" +
               this.fileCount +
               " 0%"
           });
-          await this.downloadResumable.downloadAsync();
+
+          await this.downloadResumable
+            .downloadAsync()
+            .then()
+            .catch(this.failureCallback);
         });
 
         await Promise.all(itemChunk);
         await this.wait(1000);
       }
- 
+
       //this only runs when all the files are downloaded
       this.savedFileDownloadStatusArray.version = currentVersion;
       await AsyncStorage.setItem(
@@ -243,23 +289,18 @@ export default class MainScreen extends React.Component {
       console.log("finished all downloads");
     }
 
+    await this.wait(5000);
+
     this.setState({ loading: false });
+    this.props.navigation.setParams({
+      hideHeader: false
+    });
+
+    //this.props.navigation.setParams({tabBarVisible: true});
   }
 
-  async removeExistingFiles(array) {
-    let foo = async function(item, index, object) {
-      let fileInfo = await FileSystem.getInfoAsync(
-        FileSystem.documentDirectory + item
-      );
-      if (fileInfo.exists) {
-        array.splice(index, 1);
-        console.log("removing " + item);
-      }
-    };
-    await array.forEach(foo);
-
-    console.log(array);
-    return array;
+  failureCallback(result) {
+    console.log("failureCallback " + result);
   }
   wait = async ms => {
     return new Promise(resolve => {
@@ -273,19 +314,21 @@ export default class MainScreen extends React.Component {
       this.currentLocalFileSize == downloadProgress.totalBytesExpectedToWrite
     ) {
       await this.downloadResumable.pauseAsync();
-      //console.log("not downloading file " + this.currentFile);
+      //console.log("not Downloading sound file " + this.currentFile);
     } else {
       let percent =
         downloadProgress.totalBytesWritten /
         downloadProgress.totalBytesExpectedToWrite;
-      percent = percent *100; 
-      this.setState({ 
+      percent = percent * 100;
+      this.setState({
         loadingText:
-          "downloading file " +
+          "Downloading sound file " +
           this.currentFileCount +
           "/" +
-          this.fileCount + " " + 
-          parseFloat(percent).toFixed(2)+"%"
+          this.fileCount +
+          " " +
+          parseFloat(percent).toFixed(2) +
+          "%"
       });
 
       //if the file wasn't downloaded, it will be downloaded
@@ -293,9 +336,7 @@ export default class MainScreen extends React.Component {
         downloadProgress.totalBytesWritten ==
         downloadProgress.totalBytesExpectedToWrite
       ) {
-        console.log("downloaded " + this.currentFile);
-      } else {
-        //console.log("downloading file " + this.currentFile);
+        console.log("Downloaded " + this.currentFile);
       }
     }
   };
@@ -384,13 +425,17 @@ export default class MainScreen extends React.Component {
     if (loading) {
       return (
         <View style={styles.imageView}>
+          <KeepAwake />
           <Image style={styles.image} source={image} />
+          <Text>Preparing app for first time use</Text>
           <Text>{this.state.loadingText}</Text>
+          <Text>Please don't exit the app </Text>
         </View>
       );
     } else {
       return (
         <ScrollView style={globalStyle.mainContainer}>
+          <KeepAwake />
           <View style={globalStyle.sectionContainer}>
             <Text style={globalStyle.headerLabel}>Daily Quote</Text>
             <Text style={styles.dailyQuote}>{this.state.dailyQuote}</Text>

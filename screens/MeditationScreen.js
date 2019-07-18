@@ -32,13 +32,13 @@ export default class MeditationScreen extends React.Component {
     title: "Meditation"
   };
 
-
+ 
   constructor(props) {
     super(props);
     this.savedLogsKey = "SivanandaSavedLogs";
     this.BACKGROUND_TIMER_TASK = 'background-timer';
     this.state = {
-      meditationLength: 1, //TODO change to 5
+      meditationLength: 5, 
       meditationCounter: 0, //the counter will count from the meditation length to 0
       started: false,
       logHolder: this.logs
