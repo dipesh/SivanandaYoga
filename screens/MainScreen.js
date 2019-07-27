@@ -10,8 +10,8 @@ import {
   Image
 } from "react-native";
 import quote from "../quotes";
-import { FileSystem } from "expo-file-system";
-import { KeepAwake } from "expo";
+import * as FileSystem from "expo-file-system";
+import { activateKeepAwake, deactivateKeepAwake } from "expo-keep-awake";
 
 let appjson = require("../app.json");
 
@@ -58,6 +58,7 @@ export default class MainScreen extends React.Component {
 
   constructor(props) {
     super(props);
+
     this.savedClassesKey = "SivanandaSavedClasses";
     this.savedDailyQuoteArrayKey = "SivanandaSavedDailyQuoteArray";
     this.savedFileDownloadStatusKey = "savedFileDownloadStatusKey";
@@ -72,7 +73,7 @@ export default class MainScreen extends React.Component {
     };
 
     this.state = {
-      loadingText: "",
+      loadingText: "Downloading sound files...",
       allClassesHolder: this.allClasses,
       dailyQuoteArrayHolder: [],
       dailyQuote: "",
@@ -87,21 +88,20 @@ export default class MainScreen extends React.Component {
     this.props.navigation.setParams({ tabBarVisible: true });
     //this.props.navigation.setParams({ visible: false });
 
-    console.log("file")
+    //console.log("file")
     this.file();
   }
   componentDidMount() {
     this.props.navigation.setParams({
       hideHeader: true
     });
+    activateKeepAwake();
+  }
+  componentWillUnmount() {
+    deactivateKeepAwake();
   }
   async file() {
-    let deleteFiles = false; //should false for release
-
-    if (deleteFiles) {
-      //for testing
-      await AsyncStorage.removeItem(this.savedFileDownloadStatusKey);
-    }
+    
     //if the app updates the version will be different and all the files will be redownloaded
     //this solution allow me not to check each file individually
 
@@ -121,17 +121,24 @@ export default class MainScreen extends React.Component {
       this.savedFileDownloadStatusArray = JSON.parse(
         savedFileDownloadStatusValue
       );
-      //console.log(this.savedFileDownloadStatusArray);
+      console.log("array version " + this.savedFileDownloadStatusArray.version);
+      console.log("file version " + currentVersion);
       if (this.savedFileDownloadStatusArray.version == currentVersion) {
         downloadFiles = false;
       }
     }
 
+    let deleteFiles = false; //should false for release
+
+    if (deleteFiles) {
+      //for testing
+      await AsyncStorage.removeItem(this.savedFileDownloadStatusKey);
+    }
     //this.savedFileDownloadStatusArray.version = version
 
     if (downloadFiles) {
       this.setState({
-        loadingText: "Downloading sound file... v" + currentVersion
+        loadingText: "Downloading sound files... v" + currentVersion
       });
       // let arrFiles = await FileSystem.readDirectoryAsync(
       //   FileSystem.documentDirectory
@@ -142,8 +149,8 @@ export default class MainScreen extends React.Component {
       // console.log(arrFiles3 + "\n" + arrFiles3.length);
       let serverLocation =
         "https://sivanandacanada.org/camp/wp-content/uploads/2019/07/";
-      
-        //todo 
+
+      //todo
       let soundFiles = [
         "bell.mp3",
         "OpeningPrayer.mp3",
@@ -262,7 +269,7 @@ export default class MainScreen extends React.Component {
           this.currentFileCount++;
           this.setState({
             loadingText:
-              "Downloading sound file " +
+              "Downloading sound files " +
               this.currentFileCount +
               "/" +
               this.fileCount +
@@ -314,7 +321,7 @@ export default class MainScreen extends React.Component {
       this.currentLocalFileSize == downloadProgress.totalBytesExpectedToWrite
     ) {
       await this.downloadResumable.pauseAsync();
-      //console.log("not Downloading sound file " + this.currentFile);
+      //console.log("not Downloading sound files " + this.currentFile);
     } else {
       let percent =
         downloadProgress.totalBytesWritten /
@@ -322,7 +329,7 @@ export default class MainScreen extends React.Component {
       percent = percent * 100;
       this.setState({
         loadingText:
-          "Downloading sound file " +
+          "Downloading sound files " +
           this.currentFileCount +
           "/" +
           this.fileCount +
@@ -425,7 +432,6 @@ export default class MainScreen extends React.Component {
     if (loading) {
       return (
         <View style={styles.imageView}>
-          <KeepAwake />
           <Image style={styles.image} source={image} />
           <Text>Preparing app for first time use</Text>
           <Text>{this.state.loadingText}</Text>
@@ -435,7 +441,6 @@ export default class MainScreen extends React.Component {
     } else {
       return (
         <ScrollView style={globalStyle.mainContainer}>
-          <KeepAwake />
           <View style={globalStyle.sectionContainer}>
             <Text style={globalStyle.headerLabel}>Daily Quote</Text>
             <Text style={styles.dailyQuote}>{this.state.dailyQuote}</Text>

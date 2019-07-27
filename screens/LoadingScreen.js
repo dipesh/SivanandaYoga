@@ -10,8 +10,8 @@ import {
   AsyncStorage,
   Image
 } from "react-native";
-import { KeepAwake } from "expo";
-import { FileSystem } from "expo-file-system";
+import {activateKeepAwake, deactivateKeepAwake}  from 'expo-keep-awake'
+import * as FileSystem from 'expo-file-system'
 
 let appjson = require("../app.json");
 
@@ -37,7 +37,12 @@ export default class HowToScreen extends React.Component {
 
     this.file();
   }
-
+  componentDidMount() {
+    activateKeepAwake();
+  }
+  componentWillUnmount(){
+    deactivateKeepAwake(); 
+  }
   
   async file() {
     //for testing
@@ -267,7 +272,6 @@ export default class HowToScreen extends React.Component {
 
     return (
       <View style={styles.imageView}>
-        <KeepAwake />
         <Image style={styles.image} source={image} />
         <Text>{this.state.loadingText}</Text>
         <Text>Please don't exit the app</Text>

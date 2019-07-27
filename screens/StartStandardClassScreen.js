@@ -10,13 +10,13 @@ import {
   AsyncStorage
 } from "react-native";
 
-import { Audio } from "expo";
+import { Audio } from 'expo-av'
 
 import IntervalTimer from "../IntervalTimer";
 import toHHMMSS from "../Tools"; //toHHMMSS is used
-import { KeepAwake } from "expo";
+import { activateKeepAwake, deactivateKeepAwake } from "expo-keep-awake";
 
-import { FileSystem } from "expo-file-system";
+import * as FileSystem from 'expo-file-system'
 
 var globalStyle = require("../style");
 
@@ -349,13 +349,16 @@ export default class StartStandardClassScreen extends React.Component {
       totalTime: 1000
     };
   }
-
+  componentDidMount() {
+    activateKeepAwake();
+  }
   componentWillUnmount() {
     //the sound needs to be stopped when the user leaves the screen
     this.soundObject
       .stopAsync()
       .then()
       .catch(this.failureCallback);
+    deactivateKeepAwake();
   }
 
   failureCallback(result) {
@@ -384,7 +387,6 @@ export default class StartStandardClassScreen extends React.Component {
       console.log("nextAsana done");
     }
   }
-
 
   startPause() {
     if (this.state.started) {
@@ -476,7 +478,6 @@ export default class StartStandardClassScreen extends React.Component {
 
     return (
       <View style={globalStyle.mainContainer}>
-        <KeepAwake />
         <View style={globalStyle.sectionContainer}>
           <TouchableOpacity
             onPress={() => this.startPause()}

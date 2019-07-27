@@ -3,12 +3,12 @@
     "name": "Sivananda Yoga",
     "slug": "SivanandaYoga",
     "privacy": "public",
-    "sdkVersion": "32.0.0",
+    "sdkVersion": "33.0.0",
     "platforms": [
       "ios",
       "android"
     ],
-    "version": "1.0.0",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/images/IconSivananda.png",
     "splash": {
@@ -17,7 +17,7 @@
       "backgroundColor": "#ffffff"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0 
     },
     "assetBundlePatterns": [
       "**/*"
@@ -27,7 +27,8 @@
       "bundleIdentifier": "com.sivanada.yoga"
     },
     "android": {
-      "package": "com.sivanada.yoga"
+      "package": "com.sivanada.yoga",
+      "versionCode": 2
     }
   }
 }

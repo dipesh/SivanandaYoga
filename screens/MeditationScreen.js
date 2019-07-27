@@ -12,8 +12,8 @@ import {
 import NumberChooser from "../components/NumberChooser";
 import IntervalTimer from "../IntervalTimer";
 
-import { Audio, TaskManager  } from "expo";
-import { FileSystem } from "expo-file-system";
+import { Audio } from 'expo-av'
+import * as FileSystem from 'expo-file-system'
 
 import toHHMMSS from "../Tools"; //toHHMMSS is used
 
@@ -67,7 +67,7 @@ export default class MeditationScreen extends React.Component {
 
   async getLogs() {
     const value = await AsyncStorage.getItem(this.savedLogsKey);
-    console.log("logs value " + value);
+    //console.log("logs value " + value);
     if (value != null) {
       this.logs = JSON.parse(value);
 
@@ -119,7 +119,7 @@ export default class MeditationScreen extends React.Component {
     });
     //limit the size of the log to 100
     if (this.logs.length > 100) {
-      this.logs.length = 100;
+      this.logs.length = 100;  
     }
 
     this.setState({ logHolder: [...this.logs] });
@@ -128,12 +128,11 @@ export default class MeditationScreen extends React.Component {
   }
 
   tick = () => {
-    
     if (this.state.meditationCounter == 0) {
       this.counterTimer.stop();
       this.logMessage("Meditation complete!");
       this.replaySound();
-      console.log("should play sound")
+      //console.log("should play sound")
       this.setState({ meditationCounter: 0, started: false });
     }
     this.setState({

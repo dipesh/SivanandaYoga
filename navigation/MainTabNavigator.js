@@ -45,10 +45,11 @@ const MainStack = createStackNavigator({
 //       //     : "md-information-circle"
 //       // }
 //       name={"ios-body"}
-//     />
+//     />  
 //   ),
 
 // };
+
 MainStack.navigationOptions = ({ navigation }) => {
   let hideHeader = navigation.state;
   //console.log(hideHeader)

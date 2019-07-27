@@ -11,13 +11,13 @@ import {
 } from "react-native";
 
 var globalStyle = require("../style");
-import { FileSystem } from "expo-file-system";
+import * as FileSystem from 'expo-file-system'
 
-import { Audio } from "expo";
+import { Audio } from 'expo-av'
 
 import IntervalTimer from "../IntervalTimer";
 import toHHMMSS from "../Tools"; //toHHMMSS is used
-import { KeepAwake } from "expo";
+import { activateKeepAwake, deactivateKeepAwake } from "expo-keep-awake";
 
 export default class StartClassScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
@@ -28,6 +28,7 @@ export default class StartClassScreen extends React.Component {
 
   constructor(props) {
     super(props);
+
     //this is used to make sure that multiple sound button presses don't happen if the sound functions are running
     this.buttomComplete = true;
 
@@ -59,7 +60,9 @@ export default class StartClassScreen extends React.Component {
       totalTime: 1000
     };
   }
-
+  componentDidMount() {
+    activateKeepAwake();
+  }
   componentWillUnmount() {
     //the sound automically stops if the screen closes
     //the sound needs to be stopped when the user leaves the screen
@@ -71,6 +74,7 @@ export default class StartClassScreen extends React.Component {
       .stopAsync()
       .then()
       .catch(this.failureCallback);
+    deactivateKeepAwake();
   }
 
   _onPlaybackStatusUpdate = playbackStatus => {
@@ -371,7 +375,6 @@ export default class StartClassScreen extends React.Component {
   //#endregion
   //#region Anuloma Viloma
   async playAnulomaViloma() {
-
     //The file  AnulomaViloma-MasterFile has all the ratios in it,
     //the timings need to be adjusted.
 
@@ -925,7 +928,7 @@ export default class StartClassScreen extends React.Component {
       .stopAsync()
       .then()
       .catch(this.failureCallback);
-      
+
     this.props.navigation.navigate("EditClassScreen", {
       key: this.currentClass.key
     });
@@ -1012,8 +1015,6 @@ export default class StartClassScreen extends React.Component {
   render() {
     return (
       <View style={globalStyle.mainContainer}>
-        <KeepAwake />
-
         <View style={[globalStyle.sectionContainer, globalStyle.buttonRow]}>
           {this.renderStartPauseButton()}
           <View style={styles.textHeaderView}>
@@ -1084,7 +1085,7 @@ export default class StartClassScreen extends React.Component {
           "Om Tryambakam Yajamahe\nSugandhim Pushtivardhanam\nUrvarukamiva Bandhanan\nMrityor Mukshiya Maamritat (repeat 3 times)\n\nOm Sarvesham Svastir Bhavatu\nSarvesham Shantir Bhavatu\nSarvesham Purnam Bhavatu\nSarvesham Mangalam Bhavatu\n\nSarve Bhavantu Sukhinah\nSarve Santu Niramayaah\nSarve Bhadrani Pasyantu\nMa Kaschid-Dukha-Bhag-Bhavet\n\nAsato Ma Sat Gamaya\nTamaso Ma Jyotir Gamaya\nMrityor Mamritam Gamaya\n\nOm Purnamadah Purnamidam\nPurnat Purnamudachyate\nPurnasya Purnamadaya\nPurnameva Vashishyate\n\nOm Shantih Shantih Shantih\nOm Peace Peace Peace\n\n";
       }
     } else if (item.title == "Savasana") {
-      description = "Rest for " + item.holdTime + " seconds ";
+      description = "Tension release and guided relaxation followed by rest for " + item.holdTime + " seconds ";
     } else if (item.title == "Kapalabhati") {
       description =
         item.rounds +
@@ -1107,7 +1108,7 @@ export default class StartClassScreen extends React.Component {
       description = "Hold for " + item.holdTime + " seconds ";
     }
 
-    return (
+    return (        
       <TouchableOpacity
         style={{ backgroundColor: color }}
         onPress={() => this.asanaClicked(item)}
