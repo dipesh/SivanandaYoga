@@ -51,7 +51,7 @@ export default class MeditationScreen extends React.Component {
 
     this.soundObject = new Audio.Sound();
     let soundAsset = {
-      uri: FileSystem.documentDirectory + "OpeningPrayer.mp3"
+      uri: FileSystem.documentDirectory + "bell.mp3"
     };
     this.soundObject.loadAsync(soundAsset);
 

@@ -60,6 +60,7 @@ export default class StartClassScreen extends React.Component {
       totalTime: 1000
     };
   }
+  
   componentDidMount() {
     activateKeepAwake();
   }
@@ -264,12 +265,13 @@ export default class StartClassScreen extends React.Component {
     await this.soundObject.loadAsync(soundAsset);
     await this.soundObject.playAsync();
     //await this.soundObject.setProgressUpdateIntervalAsync(50);
-
-    //await this.soundObject.setPositionAsync(45000);
+    this.soundObject.setIsLoopingAsync(true);
+    let jumpTime = 45000
+    await this.soundObject.setPositionAsync(jumpTime);
     //return;
 
     this.kaPumpResetPoint = 55882;
-    this.kaIntroDuration = 48000;
+    this.kaIntroDuration = 48183 - jumpTime;
     this.kaRoundsPassed = 0;
 
     //after the intro has finished
@@ -288,7 +290,7 @@ export default class StartClassScreen extends React.Component {
     let actionsPerRound = this.asanaArray[this.currentAsanaRow].actionsPerRound;
     console.log("kaIntroFinish " + actionsPerRound);
     let roundCounter = 0;
-    this.numberOfPumps = actionsPerRound - 3;
+    this.numberOfPumps = actionsPerRound - 7; //6 pumps are played at the end of recording
 
     await this.soundObject.setPositionAsync(this.kaPumpResetPoint);
     this.repeatTimer = new IntervalTimer(
@@ -304,18 +306,19 @@ export default class StartClassScreen extends React.Component {
         }
       },
       938,
-      this.numberOfPumps + 1 // 1 extra to play end of pumping
+      this.numberOfPumps + 1// 1 extra to play end of pumping
     );
     this.repeatTimer.start();
     this.activeAsanaTimer = this.repeatTimer;
   }
+
   async playKaPump() {
     try {
       await this.soundObject.setPositionAsync(this.kaPumpResetPoint);
     } catch (error) {}
   }
   async playEndOfPumping() {
-    await this.soundObject.setPositionAsync(116000);
+    await this.soundObject.setPositionAsync(113000); //6 pumping is played after this
     let retentionLength = this.asanaArray[this.currentAsanaRow].retentionLength;
 
     //end of pumpings is at 1:56, 116000, there is two final pumping then instructions before breath hold

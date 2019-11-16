@@ -277,7 +277,7 @@ export default class AsanaRow extends React.PureComponent {
         maxValue = 120;
         incrementValue = 5;
       } else if (title == "Salabhasana") {
-        minValue = 30;
+        minValue = 15;
         maxValue = 120;
         incrementValue = 5;
       } else if(title == "Savasana"){
@@ -295,7 +295,7 @@ export default class AsanaRow extends React.PureComponent {
               this.props.updateHoldTime(this.props.rowNumber, itemValue);
             }}
             initialValue={this.props.holdTime}
-            minValue={minValue} //30
+            minValue={minValue} 
             maxValue={maxValue}
             incrementValue={incrementValue}
           />

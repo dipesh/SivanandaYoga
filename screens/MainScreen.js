@@ -7,11 +7,14 @@ import {
   View,
   FlatList,
   AsyncStorage,
-  Image
+  Image,
+  AppState
 } from "react-native";
 import quote from "../quotes";
 import * as FileSystem from "expo-file-system";
 import { activateKeepAwake, deactivateKeepAwake } from "expo-keep-awake";
+
+import { Audio } from "expo-av";
 
 let appjson = require("../app.json");
 
@@ -30,7 +33,7 @@ export default class MainScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     //let  routeName  = navigation.state.routes[];
 
-    console.log("navigationOptions " + navigation.state.routes);
+    //console.log("navigationOptions " + navigation.state.routes);
     let navigationOptions = {};
 
     navigationOptions.tabBarVisible = true;
@@ -77,7 +80,8 @@ export default class MainScreen extends React.Component {
       allClassesHolder: this.allClasses,
       dailyQuoteArrayHolder: [],
       dailyQuote: "",
-      loading: true
+      loading: true,
+      appState: AppState.currentState
     };
     this.dailyQuote = "";
     this.willFocus = this.props.navigation.addListener("willFocus", () => {
@@ -88,20 +92,124 @@ export default class MainScreen extends React.Component {
     this.props.navigation.setParams({ tabBarVisible: true });
     //this.props.navigation.setParams({ visible: false });
 
+    this.downloadResumable = null;
     //console.log("file")
-    this.file();
+    this.downloadAudioFiles();
+
+    this.soundsetup();
   }
+
+  _onPlaybackStatusUpdate = playbackStatus => {
+    const { didJustFinish, isLoaded, positionMillis, uri } = playbackStatus;
+
+    if (isLoaded) {
+      if (didJustFinish) {
+        //console.log(uri);
+        //loop is on
+        this.playCount++;
+        console.log("playCount " + this.playCount);
+        this.soundObjects[0].setRateAsync(
+          this.playRate,
+          false,
+          Audio.PitchCorrectionQuality.High
+        );
+        this.playRate = 1 + 0.05 * this.playCount;
+        console.log("playRate " + this.playRate);
+        if (this.playCount == 10) {
+          this.playNextSound();
+        }
+      }
+    }
+  };
+  async soundsetup() {
+    this.soundObjects = [];
+    this.playCount = 0;
+    this.playRate = 1.0;
+    let soundAsset = require("../assets/KapalabhatiPump.mp3");
+
+    //for (let i = 0; i < 5; i++) {
+    this.soundObjects[0] = new Audio.Sound();
+    this.soundObjects[0].setOnPlaybackStatusUpdate(
+      this._onPlaybackStatusUpdate
+    );
+    await this.soundObjects[0].loadAsync(soundAsset);
+    await this.soundObjects[0].setIsLoopingAsync(true);
+
+    this.soundObjects[1] = new Audio.Sound();
+    await this.soundObjects[1].loadAsync(require("../assets/3sec.mp3"));
+    this.currentSoundIndex = 0;
+  }
+
+  async playNextSound() {
+    console.log("playNextSound");
+    await this.soundObjects[0].stopAsync();
+    await this.soundObjects[1].playAsync();
+    this.playCount = 0;
+  }
+
+  async setSoundPosition() {
+    if (this.currentSoundIndex < 4) {
+      this.currentSoundIndex++;
+      await this.soundObjects[this.currentSoundIndex].setPositionAsync(0);
+      console.log("setSoundPosition");
+    }
+  }
+
+  async soundpause() {
+    await this.soundObjects[this.currentSoundIndex].pauseAsync();
+  }
+
+  async soundplay() {
+    this.currentSoundIndex = 0;
+    await this.soundObjects[this.currentSoundIndex].playAsync();
+  }
+
   componentDidMount() {
     this.props.navigation.setParams({
       hideHeader: true
     });
     activateKeepAwake();
+
+    AppState.addEventListener("change", this._handleAppStateChange);
   }
   componentWillUnmount() {
     deactivateKeepAwake();
+    AppState.removeEventListener("change", this._handleAppStateChange);
   }
-  async file() {
-    
+
+  _handleAppStateChange = nextAppState => {
+    if (this.downloadResumable != null) {
+      if (
+        this.state.appState.match(/inactive|background/) &&
+        nextAppState === "active"
+      ) {
+        this.resumeDownload();
+      } else if (
+        this.state.appState === "active" &&
+        nextAppState.match(/inactive|background/)
+      ) {
+        this.pauseDownload();
+      }
+    }
+    this.setState({ appState: nextAppState });
+  };
+
+  async pauseDownload() {
+    await this.downloadResumable.pauseAsync();
+  }
+
+  async resumeDownload() {
+    await this.downloadResumable.resumeAsync();
+  }
+
+  async downloadAudioFiles() {
+    let deleteFiles = false; //should false for release
+
+    if (deleteFiles) {
+      //for testing
+      await AsyncStorage.removeItem(this.savedFileDownloadStatusKey);
+    }
+
     //if the app updates the version will be different and all the files will be redownloaded
     //this solution allow me not to check each file individually
 
@@ -116,25 +224,16 @@ export default class MainScreen extends React.Component {
 
     //console.log("data" + savedFileDownloadStatusValue);
     //if the version was never saved or is different from the current version, download the files
-
     if (savedFileDownloadStatusValue != null) {
       this.savedFileDownloadStatusArray = JSON.parse(
         savedFileDownloadStatusValue
       );
-      console.log("array version " + this.savedFileDownloadStatusArray.version);
-      console.log("file version " + currentVersion);
+      // console.log("array version " + this.savedFileDownloadStatusArray.version);
+      // console.log("file version " + currentVersion);
       if (this.savedFileDownloadStatusArray.version == currentVersion) {
         downloadFiles = false;
       }
     }
-
-    let deleteFiles = false; //should false for release
-
-    if (deleteFiles) {
-      //for testing
-      await AsyncStorage.removeItem(this.savedFileDownloadStatusKey);
-    }
-    //this.savedFileDownloadStatusArray.version = version
 
     if (downloadFiles) {
       this.setState({
@@ -246,6 +345,7 @@ export default class MainScreen extends React.Component {
         let myChunk = soundFiles.slice(i, i + item_chunk_size);
         itemArray.push(myChunk);
       }
+
       for (let i = 0; i < itemArray.length; i++) {
         let itemChunk = itemArray[i].map(async soundUri => {
           let arr = soundUri.toString().split("/");
@@ -296,7 +396,7 @@ export default class MainScreen extends React.Component {
       console.log("finished all downloads");
     }
 
-    await this.wait(5000);
+    //await this.wait(5000);
 
     this.setState({ loading: false });
     this.props.navigation.setParams({
@@ -441,6 +541,21 @@ export default class MainScreen extends React.Component {
     } else {
       return (
         <ScrollView style={globalStyle.mainContainer}>
+          {/* <View style={globalStyle.buttonRow}>
+            <TouchableOpacity
+              onPress={() => this.soundplay()}
+              style={[globalStyle.button, styles.standardButton]}
+            >
+              <Text style={globalStyle.buttonText}>Sound Play</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => this.soundpause()}
+              style={[globalStyle.button, styles.standardButton]}
+            >
+              <Text style={globalStyle.buttonText}>Sound Stop</Text>
+            </TouchableOpacity>
+          </View> */}
+
           <View style={globalStyle.sectionContainer}>
             <Text style={globalStyle.headerLabel}>Daily Quote</Text>
             <Text style={styles.dailyQuote}>{this.state.dailyQuote}</Text>

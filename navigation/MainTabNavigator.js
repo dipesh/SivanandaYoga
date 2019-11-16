@@ -12,7 +12,7 @@ import StartStandardClassScreen from "../screens/StartStandardClassScreen";
 import MainScreen from "../screens/MainScreen";
 import MeditationScreen from "../screens/MeditationScreen";
 import HowToScreen from "../screens/HowToScreen";
-import LoadingScreen from "../screens/LoadingScreen";
+//import LoadingScreen from "../screens/LoadingScreen";
 
 
 const MainStack = createStackNavigator({
