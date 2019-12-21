@@ -1,10 +1,8 @@
 {
   "expoServerPort": 19000,
-  "expoServerNgrokUrl": "https://6e-rbd.dipesh1990.sivanandayoga.exp.direct",
-  "packagerNgrokUrl": "https://packager.6e-rbd.dipesh1990.sivanandayoga.exp.direct",
-  "ngrokPid": 2880,
   "packagerPort": 19001,
-  "packagerPid": 15352,
-  "devToolsPort": 19002,
-  "webpackServerPort": null
+  "packagerPid": 1160,
+  "expoServerNgrokUrl": "https://zy-qub.dipesh1990.sivanandayoga.exp.direct",
+  "packagerNgrokUrl": "https://packager.zy-qub.dipesh1990.sivanandayoga.exp.direct",
+  "ngrokPid": 2020
 }
