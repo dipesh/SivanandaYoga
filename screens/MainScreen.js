@@ -14,7 +14,7 @@ import quote from "../quotes";
 import * as FileSystem from "expo-file-system";
 import { activateKeepAwake, deactivateKeepAwake } from "expo-keep-awake";
 
-import { Audio } from "expo-av";
+//import { Audio } from "expo-av";
 
 let appjson = require("../app.json");
 
@@ -80,7 +80,8 @@ export default class MainScreen extends React.Component {
       allClassesHolder: this.allClasses,
       dailyQuoteArrayHolder: [],
       dailyQuote: "",
-      loading: true,
+      loading: false,
+      loadingPrompt: true,
       appState: AppState.currentState
     };
     this.dailyQuote = "";
@@ -92,52 +93,56 @@ export default class MainScreen extends React.Component {
     this.props.navigation.setParams({ tabBarVisible: true });
     //this.props.navigation.setParams({ visible: false });
 
+    this.checkIfFilesNeedToDownload();
+
     this.downloadResumable = null;
     //console.log("file")
-    this.downloadAudioFiles();
+    this.totalFileSize = 0;
+    //this.downloadAudioFiles();
 
-    this.soundsetup();
+ //   this.soundsetup();
   }
 
-  _onPlaybackStatusUpdate = playbackStatus => {
-    const { didJustFinish, isLoaded, positionMillis, uri } = playbackStatus;
+  // _onPlaybackStatusUpdate = playbackStatus => {
+  //   const { didJustFinish, isLoaded, positionMillis, uri } = playbackStatus;
 
-    if (isLoaded) {
-      if (didJustFinish) {
-        //console.log(uri);
-        //loop is on
-        this.playCount++;
-        console.log("playCount " + this.playCount);
-        this.soundObjects[0].setRateAsync(
-          this.playRate,
-          false,
-          Audio.PitchCorrectionQuality.High
-        );
-        this.playRate = 1 + 0.05 * this.playCount;
-        console.log("playRate " + this.playRate);
-        if (this.playCount == 10) {
-          this.playNextSound();
-        }
-      }
-    }
-  };
+  //   if (isLoaded) {
+  //     if (didJustFinish) {
+  //       //console.log(uri);
+  //       //loop is on
+  //       this.playCount++;
+  //       console.log("playCount " + this.playCount);
+  //       this.soundObjects[0].setRateAsync(
+  //         this.playRate,
+  //         false,
+  //         Audio.PitchCorrectionQuality.High
+  //       );
+  //       this.playRate = 1 + 0.05 * this.playCount;
+  //       console.log("playRate " + this.playRate);
+  //       if (this.playCount == 10) {
+  //         this.playNextSound();
+  //       }
+  //     }
+  //   }
+  // };
+
   async soundsetup() {
-    this.soundObjects = [];
-    this.playCount = 0;
-    this.playRate = 1.0;
-    let soundAsset = require("../assets/KapalabhatiPump.mp3");
+    // this.soundObjects = [];
+    // this.playCount = 0;
+    // this.playRate = 1.0;
+    // let soundAsset = require("../assets/KapalabhatiPump.mp3");
 
-    //for (let i = 0; i < 5; i++) {
-    this.soundObjects[0] = new Audio.Sound();
-    this.soundObjects[0].setOnPlaybackStatusUpdate(
-      this._onPlaybackStatusUpdate
-    );
-    await this.soundObjects[0].loadAsync(soundAsset);
-    await this.soundObjects[0].setIsLoopingAsync(true);
+    // //for (let i = 0; i < 5; i++) {
+    // this.soundObjects[0] = new Audio.Sound();
+    // this.soundObjects[0].setOnPlaybackStatusUpdate(
+    //   this._onPlaybackStatusUpdate
+    // );
+    // await this.soundObjects[0].loadAsync(soundAsset);
+    // await this.soundObjects[0].setIsLoopingAsync(true);
 
-    this.soundObjects[1] = new Audio.Sound();
-    await this.soundObjects[1].loadAsync(require("../assets/3sec.mp3"));
-    this.currentSoundIndex = 0;
+    // this.soundObjects[1] = new Audio.Sound();
+    // await this.soundObjects[1].loadAsync(require("../assets/3sec.mp3"));
+    // this.currentSoundIndex = 0;
   }
 
   async playNextSound() {
@@ -202,42 +207,54 @@ export default class MainScreen extends React.Component {
     await this.downloadResumable.resumeAsync();
   }
 
-  async downloadAudioFiles() {
-    let deleteFiles = false; //should false for release
+  async checkIfFilesNeedToDownload() {
 
-    if (deleteFiles) {
-      //for testing
-      await AsyncStorage.removeItem(this.savedFileDownloadStatusKey);
-    }
+    //for testing TODO
+    //await AsyncStorage.removeItem(this.savedFileDownloadStatusKey);
 
     //if the app updates the version will be different and all the files will be redownloaded
-    //this solution allow me not to check each file individually
+    //this solution allows me not to check each file individually
 
     //the version will only be saved locally if the download has completed
-    let currentVersion = appjson.expo.version;
+    this.currentVersion = appjson.expo.version;
 
     const savedFileDownloadStatusValue = await AsyncStorage.getItem(
       this.savedFileDownloadStatusKey
     );
 
-    let downloadFiles = true;
+    this.downloadFiles = true;
 
-    //console.log("data" + savedFileDownloadStatusValue);
     //if the version was never saved or is different from the current version, download the files
     if (savedFileDownloadStatusValue != null) {
       this.savedFileDownloadStatusArray = JSON.parse(
         savedFileDownloadStatusValue
       );
-      // console.log("array version " + this.savedFileDownloadStatusArray.version);
-      // console.log("file version " + currentVersion);
-      if (this.savedFileDownloadStatusArray.version == currentVersion) {
-        downloadFiles = false;
+      if (this.savedFileDownloadStatusArray.version == this.currentVersion) {
+        this.downloadFiles = false;
       }
     }
 
-    if (downloadFiles) {
+    console.log("savedFileDownloadStatusArray " + this.savedFileDownloadStatusArray.version + ".")
+    console.log("currentVersion " + this.currentVersion)
+    console.log("downloadFiles " + this.downloadFiles)
+    if (this.downloadFiles == false) {
       this.setState({
-        loadingText: "Downloading sound files... v" + currentVersion
+        loadingPrompt: false,
+        loading: false
+      });
+    }
+  }
+  async downloadAudioFiles() {
+    //let deleteFiles = true; //should false for release TODO
+
+    //if (deleteFiles) {
+      // for testing
+      // await AsyncStorage.removeItem(this.savedFileDownloadStatusKey);
+    //}
+
+    if (this.downloadFiles) {
+      this.setState({
+        loadingText: "Downloading sound files... "
       });
       // let arrFiles = await FileSystem.readDirectoryAsync(
       //   FileSystem.documentDirectory
@@ -317,6 +334,8 @@ export default class MainScreen extends React.Component {
 
       this.fileCount = soundFiles.length;
       this.currentFileCount = 0;
+
+      //delete all the older files
       if (deleteFiles) {
         for (let i = 0; i < soundFiles.length; i++) {
           console.log(
@@ -368,12 +387,7 @@ export default class MainScreen extends React.Component {
 
           this.currentFileCount++;
           this.setState({
-            loadingText:
-              "Downloading sound files " +
-              this.currentFileCount +
-              "/" +
-              this.fileCount +
-              " 0%"
+            loadingText: this.currentFileCount + "/" + this.fileCount + " 0%"
           });
 
           await this.downloadResumable
@@ -386,8 +400,10 @@ export default class MainScreen extends React.Component {
         await this.wait(1000);
       }
 
+      console.log("saving savedFileDownloadStatusArray " + this.savedFileDownloadStatusArray.version);
+
       //this only runs when all the files are downloaded
-      this.savedFileDownloadStatusArray.version = currentVersion;
+      this.savedFileDownloadStatusArray.version = this.currentVersion;
       await AsyncStorage.setItem(
         this.savedFileDownloadStatusKey,
         JSON.stringify(this.savedFileDownloadStatusArray)
@@ -404,6 +420,14 @@ export default class MainScreen extends React.Component {
     });
 
     //this.props.navigation.setParams({tabBarVisible: true});
+  }
+
+  downloadPromptOK() {
+    this.setState({
+      loadingPrompt: false,
+      loading: true
+    });
+    this.downloadAudioFiles();
   }
 
   failureCallback(result) {
@@ -429,13 +453,14 @@ export default class MainScreen extends React.Component {
       percent = percent * 100;
       this.setState({
         loadingText:
-          "Downloading sound files " +
           this.currentFileCount +
           "/" +
           this.fileCount +
           " " +
           parseFloat(percent).toFixed(2) +
-          "%"
+          "% -- " +
+          parseFloat(this.totalFileSize / 2 / 1024 / 1024).toFixed(0) +
+          " of 372mb"
       });
 
       //if the file wasn't downloaded, it will be downloaded
@@ -443,7 +468,10 @@ export default class MainScreen extends React.Component {
         downloadProgress.totalBytesWritten ==
         downloadProgress.totalBytesExpectedToWrite
       ) {
-        console.log("Downloaded " + this.currentFile);
+        this.totalFileSize += downloadProgress.totalBytesExpectedToWrite;
+        console.log(
+          "Downloaded " + this.currentFile + " - Total: " + this.totalFileSize
+        );
       }
     }
   };
@@ -529,11 +557,28 @@ export default class MainScreen extends React.Component {
     let image = require("../assets/images/IconSivananda.png");
 
     let loading = this.state.loading;
-    if (loading) {
+    let loadingPrompt = this.state.loadingPrompt;
+    if (loadingPrompt) {
+      return (
+        <View style={styles.imageView}>
+          <Image style={styles.image} source={image} />
+          <Text>A download is required for the audio yoga classes.</Text>
+          <View style={globalStyle.buttonRow}>
+            <TouchableOpacity
+              onPress={() => this.downloadPromptOK()}
+              style={[globalStyle.button, styles.standardButton]}
+            >
+              <Text style={globalStyle.buttonText}>Confirm</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      );
+    } else if (loading) {
       return (
         <View style={styles.imageView}>
           <Image style={styles.image} source={image} />
           <Text>Preparing app for first time use</Text>
+          <Text>Downloading sound files</Text>
           <Text>{this.state.loadingText}</Text>
           <Text>Please don't exit the app </Text>
         </View>
@@ -586,7 +631,7 @@ export default class MainScreen extends React.Component {
             </View>
           </View>
 
-          <View style={globalStyle.sectionContainer}>
+          {/* <View style={globalStyle.sectionContainer}>
             <Text style={globalStyle.headerLabel}>Adjustable Classes</Text>
             <FlatList
               data={this.state.allClassesHolder}
@@ -603,7 +648,7 @@ export default class MainScreen extends React.Component {
             >
               <Text style={globalStyle.buttonText}>New</Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
         </ScrollView>
       );
     }
