@@ -69,7 +69,7 @@ MainStack.navigationOptions = ({ navigation }) => {
         // }
         name={"ios-body"}
       />
-    )
+    ) 
   };
 };
 // MainStack.navigationOptions = ({ navigation }) => {
