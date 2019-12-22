@@ -1,8 +1,9 @@
 {
-  "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 1160,
-  "expoServerNgrokUrl": "https://zy-qub.dipesh1990.sivanandayoga.exp.direct",
-  "packagerNgrokUrl": "https://packager.zy-qub.dipesh1990.sivanandayoga.exp.direct",
-  "ngrokPid": 2020
+  "expoServerPort": null,
+  "packagerPort": null,
+  "packagerPid": null,
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null,
+  "webpackServerPort": null
 }
